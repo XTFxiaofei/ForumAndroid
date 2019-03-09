@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="scheduleWeek">
+        <item>第1周</item>
+        <item>第2周</item>
+        <item>第3周</item>
+        <item>第4周</item>
+        <item>第5周</item>
+        <item>第6周</item>
+        <item>第7周</item>
+        <item>第8周</item>
+        <item>第9周</item>
+        <item>第10周</item>
+        <item>第11周</item>
+        <item>第12周</item>
+        <item>第13周</item>
+        <item>第14周</item>
+        <item>第15周</item>
+        <item>第16周</item>
+        <item>第17周</item>
+        <item>第18周</item>
+        <item>第19周</item>
+        <item>第20周</item>
+        <item>第21周</item>
+        <item>第22周</item>
+    </string-array>
+    <string-array name="font_size">
+        <item>1号</item>
+        <item>2号</item>
+        <item>3号</item>
+        <item>4号</item>
+        <item>5号</item>
+        <item>6号</item>
+        <item>7号</item>
+    </string-array>
+    <string-array name="post_categories">
+        <item>灌水专区</item>
+        <item>技术交流</item>
+        <item>问答专区</item>
+        <item>发展建议</item>
+        <item>论坛反馈</item>
+        <item>校园交易</item>
+        <item>公告活动</item>
+    </string-array>
+
+    <string-array name="post_categories_value">
+        <item>daily</item>
+        <item>code</item>
+        <item>qa</item>
+        <item>suggests</item>
+        <item>feedback</item>
+        <item>transaction</item>
+        <item>activity</item>
+    </string-array>
+</resources>

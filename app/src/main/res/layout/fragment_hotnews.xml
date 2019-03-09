@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbarHeight"
+        android:background="?android:attr/colorPrimary"
+        android:elevation="4dp">
+
+        <RadioGroup
+            android:id="@+id/btn_change"
+            android:layout_width="191dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:checkedButton="@+id/btn_1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <cn.tengfeistudio.forum.widget.BatchRadioButton
+                android:id="@+id/btn_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/switch_left_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="新帖"
+                android:textColor="@color/text_primary_white"
+                android:textSize="13sp" />
+
+            <cn.tengfeistudio.forum.widget.BatchRadioButton
+                android:id="@+id/btn_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/switch_center_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="回复"
+                android:textColor="@color/text_primary_white"
+                android:textSize="13sp" />
+
+            <cn.tengfeistudio.forum.widget.BatchRadioButton
+                android:id="@+id/btn_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/switch_right_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="我的"
+                android:textColor="@color/text_primary_white"
+                android:textSize="13sp" />
+
+            <cn.tengfeistudio.forum.widget.BatchRadioButton
+                android:id="@+id/btn_4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/switch_right_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="更多"
+                android:textColor="@color/text_primary_white"
+                android:textSize="13sp" />
+        </RadioGroup>
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/edit_image_btn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="13dp"
+            android:background="@drawable/ic_create_black_24dp"
+            android:button="@null"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="end"
+            />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_hotnews_showlogin"
+        style="@style/text_14_sec"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="登陆后就可以看了喔 ٩(๑❛ᴗ❛๑)۶"
+        android:visibility="visible" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swiperefresh_hotnews"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_hotnews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_secondary"
+            android:visibility="gone" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</LinearLayout>

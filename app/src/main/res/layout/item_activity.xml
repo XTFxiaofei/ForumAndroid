@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_primary">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/article_title2"
+            style="@style/text_16_pri"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="帖子的标题" />
+
+        <cn.tengfeistudio.forum.widget.CircleImageView
+            android:id="@+id/author_img2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/article_title2"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_placeholder"
+            app:civ_border_color="@android:color/white"
+            app:civ_border_width="1dp"
+            app:layout_constraintStart_toStartOf="@+id/article_title2"
+            app:layout_constraintTop_toBottomOf="@+id/article_title2" />
+
+        <TextView
+            android:id="@+id/author_name2"
+            style="@style/text_12_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/fontawesome"
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_person_outline_black_24dp"
+            app:layout_constraintStart_toEndOf="@+id/author_img2"
+            app:layout_constraintTop_toTopOf="@+id/author_img2"
+            tools:text=" hahah" />
+
+        <TextView
+            android:id="@+id/post_time2"
+            style="@style/text_12_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:maxLines="1"
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_access_time_black_24dp"
+            app:layout_constraintStart_toStartOf="@+id/author_name2"
+            app:layout_constraintTop_toBottomOf="@+id/author_name2"
+            tools:text=" 2015-1-1 19:20:15" />
+
+        <TextView
+            android:id="@+id/reply_count2"
+            style="@style/text_12_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:maxEms="5"
+            android:gravity="center"
+            android:drawableStart="@drawable/ic_forum_black_24dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/view_count2"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text=" 111" />
+
+        <TextView
+            android:id="@+id/view_count2"
+            style="@style/text_12_sec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:maxEms="5"
+            android:visibility="gone"
+            app:layout_constraintBaseline_toBaselineOf="@+id/post_time2"
+            app:layout_constraintEnd_toStartOf="@+id/reply_count2"
+            tools:text="&#xf06e; 222" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
