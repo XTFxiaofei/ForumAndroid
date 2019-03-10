@@ -22,18 +22,17 @@ import cn.tengfeistudio.forum.widget.CircleImageView;
 
 public class ContentActivity extends BaseActivity {
 
-    @BindView(R.id.fragment2)
-    ScrollView scrollView;
-//    @BindView(R.id.ac_icon)
-//    CircleImageView acIcon;
-//    @BindView(R.id.ac_publisher)
-//    TextView acPublisher;
-//    @BindView(R.id.ac_place)
-//    TextView acPlace;
-//    @BindView(R.id.ac_time)
-//    TextView acTime;
-//    @BindView(R.id.ac_content)
-//    TextView acContent;
+
+    @BindView(R.id.ac_icon)
+    CircleImageView acIcon;
+    @BindView(R.id.ac_publisher)
+    TextView acPublisher;
+    @BindView(R.id.ac_place)
+    TextView acPlace;
+    @BindView(R.id.ac_time)
+    TextView acTime;
+    @BindView(R.id.ac_content)
+    TextView acContent;
 
     @Override
     protected int getLayoutID() {
@@ -86,16 +85,16 @@ public class ContentActivity extends BaseActivity {
      */
     private void setIntentData(String activityJsonObj) {
 
-//        ActivityBean activityObj = JSON.parseObject(activityJsonObj, ActivityBean.class);
-//        int activityId = activityObj.getActivityId();
-//        int fromUserId = activityObj.getUserId();
-//        String target = activityObj.getTarget();
-//
-//        acIcon.setImageURI(Uri.parse(activityObj.getLogoImage()));
-//        acPublisher.setText(activityObj.getSponsor());
-//        acPlace.setText(activityObj.getPlace());
-//        acTime.setText(activityObj.getActivityTime());
-//        acContent.setText(activityObj.getContent());
+        ActivityBean activityObj = JSON.parseObject(activityJsonObj, ActivityBean.class);
+        int activityId = activityObj.getActivityId();
+        int fromUserId = activityObj.getUserId();
+        String target = activityObj.getTarget();
+
+        acIcon.setImageURI(Uri.parse(activityObj.getLogoImage()));
+        acPublisher.setText(activityObj.getSponsor());
+        acPlace.setText(activityObj.getPlace());
+        acTime.setText(activityObj.getActivityTime());
+        acContent.setText(activityObj.getContent());
 
     }
 

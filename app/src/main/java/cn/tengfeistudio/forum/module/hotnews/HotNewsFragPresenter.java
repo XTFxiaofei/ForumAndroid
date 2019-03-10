@@ -141,11 +141,20 @@ public class HotNewsFragPresenter {
                 replyAdapter = new ReplyAdapter(context, replyList);
                 mView.rv.setAdapter(replyAdapter);
                 replyAdapter.setOnItemClickListener((view, pos) -> {
-                    //这里传帖子id，然后回到帖子内容那，现在不是帖子id
-                    Intent intent = new Intent(context, ReplyActivity.class);
-                    intent.putExtra("commentId", replyList.get(pos).getTargetId());
-                    intent.putExtra("isNormalPost", false);
-                    context.startActivity(intent);
+                    if(replyList.get(pos).getCommentContent().contains("@")){
+                        //这里传帖子id，然后回到帖子内容那，现在不是帖子id
+                        Intent intent = new Intent(context, ReplyActivity.class);
+                        intent.putExtra("commentId", replyList.get(pos).getTargetId());
+                        intent.putExtra("isNormalPost", false);
+                        context.startActivity(intent);
+                    }else{
+                        //这里传帖子id，然后回到帖子内容那，现在不是帖子id
+                        Intent intent = new Intent(context, PostActivity.class);
+                        intent.putExtra("topicId", replyList.get(pos).getTargetId());
+                        intent.putExtra("isNormalPost", false);
+                        context.startActivity(intent);
+                    }
+
                 });
                 // 初次加载
                 if (mView.reply_loadnothing) {
@@ -157,10 +166,18 @@ public class HotNewsFragPresenter {
                 myPostAdapter = new MyPostAdapter(context, myList);
                 mView.rv.setAdapter(myPostAdapter);
                 myPostAdapter.setOnItemClickListener((view, pos) -> {
-                    Intent intent = new Intent(context, PostActivity.class);
-                    intent.putExtra("topicId", myList.get(pos).getTargetId());
-                    intent.putExtra("isNormalPost", false);
-                    context.startActivity(intent);
+                    if(myList.get(pos).getCommentContent().contains("@")){
+                        //这里传帖子id，然后回到帖子内容那，现在不是帖子id
+                        Intent intent = new Intent(context, ReplyActivity.class);
+                        intent.putExtra("commentId", myList.get(pos).getTargetId());
+                        intent.putExtra("isNormalPost", false);
+                        context.startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(context, PostActivity.class);
+                        intent.putExtra("topicId", myList.get(pos).getTargetId());
+                        intent.putExtra("isNormalPost", false);
+                        context.startActivity(intent);
+                    }
                 });
                 if (mView.my_loadnothing) {
                     myPostAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);

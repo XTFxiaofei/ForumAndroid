@@ -60,8 +60,10 @@ public class ScheduleActivity extends BaseActivity {
     ImageView ivToolbarMenu;
 
     private String eduid;
+    private String edupwd;
     private String userName;
     private String cookie;
+
     private int nowWeek = 1;
     public static final int requestCode = 512;
 
@@ -77,17 +79,23 @@ public class ScheduleActivity extends BaseActivity {
     @Override
     protected void initData() {
         contents = new String[6][7];
+        //学号
         eduid = App.getEduid();
+        //教务系统密码
+        edupwd=App.getEduPwd();
+        //用户姓名
         userName = App.getEduName();
         cookie = App.getCookie();
     }
 
     @Override
     protected void initView() {
+
         ivToolbarMenu.setImageResource(R.drawable.ic_check_black_24dp);
         ivToolbarMenu.setOnClickListener(view -> {
-            EventBus.getDefault().post(new MessageEvent("scheduleRefresh"));
-            finishActivity();
+                EventBus.getDefault().post(new MessageEvent("scheduleRefresh"));
+                finishActivity();
+
         });
         initSlidr();
         initSpinner();
@@ -116,12 +124,15 @@ public class ScheduleActivity extends BaseActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 nowWeek = pos + 1;
                 initScheduleDataFromDB();
+                //刷新课表
+                getScheduleFromEdu();
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
+
     }
 
     /**
@@ -131,19 +142,14 @@ public class ScheduleActivity extends BaseActivity {
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
             OkHttpUtils.get()
                     .url(NetConfig.BASE_SCHEDULE)
-                    .addParams("card", "15251104218")
-                    .addParams("cardpassword","ABC120119")
-                    .addParams("week","0")
-                    .addParams("schoolyear","2016-2017-1")
+                    .addParams("card", eduid)  //学号
+                    .addParams("cardpassword",edupwd) //教务系统密码
+                    .addParams("week",String.valueOf(nowWeek))  //第几周
+                    .addParams("schoolyear","2016-2017-2")
                     .build()
                     .execute(new StringCallback() {
                         @Override
                         public void onResponse(String response, int id){
-//                            String responseHTML = new String(response.body().bytes(), "UTF-8");
-//                            List<Course> scheduleList = getScheduleList(responseHTML);
-//                            String JsonObjs = JSON.toJSONString(scheduleList);
-//                            emitter.onNext(JsonObjs);
-//                            return null;
                             if (!response.contains("code")) {
                                 ToastNetWorkError();
                             }
@@ -211,7 +217,7 @@ public class ScheduleActivity extends BaseActivity {
             db.handSingleReadSchedule(course);
         }
         initScheduleDataFromDB();
-//        adapter.notifyDataSetChanged();
+        //adapter.notifyDataSetChanged();
     }
 
     @Override

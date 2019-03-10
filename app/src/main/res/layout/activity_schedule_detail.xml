@@ -92,13 +92,13 @@
 
             <TextView
                 style="@style/text_schedule_detail"
-                android:text="单双周" />
+                android:text="连上节数" />
 
             <TextView
                 android:id="@+id/tv_schedule_setSDweek"
                 style="@style/text_schedule_detail_info"
                 android:layout_marginRight="45dp"
-                tool:text="单双周" />
+                tool:text="2" />
         </FrameLayout>
     </FrameLayout>
 

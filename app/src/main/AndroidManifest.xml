@@ -61,6 +61,10 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".module.schedule.edu.set.ScheduleDetailSetActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
             android:name=".module.edu.main.EduActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />

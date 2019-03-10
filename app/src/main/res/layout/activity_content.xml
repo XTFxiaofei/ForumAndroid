@@ -1,12 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_secondary">
-    <ScrollView
-        android:id="@+id/fragment2"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:background="@color/bg_primary"
+    android:orientation="vertical">
+    <include layout="@layout/my_toolbar"/>
+    <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true" />
+        android:layout_height="wrap_content"
+        android:background="@color/bg_primary"
+        android:padding="5dp">
+        <cn.tengfeistudio.forum.widget.CircleImageView
+            android:id="@+id/ac_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_placeholder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/ac_publisher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/colorAuthor"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/article_user_image"
+            app:layout_constraintTop_toTopOf="@+id/article_user_image"
+            tools:text="发布者" />
+
+        <TextView
+            android:id="@+id/ac_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="666/999" />
+
+        <TextView
+            android:id="@+id/ac_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="666/999" />
+
+        <TextView
+            android:id="@+id/ac_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            tools:layout_editor_absoluteX="138dp"
+            tools:layout_editor_absoluteY="1dp">
+        </TextView>
+    </LinearLayout>
+
+</LinearLayout>

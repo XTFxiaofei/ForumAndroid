@@ -134,6 +134,8 @@ public class NetConfig {
     /** 课表url */
     public static final String BASE_SCHEDULE=BASE_SCHOOL+"get_schedule";
 
+    public static final String BASE_EDU_GDUFE="http://jwxt.gdufe.edu.cn/jsxsd/";
+
     /** 安装包下载地址 */
     public static final String APK_DOWNLOAD_URL="";
 

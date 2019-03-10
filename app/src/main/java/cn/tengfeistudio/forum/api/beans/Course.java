@@ -141,4 +141,20 @@ public class Course {
     public void setSumSection(int sumSection) {
         this.sumSection = sumSection;
     }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "cid=" + cid +
+                ", weekDay=" + weekDay +
+                ", startSection=" + startSection +
+                ", sumSection=" + sumSection +
+                ", courseName='" + courseName + '\'' +
+                ", teacher='" + teacher + '\'' +
+                ", weekNumber='" + weekNumber + '\'' +
+                ", sectionNumber='" + sectionNumber + '\'' +
+                ", place='" + place + '\'' +
+                ", create_time='" + create_time + '\'' +
+                '}';
+    }
 }

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
-import cn.tengfeistudio.forum.api.bean.Course;
+import cn.tengfeistudio.forum.api.beans.Course;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.module.schedule.edu.set.ScheduleDetailSetActivity;
@@ -43,7 +43,7 @@ public class ScheduleDetailActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        initToolBar(true, "编辑课程");
+        initToolBar(true, "课程详情");
         initSlidr();
     }
 
@@ -66,10 +66,10 @@ public class ScheduleDetailActivity extends BaseActivity {
      */
     private void initBaseData() {
         tvScheduleSetCourseName.setText(object.getCourseName());
-        tvScheduleSetClass.setText(object.getClassRoom());
-        tvScheduleSetWeeks.setText(object.getStartWeek() + " - " + object.getEndWeek() + "周");
-        tvScheduleSetSDweek.setText(object.printSD_week());
-        tvScheduleSetJS.setText(object.getCourseTime());
+        tvScheduleSetClass.setText(object.getPlace());
+        tvScheduleSetWeeks.setText(object.getWeekNumber());
+        tvScheduleSetSDweek.setText(String.valueOf(object.getSumSection()));
+        tvScheduleSetJS.setText(object.getSectionNumber());
         tvScheduleSetTeacher.setText(object.getTeacher());
     }
 
@@ -107,7 +107,7 @@ public class ScheduleDetailActivity extends BaseActivity {
                 intent.putExtra("set","weeks");
                 break;
             case R.id.fl_setSDweek:
-                intent.putExtra("set","sdWeek");
+                intent.putExtra("set","sumSection");
                 break;
             case R.id.fl_setJS:
                 intent.putExtra("set","js");

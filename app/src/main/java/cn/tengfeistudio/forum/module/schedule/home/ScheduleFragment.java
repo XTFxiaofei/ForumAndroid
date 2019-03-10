@@ -26,6 +26,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastShort;
+
 public class ScheduleFragment extends BaseFragment
         implements ScheduleFragView{
     @BindView(R.id.courceDetail)
@@ -109,9 +111,12 @@ public class ScheduleFragment extends BaseFragment
     @OnClick(R.id.iv_toolbar_menu)
     public void onViewClicked() {
         //ToastUtils.ToastShort("由于技术升级，爬虫不可用，此功能暂时下线");
-        // TODO:暂时下线功能
-        Intent intent = new Intent(mActivity, EduLoginActivity.class);
-        startActivity(intent);
+        if(App.getEduid()!=null && App.getEduPwd()!=null ){
+            ToastShort("已经登录了!");
+        }else{
+            Intent intent = new Intent(mActivity, EduLoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

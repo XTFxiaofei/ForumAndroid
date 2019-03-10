@@ -49,7 +49,7 @@ public class ActivityFragment extends BaseFragment
 
 
     //private String headers[] = {"城市", "年龄", "性别", "星座"};
-    private String headers[] = {"城市", "年龄", "星座"};
+    private String headers[] = {"城市", "素拓类型", "星期几"};
     //private int[] types = new int[]{DropDownMenu.TYPE_LIST_CITY, DropDownMenu.TYPE_LIST_SIMPLE, DropDownMenu.TYPE_CUSTOM, DropDownMenu.TYPE_GRID};
     private int[] types = new int[]{DropDownMenu.TYPE_LIST_CITY, DropDownMenu.TYPE_LIST_SIMPLE, DropDownMenu.TYPE_GRID};
     private String citys[] = {"不限", "广州", "佛山"};

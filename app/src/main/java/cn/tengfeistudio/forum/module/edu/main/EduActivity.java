@@ -81,7 +81,7 @@ public class EduActivity extends BaseActivity {
     private void doLogout() {
         printLog("退出登陆");
         OkHttpUtils.post()
-                .url(NetConfig.BASE_EDU_HOST_ME + id)
+                .url(NetConfig.BASE_EDU_GDUFE)
                 .addHeader("Cookie", Cookie)
                 //无__VIEWSTATE参数不能够正常post
                 //.addParams("__VIEWSTATE", App.get__VIEWSTATE())
@@ -112,7 +112,7 @@ public class EduActivity extends BaseActivity {
      */
     private void getLogout() {
         OkHttpUtils.get()
-                .url("http://jwxt.gdufe.edu.cn/jsxsd/")
+                .url(NetConfig.BASE_EDU_GDUFE)
                 .addHeader("Cookie", Cookie)
                 .build()
                 .execute(new StringCallback() {

@@ -6,7 +6,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.alibaba.fastjson.JSON;
-import cn.tengfeistudio.forum.api.bean.Course;
+import cn.tengfeistudio.forum.api.beans.Course;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.R;
 
@@ -41,27 +41,24 @@ public class ScheduleDetailSetActivity extends BaseActivity {
                 break;
             case "class":
                 initToolBar(true,"修改教室");
-                etSetinfo.setText(object.getCourseName());
-
+                etSetinfo.setText(object.getPlace());
                 break;
             case "weeks":
                 initToolBar(true,"修改周数");
-                etSetinfo.setText(object.getStartWeek() + "~" + object.getEndWeek());
+                etSetinfo.setText(object.getWeekNumber());
 
                 break;
-            case "sdWeek":
-                initToolBar(true,"修改单双周");
-                etSetinfo.setText(object.printSD_week());
-
+            case "sumSection":
+                initToolBar(true,"修改连上节数");
+                etSetinfo.setText(String.valueOf(object.getSumSection()));
                 break;
             case "js":
                 initToolBar(true,"修改节数");
-                etSetinfo.setText(object.getCourseTime());
+                etSetinfo.setText(object.getSectionNumber().toString());
                 break;
             case "teacher":
                 initToolBar(true,"修改老师");
                 etSetinfo.setText(object.getTeacher());
-
                 break;
         }
     }

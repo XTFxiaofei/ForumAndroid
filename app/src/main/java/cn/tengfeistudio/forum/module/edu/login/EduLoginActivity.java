@@ -210,7 +210,6 @@ public class EduLoginActivity extends BaseActivity {
                     public Object parseNetworkResponse(Response response, int id) throws Exception {
                         String responseHTML = new String(response.body().bytes(), "utf-8");
                         emitter.onNext(responseHTML);
-//                        writeData("/sdcard/Test/isLoginHTML.txt", responseHTML);
                         return null;
                     }
 

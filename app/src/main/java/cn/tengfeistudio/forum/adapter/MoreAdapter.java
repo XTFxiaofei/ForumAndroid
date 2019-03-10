@@ -33,10 +33,12 @@ import cn.tengfeistudio.forum.module.post.edit.EditAcitivity;
 import cn.tengfeistudio.forum.module.post.postlist.PostsActivity;
 import cn.tengfeistudio.forum.utils.DateUtils;
 
+import static cn.tengfeistudio.forum.adapter.BaseAdapter.TYPE_NORMAL;
+
 /**
- * Reply列表adapter
+ * more列表adapter
  */
-public class MoreAdapter extends BaseAdapter {
+public class MoreAdapter extends BaseAdapter2 {
     private Context context;
     private String weatherString;
 
@@ -47,7 +49,7 @@ public class MoreAdapter extends BaseAdapter {
 
     @Override
     protected int getDataCount() {
-        return TYPE_NORMAL;
+        return 2;
     }
 
     @Override
@@ -92,7 +94,7 @@ public class MoreAdapter extends BaseAdapter {
 
         @Override
         void setData(int pos) {
-            //super.setData(pos);
+            //super.setData(0);
             initData(context);
         }
 
