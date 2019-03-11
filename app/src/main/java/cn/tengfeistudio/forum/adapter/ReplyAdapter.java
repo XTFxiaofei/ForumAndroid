@@ -16,6 +16,8 @@ import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.api.beans.Comment;
 import cn.tengfeistudio.forum.utils.StampToDate;
 
+import static cn.tengfeistudio.forum.utils.StampToDate.getStringDate;
+
 /**
  * Reply列表adapter
  */
@@ -91,7 +93,7 @@ public class ReplyAdapter extends BaseAdapter {
         void setData(int pos) {
             Comment object = postList.get(pos);
             articleTitle.setText(object.getTargetContent());
-            postTime.setText(" " + StampToDate.stampToDate(String.valueOf(object.getCreateTime())));
+            postTime.setText(" " + getStringDate(object.getCreateTime()));
             articleReply.setText(object.getCommentContent());
         }
     }

@@ -28,6 +28,8 @@ import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 
+import static cn.tengfeistudio.forum.utils.StampToDate.getStringDate;
+
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     private List<CommentBean> commentList;
     private Context context;
@@ -65,7 +67,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         if (object.getComment().getCreateTime().equals(null))
             holder.replayTime.setText(DateUtils.getFromNowOnTime(object.getComment().getCreateTime()));
         else
-            holder.replayTime.setText(StampToDate.stampToDate(String.valueOf(object.getComment().getCreateTime())));
+            holder.replayTime.setText(getStringDate(object.getComment().getCreateTime()));
         RichText.fromMarkdown(object.getComment().getCommentContent()).into(holder.markdownText);
         Picasso.get()
                 .load(object.getComment().getUserByFromId().getIcon())

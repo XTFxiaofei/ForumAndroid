@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.squareup.picasso.Picasso;
@@ -14,9 +16,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.api.beans.TopicBean;
 import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
+import cn.tengfeistudio.forum.utils.StampToDate;
+import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 
 /**
@@ -90,6 +95,11 @@ public class TopicAdapter extends BaseAdapter {
         TextView replyCount;
         @BindView(R.id.view_count)
         TextView viewCount;
+        @BindView(R.id.rb_grade)
+        RatingBar level;
+        @BindView(R.id.article_content)
+        TextView content;
+
 
         NormalViewHolder(View view) {
             super(view);
@@ -101,18 +111,48 @@ public class TopicAdapter extends BaseAdapter {
             TopicBean object = topicList.get(pos);
             articleTitle.setText(object.getTitle());
             authorName.setText(" " + object.getUserByUserId().getNickname());
-            postTime.setText(" " + object.getCreateTime());
+            postTime.setText(" " + StampToDate.getStringDate(object.getCreateTime()));
             replyCount.setText(" " + object.getCommentNumber());
             viewCount.setText(" " + object.getViewNumber());
+            level.setRating(object.getUserByUserId().getLevel());
+            content.setText(""+object.getContent());
             Picasso.get()
                     .load(object.getUserByUserId().getIcon())
                     .placeholder(R.drawable.image_placeholder)
                     .into(authorImg);
             authorImg.setOnClickListener(view -> {
                 Intent intent = new Intent(context, UserDetailActivity.class);
-                intent.putExtra("userid",object.getUserByUserId().getUserId());
+                intent.putExtra("userid", object.getUserByUserId().getUserId());
                 context.startActivity(intent);
             });
+        }
+
+
+
+
+        @OnClick(R.id.delete)
+        public void delete(View view) {
+            final GlobalDialog delDialog = new GlobalDialog(context);
+            delDialog.setCanceledOnTouchOutside(true);
+            delDialog.getTitle().setText("提示");
+            delDialog.getContent().setText("确定删除吗?");
+            delDialog.setLeftBtnText("取消");
+            delDialog.setRightBtnText("确定");
+            delDialog.setLeftOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "取消", Toast.LENGTH_SHORT).show();
+                    delDialog.dismiss();
+                }
+            });
+            delDialog.setRightOnclick(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "确定", Toast.LENGTH_SHORT).show();
+                    delDialog.dismiss();
+                }
+            });
+            delDialog.show();
         }
     }
 }

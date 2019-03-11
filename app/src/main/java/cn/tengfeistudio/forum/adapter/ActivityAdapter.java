@@ -102,8 +102,7 @@ public class ActivityAdapter extends BaseAdapter {
             postTime2.setText(" " + object.getActivityTime());
             //replyCount.setText(" " + object.getCommentNumber());
             //viewCount.setText(" " + object.getViewNumber());
-            Picasso.get()
-                    .load(object.getLogoImage())
+            Picasso.get().load(object.getLogoImage())
                     .placeholder(R.drawable.image_placeholder)
                     .into(authorImg2);
             //点击图片今日具体信息

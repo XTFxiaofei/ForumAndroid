@@ -54,6 +54,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static cn.tengfeistudio.forum.utils.StampToDate.getStringDate;
 import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastNetWorkError;
 import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastShort;
 
@@ -276,7 +277,7 @@ public class PostFragment extends BaseFragment {
         }
         articleTitle.setText(topicObj.getTitle());
         articleUsername.setText(topicObj.getUserByUserId().getNickname());
-        articlePostTime.setText(StampToDate.stampToDate(String.valueOf(topicObj.getCreateTime())));
+        articlePostTime.setText(getStringDate(topicObj.getCreateTime()));
 //        content.setText(postObj.getBody());
         RichText.fromMarkdown(topicObj.getContent()).into(content);
         Picasso.get()

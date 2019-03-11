@@ -12,6 +12,7 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.adapter.ActivityAdapter;
 import cn.tengfeistudio.forum.api.beans.ActivityBean;
 import cn.tengfeistudio.forum.utils.Constants;
@@ -68,7 +69,8 @@ public class ActivityFragPresenter {
         activityAdapter = new ActivityAdapter(context, activityList);
         mView.rv.setAdapter(activityAdapter);
         activityAdapter.setOnItemClickListener((v, position) -> {
-            Intent intent = new Intent(context, ContentActivity.class);
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra("viewTop",v.getTop());
             intent.putExtra("ActivityJsonObject", JSON.toJSONString(activityList.get(position)));
             intent.putExtra("isNormalPost", true);
             context.startActivity(intent);

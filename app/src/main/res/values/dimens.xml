@@ -12,4 +12,9 @@
     <dimen name="spinnerMaxHeight">200dp</dimen>
     <dimen name="scheduleCourseMargin">3dp</dimen>
     <dimen name="scheduleCoursePadding">3dp</dimen>
+
+    <dimen name="bar_view_height">100dp</dimen>
+    <dimen name="view_height">110dp</dimen>
+    <dimen name="icon_margin">15dp</dimen>
+    <dimen name="title_view_height">40dp</dimen>
 </resources>

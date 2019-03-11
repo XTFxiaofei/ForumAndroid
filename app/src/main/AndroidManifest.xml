@@ -115,7 +115,7 @@
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name=".module.activity.ContentActivity"
+            android:name=".module.activity.DetailActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 
