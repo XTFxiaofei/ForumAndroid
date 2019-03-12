@@ -11,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -21,8 +22,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -41,13 +44,20 @@ import cn.tengfeistudio.forum.module.base.BaseFragment;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.StampToDate;
+import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 import cn.tengfeistudio.forum.utils.IntentUtils;
 import cn.tengfeistudio.forum.utils.StringUtils;
+
+import com.jaeger.ninegridimageview.ItemImageClickListener;
+import com.jaeger.ninegridimageview.ItemImageLongClickListener;
+import com.jaeger.ninegridimageview.NineGridImageView;
+import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -86,6 +96,10 @@ public class PostFragment extends BaseFragment {
     LinearLayout loadBottom;
     @BindView(R.id.close_panel)
     ImageView closePanel;
+    @BindView(R.id.rb_grade)
+    RatingBar userLevel;
+    @BindView(R.id.ngl_images)
+    NineGridImageView<String> mNglContent;
 
     private List<CommentBean> beanList;
 
@@ -95,7 +109,8 @@ public class PostFragment extends BaseFragment {
     // private long postID;
     //帖子id
     private int topicId;
-
+    //用户等级
+    private int level;
     private int targetId;
     //给谁通知
     private int toUserId;
@@ -121,6 +136,22 @@ public class PostFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        //九格图
+        mNglContent.setAdapter(mAdapter);
+        mNglContent.setItemImageClickListener(new ItemImageClickListener<String>() {
+            @Override
+            public void onItemImageClick(Context context, ImageView imageView, int index, List<String> list) {
+                Log.d("onItemImageClick", list.get(index));
+            }
+        });
+        mNglContent.setItemImageLongClickListener(new ItemImageLongClickListener<String>() {
+            @Override
+            public boolean onItemImageLongClick(Context context, ImageView imageView, int index, List<String> list) {
+                Log.d("onItemImageLongClick", list.get(index));
+                return true;
+            }
+        });
+
         initHead();
     }
 
@@ -208,6 +239,8 @@ public class PostFragment extends BaseFragment {
         toUserId = topicObj.getUserByUserId().getUserId();
         //帖子id
         targetId = topicObj.getTopicId();
+        //等级
+        level=topicObj.getUserByUserId().getLevel();
     }
 
     /**
@@ -233,23 +266,12 @@ public class PostFragment extends BaseFragment {
                 }, throwable -> ToastNetWorkError());
     }
 
-    //private void initCommentListData(String CommentJsonObj) {
+
     private void initCommentListData(JSONObject CommentJsonObj) {
         if(comments==null){
             comments=new ArrayList<>();
         }
-        //JSONObject postObj = JSON.parseObject(CommentJsonObj);
-        //List<CommentBean> tempList = JSON.parseArray(postObj.getString("comment"), CommentBean.class);
- //       List<CommentBean> tempList = JSON.parseArray(CommentJsonObj.getString("data"), CommentBean.class);
- //       List<Comment> commentTempList=new ArrayList<>();
         List<Comment> commentTempList=JSON.parseArray(CommentJsonObj.getString("data"), Comment.class);
-        //初始化commentTempList
-//        for(CommentBean commentBean:tempList){
-//            commentTempList.add(commentBean.getComment());
-//            for(Comment comment:commentBean.getReplyList()){
-//                commentTempList.add(comment);
-//            }
-//        }
         //对回复进行排序
         Collections.sort(commentTempList);
         if (comments.size() != commentTempList.size()) {
@@ -267,17 +289,54 @@ public class PostFragment extends BaseFragment {
         }
     }
 
+    //九格图适配器
+    private NineGridImageViewAdapter<String> mAdapter = new NineGridImageViewAdapter<String>() {
+        @Override
+        protected void onDisplayImage(Context context, ImageView imageView, String s) {
+            Picasso.get().load(s).placeholder(R.drawable.image_placeholder).into(imageView);
+        }
+
+        @Override
+        protected ImageView generateImageView(Context context) {
+            return super.generateImageView(context);
+        }
+
+        @Override
+        protected void onItemImageClick(Context context, ImageView imageView, int index, List<String> list) {
+            Toast.makeText(context, "image position is " + index, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected boolean onItemImageLongClick(Context context, ImageView imageView, int index, List<String> list) {
+            Toast.makeText(context, "image long click position is " + index, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+    };
+    private String[] IMG_URL_LIST = {
+            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
+            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
+    };
+
     /**
      * 初始化标题等等信息
      */
     private void initHead() {
+        //样例数据
+        List<String> imgUrls = new ArrayList<>();
+        imgUrls.addAll(Arrays.asList(IMG_URL_LIST));
+
         if (from.equals("PostActivity")) {
             closePanel.setVisibility(View.GONE);
             initMyInputBar();
         }
+        mNglContent.setImagesData(imgUrls, NineGridImageView.STYLE_GRID);
         articleTitle.setText(topicObj.getTitle());
         articleUsername.setText(topicObj.getUserByUserId().getNickname());
         articlePostTime.setText(getStringDate(topicObj.getCreateTime()));
+        userLevel.setRating(topicObj.getUserByUserId().getLevel());
 //        content.setText(postObj.getBody());
         RichText.fromMarkdown(topicObj.getContent()).into(content);
         Picasso.get()
@@ -374,6 +433,27 @@ public class PostFragment extends BaseFragment {
                             }
                             break;
                         case R.id.tv_remove:
+                            final GlobalDialog delDialog = new GlobalDialog(getContext());
+                            delDialog.setCanceledOnTouchOutside(true);
+                            delDialog.getTitle().setText("提示");
+                            delDialog.getContent().setText("确定删除吗?");
+                            delDialog.setLeftBtnText("取消");
+                            delDialog.setRightBtnText("确定");
+                            delDialog.setLeftOnclick(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
+                                    delDialog.dismiss();
+                                }
+                            });
+                            delDialog.setRightOnclick(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(getContext(), "确定", Toast.LENGTH_SHORT).show();
+                                    delDialog.dismiss();
+                                }
+                            });
+                            delDialog.show();
                             break;
                     }
                     return true;
@@ -383,7 +463,7 @@ public class PostFragment extends BaseFragment {
                 // 判断是不是本人
                 popup.getMenu().removeItem(R.id.tv_edit);
                 // 如果有管理权限,则显示删除
-                popup.getMenu().removeGroup(R.id.menu_manege);
+                //popup.getMenu().removeGroup(R.id.menu_manege);
                 popup.show();
                 break;
         }
@@ -434,6 +514,27 @@ public class PostFragment extends BaseFragment {
                             }
                             break;
                         case R.id.tv_remove:
+                            final GlobalDialog delDialog = new GlobalDialog(getContext());
+                            delDialog.setCanceledOnTouchOutside(true);
+                            delDialog.getTitle().setText("提示");
+                            delDialog.getContent().setText("确定删除吗?");
+                            delDialog.setLeftBtnText("取消");
+                            delDialog.setRightBtnText("确定");
+                            delDialog.setLeftOnclick(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
+                                    delDialog.dismiss();
+                                }
+                            });
+                            delDialog.setRightOnclick(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(getContext(), "确定", Toast.LENGTH_SHORT).show();
+                                    delDialog.dismiss();
+                                }
+                            });
+                            delDialog.show();
                             break;
                     }
                     return true;
@@ -441,9 +542,9 @@ public class PostFragment extends BaseFragment {
                 MenuInflater inflater = popup.getMenuInflater();
                 inflater.inflate(R.menu.menu_post_more, popup.getMenu());
                 // 判断是不是本人
-                popup.getMenu().removeItem(R.id.tv_edit);
+                //popup.getMenu().removeItem(R.id.tv_edit);
                 // 如果有管理权限,则显示删除
-                popup.getMenu().removeGroup(R.id.menu_manege);
+                //popup.getMenu().removeGroup(R.id.menu_manege);
                 popup.show();
                 break;
             case R.id.article_user_image:

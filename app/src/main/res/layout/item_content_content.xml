@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_primary">
     <cn.tengfeistudio.forum.widget.CircleImageView
         android:id="@+id/article_user_image"
@@ -20,6 +21,7 @@
         android:layout_marginStart="6dp"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/article_user_image"
+        android:drawableStart="@drawable/ic_person_outline_black_24dp"
         android:textColor="@color/colorAuthor"
         android:textSize="14sp"
         tools:text="author" />
@@ -40,6 +42,17 @@
         android:textColor="@android:color/white"
         android:textSize="10sp"
         android:textStyle="bold" />
+
+    <RatingBar
+        android:id="@+id/rb_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="9dp"
+        android:isIndicator="true"
+        android:progressDrawable="@drawable/ratingbar_progress"
+        android:rating="4"/>
 
     <TextView
         android:id="@+id/article_post_time"
@@ -95,10 +108,19 @@
         android:textSize="16sp"
         tools:text="在点(110,10)处绘制一个宽和高均为50像素的正方形边框 context.strokeRect(110,10,50,50); //在点(30,10)处绘制一个宽和高均为50像素的正方形边框 " />
 
+    <com.jaeger.ninegridimageview.NineGridImageView
+        android:layout_below="@+id/content"
+        android:id="@+id/ngl_images"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:imgGap="3dp"
+        app:showStyle="grid"
+        app:singleImgSize="500dp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="12dp"
-        android:layout_below="@+id/content"
+        android:layout_below="@+id/ngl_images"
         android:layout_marginTop="4dp"
         android:background="@color/bg_secondary" />
 
