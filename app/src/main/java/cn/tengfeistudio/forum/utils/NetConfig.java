@@ -101,6 +101,9 @@ public class NetConfig {
 
     public static final String BASE_DOMAIN="http://10.0.2.2:8080/";
 
+    /** 发帖 **/
+    public static final String BASE_TOPIC_INCLUDE_IMAGES=BASE_DOMAIN+"topic/send_topic_image";
+
     public static final String BASE_USER=BASE_DOMAIN+"user/";
 
     /** 获取用户具体信息 */

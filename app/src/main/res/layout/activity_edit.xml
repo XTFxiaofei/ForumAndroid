@@ -42,14 +42,25 @@
         android:id="@+id/editor"
         style="@style/text_16_sec"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="150dp"
         android:background="@color/bg_secondary"
         android:focusable="true"
-        android:singleLine="false"
         android:gravity="start"
         android:hint="请输入发布内容 #支持MarkDown"
         android:imeOptions="actionNext"
-        android:inputType="text"
-        android:padding="10dp" />
+        android:inputType="text" />
+    <!--android:padding="10dp"-->
+    <!--android:singleLine="false"-->
+
+    <!--<include layout="@layout/item_filter_image" />-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_secondary"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:overScrollMode="never"/>
 
 </LinearLayout>

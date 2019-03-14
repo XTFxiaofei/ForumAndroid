@@ -31,4 +31,8 @@
     <color name="main_color_10">#cc268f</color>
     <color name="main_color_11">#39c5bb</color>
 
+
+    <!-- 选择图片 -->
+    <color name="color_f6">#f6f6f6</color>
+
 </resources>

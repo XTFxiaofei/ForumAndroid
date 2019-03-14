@@ -16,11 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.jaeger.ninegridimageview.ItemImageClickListener;
 import com.jaeger.ninegridimageview.ItemImageLongClickListener;
 import com.jaeger.ninegridimageview.NineGridImageView;
 import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
 import com.squareup.picasso.Picasso;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -173,10 +175,13 @@ public class TopicAdapter extends BaseAdapter {
 
         @Override
         void setData(int pos) {
+            //["http://10.0.2.2:8080/upload/imgs/1552591792843/1552591792843_933.JPEG","http://10.0.2.2:8080/upload/imgs/1552591792869/1552591792869_462.jpg","http://10.0.2.2:8080/upload/imgs/1552591792886/1552591792886_953.jpg"]
             List<String> imgUrls = new ArrayList<>();
-            imgUrls.addAll(Arrays.asList(IMG_URL_LIST));
+            //imgUrls.addAll(Arrays.asList(IMG_URL_LIST));
+
 
             TopicBean object = topicList.get(pos);
+            imgUrls= JSONArray.parseArray(object.getContentPictureJson(),String.class);
             mNglContent.setImagesData(imgUrls, NineGridImageView.STYLE_GRID);
 
             articleTitle.setText(object.getTitle());
@@ -249,35 +254,7 @@ public class TopicAdapter extends BaseAdapter {
                 // popup.getMenu().removeGroup(R.id.menu_manege);
                 popup.show();
             });
-
         }
-
-
-//        @OnClick(R.id.delete)
-//        public void delete(View view) {
-//            final GlobalDialog delDialog = new GlobalDialog(context);
-//            delDialog.setCanceledOnTouchOutside(true);
-//            delDialog.getTitle().setText("提示");
-//            delDialog.getContent().setText("确定删除吗?");
-//            delDialog.setLeftBtnText("取消");
-//            delDialog.setRightBtnText("确定");
-//            delDialog.setLeftOnclick(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(context, "取消", Toast.LENGTH_SHORT).show();
-//                    delDialog.dismiss();
-//                }
-//            });
-//            delDialog.setRightOnclick(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(context, "确定", Toast.LENGTH_SHORT).show();
-//                    delDialog.dismiss();
-//                }
-//            });
-//            delDialog.show();
-//        }
-
 
     }
 }
