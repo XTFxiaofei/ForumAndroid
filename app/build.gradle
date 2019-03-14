@@ -76,5 +76,5 @@ dependencies {
     implementation files('libs/javax.annotation-api-1.2.jar')
     /*PictureSelector*/
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.0'
-    implementation files('D:/AndroidStudio/forums/ForumAndroid/libs/fastjson-1.2.7.jar')
+
 }

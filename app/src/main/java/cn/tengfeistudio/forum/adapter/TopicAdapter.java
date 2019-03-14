@@ -175,7 +175,7 @@ public class TopicAdapter extends BaseAdapter {
 
         @Override
         void setData(int pos) {
-            //["http://10.0.2.2:8080/upload/imgs/1552591792843/1552591792843_933.JPEG","http://10.0.2.2:8080/upload/imgs/1552591792869/1552591792869_462.jpg","http://10.0.2.2:8080/upload/imgs/1552591792886/1552591792886_953.jpg"]
+            //http://10.0.2.2:8080/upload/imgs/1552598994195/1552598994194_876.JPEG","http://10.0.2.2:8080/upload/imgs/1552598994279/1552598994279_216.JPEG","http://10.0.2.2:8080/upload/imgs/1552598994304/1552598994303_596.JPEG
             List<String> imgUrls = new ArrayList<>();
             //imgUrls.addAll(Arrays.asList(IMG_URL_LIST));
 
