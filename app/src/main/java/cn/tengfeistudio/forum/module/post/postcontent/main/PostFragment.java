@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import cn.tengfeistudio.forum.adapter.CommentReplyAdapter;
 import cn.tengfeistudio.forum.api.beans.Comment;
@@ -326,7 +327,8 @@ public class PostFragment extends BaseFragment {
     private void initHead() {
         //样例数据
         List<String> imgUrls = new ArrayList<>();
-        imgUrls.addAll(Arrays.asList(IMG_URL_LIST));
+        //imgUrls.addAll(Arrays.asList(IMG_URL_LIST));
+        imgUrls= JSONArray.parseArray(topicObj.getContentPictureJson(),String.class);
 
         if (from.equals("PostActivity")) {
             closePanel.setVisibility(View.GONE);
