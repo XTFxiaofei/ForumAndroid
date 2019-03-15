@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/one"
+        android:title="大一第1学期"/>
+    <item android:id="@+id/two"
+        android:title="大一第2学期"/>
+    <item android:id="@+id/three"
+        android:title="大二第1学期"/>
+    <item android:id="@+id/four"
+        android:title="大二第2学期"/>
+    <item android:id="@+id/five"
+        android:title="大三第1学期"/>
+    <item android:id="@+id/six"
+        android:title="大三第2学期"/>
+    <item android:id="@+id/seven"
+        android:title="大四第1学期"/>
+    <item android:id="@+id/eight"
+        android:title="大四第2学期"/>
+</menu>

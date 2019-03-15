@@ -2,6 +2,7 @@ package cn.tengfeistudio.forum.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class StampToDate {
@@ -48,5 +49,44 @@ public class StampToDate {
         return sDateTime;
     }
 
+
+    /**
+     * 获取当前年份
+     * @return
+     */
+    public static int getCurrentYear() {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        return year;
+    }
+
+    /**
+     * 当前月份
+     * @return
+     */
+    public static int getCurrentMonth(){
+        Calendar cal = Calendar.getInstance();
+        int month=cal.get(Calendar.MONTH);
+        return month;
+    }
+
+    /**
+     * 获取当前学年
+     * @return  2015-2016-1
+     */
+    public static String getCurrentSchoolYear(){
+        Calendar cal=Calendar.getInstance();
+        int year=cal.get(Calendar.YEAR);
+        int month=cal.get(Calendar.MONTH);
+        int se=1;
+        //大于9月份小于3月份为第一学期
+        if(month>=9 || month<3){
+            se=1;
+        }else{
+            se=2;
+        }
+        String schoolyear=year+"-"+(year+1)+"-"+se;
+        return schoolyear;
+    }
 
 }

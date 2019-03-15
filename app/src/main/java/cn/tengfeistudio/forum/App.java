@@ -17,6 +17,7 @@ import cn.tengfeistudio.forum.injector.components.DaggerApplicationComponent;
 import cn.tengfeistudio.forum.injector.modules.ApplicationModule;
 import cn.tengfeistudio.forum.local.DataBase.SQLiteHelper;
 import cn.tengfeistudio.forum.utils.DateUtils;
+import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.StringUtils;
 import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 
@@ -186,6 +187,31 @@ public class App extends Application {
         editor.apply();
     }
 
+    public static String getSchoolYear(){
+
+        SharedPreferences sp=context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        //当前学年
+        return sp.getString(SCHOOL_YEAR, StampToDate.getCurrentSchoolYear());
+    }
+    public static void setSchoolYear(String schoolYear){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(SCHOOL_YEAR, schoolYear);
+        editor.apply();
+    }
+
+    public static String getNowWeek(){
+        SharedPreferences sp=context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        //当前周数
+        return sp.getString(NOW_WEEK, "1");
+    }
+    public static void setNowWeek(String nowWeek){
+        SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(NOW_WEEK, nowWeek);
+        editor.apply();
+    }
+
     public static String getEduName(){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME, MODE_PRIVATE);
         return sp.getString(USER_EDUNAME_KEY,"");
@@ -333,6 +359,8 @@ public class App extends Application {
     public static final String USER_EDUNAME_KEY = "edu_name";
     public static final String USER_EDUPWD_KEY = "edu_pwd";
     public static final String COOKIE = "cookie";
+    public static final String SCHOOL_YEAR="school_year";
+    public static final String NOW_WEEK="now_week";
     public static final String THEME_KEY = "theme";
     public static final String AUTO_DARK_MODE_KEY = "auto_dark_mode";
     public static final String START_DARK_TIME_KEY = "start_dart_time";

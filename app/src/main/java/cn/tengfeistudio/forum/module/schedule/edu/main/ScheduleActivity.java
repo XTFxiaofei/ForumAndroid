@@ -1,5 +1,6 @@
 package cn.tengfeistudio.forum.module.schedule.edu.main;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -64,7 +65,7 @@ public class ScheduleActivity extends BaseActivity {
     private String userName;
     private String cookie;
 
-    private int nowWeek = 1;
+    private int nowWeek = Integer.parseInt(App.getNowWeek());
     public static final int requestCode = 512;
 
     private String[][] contents;
@@ -123,9 +124,15 @@ public class ScheduleActivity extends BaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 nowWeek = pos + 1;
-                initScheduleDataFromDB();
+                //选择的周数存到内存
+                SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString(App.NOW_WEEK, String.valueOf(nowWeek));
+                editor.apply();
                 //刷新课表
                 getScheduleFromEdu();
+                //初始化
+                initScheduleDataFromDB();
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -145,7 +152,7 @@ public class ScheduleActivity extends BaseActivity {
                     .addParams("card", eduid)  //学号
                     .addParams("cardpassword",edupwd) //教务系统密码
                     .addParams("week",String.valueOf(nowWeek))  //第几周
-                    .addParams("schoolyear","2016-2017-2")
+                    .addParams("schoolyear",App.getSchoolYear()) //学年
                     .build()
                     .execute(new StringCallback() {
                         @Override
