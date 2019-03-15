@@ -183,7 +183,10 @@ public class ScheduleFragment extends BaseFragment
     @OnClick(R.id.iv_toolbar_menu)
     public void onViewClicked() {
         //ToastUtils.ToastShort("由于技术升级，爬虫不可用，此功能暂时下线");
-        if (App.getEduid() != null && App.getEduPwd() != null) {
+        if (App.getEduid().isEmpty() && App.getEduPwd().isEmpty()) {
+            Intent intent = new Intent(mActivity, EduLoginActivity.class);
+            startActivity(intent);
+        } else {
             //创建弹出式菜单对象（最低版本11）
             PopupMenu popup = new PopupMenu(getContext(), getView());//第二个参数是绑定的那个view
             //获取菜单填充器
@@ -195,9 +198,6 @@ public class ScheduleFragment extends BaseFragment
             //显示(这一行代码不要忘记了)
             popup.show();
             //ToastShort("已经登录了!");
-        } else {
-            Intent intent = new Intent(mActivity, EduLoginActivity.class);
-            startActivity(intent);
         }
     }
 
