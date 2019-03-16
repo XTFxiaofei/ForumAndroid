@@ -203,7 +203,7 @@ public class App extends Application {
     public static String getNowWeek(){
         SharedPreferences sp=context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
         //当前周数
-        return sp.getString(NOW_WEEK, "1");
+        return sp.getString(NOW_WEEK, "0");
     }
     public static void setNowWeek(String nowWeek){
         SharedPreferences sp = context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);

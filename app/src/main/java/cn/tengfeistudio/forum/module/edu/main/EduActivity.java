@@ -169,7 +169,8 @@ public class EduActivity extends BaseActivity {
                 doLogout();
                 break;
             case R.id.btn_main_jump:
-                gotoActivity(ScheduleActivity.class);
+                //gotoActivity(ScheduleActivity.class);
+                ToastLong("返回主界面就会更新课表了");
                 break;
             case R.id.btn_main_ecard:
 //                gotoActivity(ECardActivity.class);

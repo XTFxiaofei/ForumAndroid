@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="scheduleWeek">
+        <item>整个学期</item>
         <item>第1周</item>
         <item>第2周</item>
         <item>第3周</item>

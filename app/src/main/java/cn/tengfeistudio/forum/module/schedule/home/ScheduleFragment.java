@@ -160,9 +160,9 @@ public class ScheduleFragment extends BaseFragment
         //
         initSpinner();
         //删除旧的课表
-        clearOldSchedule();
+        //clearOldSchedule();
         //重教务系统获取课表
-        getScheduleFromEdu();
+        //getScheduleFromEdu();
     }
 
     public void doRefresh() {
@@ -185,7 +185,7 @@ public class ScheduleFragment extends BaseFragment
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 App.setScheduleStartWeek(pos + 1);
                 //选择的周数保存到本地数据库
-                nowWeek = pos + 1;
+                nowWeek = pos;
                 //选择的周数存到内存
                 SharedPreferences sp = mActivity.getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
@@ -287,10 +287,13 @@ public class ScheduleFragment extends BaseFragment
      */
     private void initScheduleDataFromEdu(String JsonObjs) {
 
-        scheduleList = JSON.parseArray(JsonObjs, Course.class);
+        if(JSON.parseArray(JsonObjs, Course.class)!=null){
+            scheduleList = JSON.parseArray(JsonObjs, Course.class);
+        }
         MyDB db = new MyDB(getContext());
         //删去旧课表
         db.clearSchedule();
+
         for (int i = 0; i < scheduleList.size(); i++) {
             Course course = scheduleList.get(i);
             db.handSingleReadSchedule(course);
