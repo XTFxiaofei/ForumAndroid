@@ -64,6 +64,7 @@ public class MyDB {
         } else {
             insertUser(user);
         }
+
     }
 
     // 获取课程表的课程信息

@@ -79,6 +79,7 @@ public class ScheduleActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        //课表内容
         contents = new String[6][7];
         //学号
         eduid = App.getEduid();
@@ -86,6 +87,7 @@ public class ScheduleActivity extends BaseActivity {
         edupwd=App.getEduPwd();
         //用户姓名
         userName = App.getEduName();
+        //cookie
         cookie = App.getCookie();
     }
 
