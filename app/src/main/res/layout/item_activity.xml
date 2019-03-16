@@ -67,30 +67,18 @@
             app:layout_constraintTop_toBottomOf="@+id/author_name2"
             tools:text=" 2015-1-1 19:20:15" />
 
-        <TextView
-            android:id="@+id/reply_count2"
-            style="@style/text_12_sec"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:maxEms="5"
-            android:gravity="center"
-            android:drawableStart="@drawable/ic_forum_black_24dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/view_count2"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text=" 111" />
-
-        <TextView
-            android:id="@+id/view_count2"
-            style="@style/text_12_sec"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:maxEms="5"
-            android:visibility="gone"
+        <ImageView
+            android:id="@+id/iv_collect"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/collect_no"
+            android:layout_marginBottom="@dimen/bar_view_height"
             app:layout_constraintBaseline_toBaselineOf="@+id/post_time2"
-            app:layout_constraintEnd_toStartOf="@+id/reply_count2"
-            tools:text="&#xf06e; 222" />
+            app:layout_constraintEnd_toEndOf="parent"
+             />
 
     </android.support.constraint.ConstraintLayout>
 

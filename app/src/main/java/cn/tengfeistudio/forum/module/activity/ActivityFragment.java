@@ -49,12 +49,12 @@ public class ActivityFragment extends BaseFragment
 
 
     //private String headers[] = {"城市", "年龄", "性别", "星座"};
-    private String headers[] = {"城市", "素拓类型", "星期几"};
+    private String headers[] = {"城市", "素拓类型",};
     //private int[] types = new int[]{DropDownMenu.TYPE_LIST_CITY, DropDownMenu.TYPE_LIST_SIMPLE, DropDownMenu.TYPE_CUSTOM, DropDownMenu.TYPE_GRID};
-    private int[] types = new int[]{DropDownMenu.TYPE_LIST_CITY, DropDownMenu.TYPE_LIST_SIMPLE, DropDownMenu.TYPE_GRID};
+    private int[] types = new int[]{DropDownMenu.TYPE_LIST_CITY, DropDownMenu.TYPE_LIST_SIMPLE};
     private String citys[] = {"不限", "广州", "佛山"};
     private String actypes[] = {"不限", "身心", "文化", "创新创业", "思想品德", "技能"};
-    private String constellations[] = {"不限", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+    //private String constellations[] = {"不限", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
 
 
     @Inject
@@ -149,9 +149,9 @@ public class ActivityFragment extends BaseFragment
                     map.put(DropDownMenu.VALUE, actypes);
                     //map.put(DropDownMenu.SELECT_POSITION,0);
                     break;
-                case DropDownMenu.TYPE_GRID:
-                    map.put(DropDownMenu.VALUE, constellations);
-                    break;
+//                case DropDownMenu.TYPE_GRID:
+//                    map.put(DropDownMenu.VALUE, constellations);
+//                    break;
 //                default:
 //                    map.put(DropDownMenu.VALUE, getCustomView());
 //                    break;
