@@ -23,6 +23,7 @@ import com.jaeger.ninegridimageview.ItemImageLongClickListener;
 import com.jaeger.ninegridimageview.NineGridImageView;
 import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
 import com.squareup.picasso.Picasso;
+import com.zzhoujay.richtext.RichText;
 
 
 import java.util.ArrayList;
@@ -190,14 +191,22 @@ public class TopicAdapter extends BaseAdapter {
             mNglContent.setImagesData(imgUrls, NineGridImageView.STYLE_GRID);
 
 
-            articleTitle.setText("# "+object.getTitle()+" #");
+            if(object.getTitle().isEmpty()){
+                articleTitle.setVisibility(View.GONE);
+            }else {
+                articleTitle.setText("# "+object.getTitle()+" #");
+            }
             authorName.setText(" " + object.getUserByUserId().getNickname());
             postTime.setText(" " + StampToDate.getStringDate(object.getCreateTime()));
             replyCount.setText("" + object.getCommentNumber());
             viewCount.setText("" + object.getViewNumber());
             praiseCount.setText(""+0);
             level.setRating(object.getUserByUserId().getLevel());
-            content.setText("" + object.getContent());
+            if(object.getContent().isEmpty()){
+                content.setVisibility(View.GONE);
+            }else{
+                RichText.fromMarkdown(object.getContent()).into(content);
+            }
             Picasso.get()
                     .load(object.getUserByUserId().getIcon())
                     .placeholder(R.drawable.image_placeholder)

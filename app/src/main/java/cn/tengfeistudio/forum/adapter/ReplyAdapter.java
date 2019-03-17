@@ -92,7 +92,11 @@ public class ReplyAdapter extends BaseAdapter {
         @Override
         void setData(int pos) {
             Comment object = postList.get(pos);
-            articleTitle.setText(object.getTargetContent());
+            if(object.getTargetContent().isEmpty()){
+                articleTitle.setText("【图片】");
+            }else{
+                articleTitle.setText(object.getTargetContent());
+            }
             postTime.setText(" " + getStringDate(object.getCreateTime()));
             articleReply.setText(object.getCommentContent());
         }

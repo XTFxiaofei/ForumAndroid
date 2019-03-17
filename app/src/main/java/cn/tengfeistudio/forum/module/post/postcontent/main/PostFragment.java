@@ -340,7 +340,12 @@ public class PostFragment extends BaseFragment {
         articlePostTime.setText(getStringDate(topicObj.getCreateTime()));
         userLevel.setRating(topicObj.getUserByUserId().getLevel());
 //        content.setText(postObj.getBody());
-        RichText.fromMarkdown(topicObj.getContent()).into(content);
+        if(topicObj.getContent().isEmpty()){
+            content.setVisibility(View.GONE);
+        }else{
+            RichText.fromMarkdown(topicObj.getContent()).into(content);
+        }
+
         Picasso.get()
                 .load(topicObj.getUserByUserId().getIcon())
                 .placeholder(R.drawable.image_placeholder)

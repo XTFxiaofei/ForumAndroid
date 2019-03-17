@@ -202,9 +202,9 @@ public class EditAcitivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (TextUtils.isEmpty(etPostTitle.getText().toString())) {
-                    etPostTitle.setError("标题不能为空");
-                }
+//                if (TextUtils.isEmpty(etPostTitle.getText().toString())) {
+//                    etPostTitle.setError("标题不能为空");
+//                }
             }
         };
         editor.addTextChangedListener(watcher);
@@ -214,12 +214,16 @@ public class EditAcitivity extends BaseActivity {
      * 检查输入是否正确
      */
     private boolean checkInput() {
-        if (TextUtils.isEmpty(etPostTitle.getText().toString())) {
-            etPostTitle.setError("标题不能为空");
-            return false;
-        }
-        if (TextUtils.isEmpty(editor.getText().toString())) {
-            ToastShort("帖子内容不能为空");
+//        if (TextUtils.isEmpty(etPostTitle.getText().toString())) {
+//            etPostTitle.setError("标题不能为空");
+//            return false;
+//        }
+//        if (TextUtils.isEmpty(editor.getText().toString())) {
+//            ToastShort("帖子内容不能为空");
+//            return false;
+//        }
+        if(TextUtils.isEmpty(etPostTitle.getText().toString()) && TextUtils.isEmpty(editor.getText().toString()) &&imagesPath.size()<=0 ){
+            ToastShort("最少要发图片哦 |ω・）");
             return false;
         }
         return true;
