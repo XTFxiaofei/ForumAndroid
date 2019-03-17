@@ -156,20 +156,6 @@ public class TopicAdapter extends BaseAdapter {
 
             //九格图
             mNglContent.setAdapter(mAdapter);
-            mNglContent.setItemImageClickListener(new ItemImageClickListener<String>() {
-                @Override
-                public void onItemImageClick(Context context, ImageView imageView, int index, List<String> list) {
-                    Log.d("onItemImageClick", list.get(index));
-
-                }
-            });
-            mNglContent.setItemImageLongClickListener(new ItemImageLongClickListener<String>() {
-                @Override
-                public boolean onItemImageLongClick(Context context, ImageView imageView, int index, List<String> list) {
-                    Log.d("onItemImageLongClick", list.get(index));
-                    return true;
-                }
-            });
         }
         private String[] IMG_URL_LIST = {
                 "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",

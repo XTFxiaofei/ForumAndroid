@@ -46,6 +46,7 @@ import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
+import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 import cn.tengfeistudio.forum.utils.IntentUtils;
 import cn.tengfeistudio.forum.utils.StringUtils;
@@ -304,7 +305,8 @@ public class PostFragment extends BaseFragment {
 
         @Override
         protected void onItemImageClick(Context context, ImageView imageView, int index, List<String> list) {
-            Toast.makeText(context, "image position is " + index, Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(context, "image position is " + index, Toast.LENGTH_SHORT).show();
+            ToastUtils.ToastShort(list.get(index));
         }
 
         @Override
