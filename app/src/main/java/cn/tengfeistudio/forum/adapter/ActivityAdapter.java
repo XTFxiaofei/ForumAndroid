@@ -82,7 +82,8 @@ public class ActivityAdapter extends BaseAdapter {
         @BindView(R.id.article_title2)
         TextView articleTitle2;
         @BindView(R.id.author_img2)
-        CircleImageView authorImg2;
+        ImageView authorImg2;
+        //CircleImageView authorImg2;
         @BindView(R.id.author_name2)
         TextView authorName2;
         @BindView(R.id.post_time2)
@@ -103,7 +104,7 @@ public class ActivityAdapter extends BaseAdapter {
             ActivityBean object = activityList.get(pos);
             collectionId = object.getActivityId();
 
-            articleTitle2.setText(" " + object.getActivityName());
+            articleTitle2.setText("【" +object.getType()+"】" +object.getActivityName());
             authorName2.setText(" " + object.getPlace());
             postTime2.setText(" " + object.getActivityTime());
             //replyCount.setText(" " + object.getCommentNumber());

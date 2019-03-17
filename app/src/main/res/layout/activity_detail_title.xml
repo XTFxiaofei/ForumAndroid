@@ -7,23 +7,37 @@
     android:visibility="gone">
 
     <TextView
-        android:id="@+id/title"
+        style="@style/text_12_sec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
-        android:text="关闭"
-        android:textSize="18sp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:layout_gravity="center_vertical"
-        android:gravity="right"
-        android:paddingRight="10dp"
-        android:text="收藏"
-        android:textSize="18sp"/>
+        android:clickable="true"
+        android:text="注:下拉或返回即可关闭."
+       />
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_close"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@android:color/white"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:clickable="true"-->
+    <!--android:text="关闭"-->
+    <!--android:textSize="18sp"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/tv_collect"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@android:color/white"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:gravity="right"-->
+    <!--android:paddingRight="10dp"-->
+    <!--android:clickable="true"-->
+    <!--android:text="收藏"-->
+    <!--android:textSize="18sp"/>-->
 
 </LinearLayout>

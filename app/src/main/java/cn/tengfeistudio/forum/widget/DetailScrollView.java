@@ -5,8 +5,13 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ScrollView;
+
+import butterknife.OnClick;
+import cn.tengfeistudio.forum.R;
+import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 
 /**
  * Created by chenpengfei on 2016/11/22.
@@ -46,4 +51,6 @@ public class DetailScrollView extends ScrollView {
         System.out.println("=========ScrollView=========onTouchEvent===========================" + ev.getAction());
         return super.onTouchEvent(ev);
     }
+
+
 }

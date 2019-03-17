@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -31,12 +32,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.api.beans.ActivityBean;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.DisplayUtils;
+import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 import cn.tengfeistudio.forum.widget.DetailScrollView;
 import cn.tengfeistudio.forum.widget.SVRootLinearLayout;
 
@@ -61,27 +64,43 @@ public class DetailActivity extends BaseActivity {
     LinearLayout mContentLl;
     //内容里的底部和顶部title布局
     @BindView(R.id.ll_bottom)
-    LinearLayout mBottomLl;
+    RelativeLayout mBottomLl;
     @BindView(R.id.ll_title)
     LinearLayout mTitleLl;
     //app图片
     @BindView(R.id.imageview_icon)
     ImageView mIconImageView;
-    //app名字控件
-    @BindView(R.id.textview_appname)
-    TextView mAppNameTextView;
-    //类型
-    @BindView(R.id.a_type)
+
+    //活动名称
+    @BindView(R.id.ac_name)
+    TextView acName;
+    //活动类型
+    @BindView(R.id.ac_type)
     TextView acType;
-    //时间
-    @BindView(R.id.a_time)
+    //活动时间
+    @BindView(R.id.ac_time)
     TextView acTime;
-    //内容
-    @BindView(R.id.a_content)
+    //活动地点
+    @BindView(R.id.ac_place)
+    TextView acPlace;
+    //面向人群
+    @BindView(R.id.ac_target)
+    TextView acTarget;
+    //活动等级
+    @BindView(R.id.ac_level)
+    TextView acLevel;
+    //举办单位
+    @BindView(R.id.ac_sponsor)
+    TextView acSponsor;
+    //活动内容
+    @BindView(R.id.ac_content)
     TextView acContent;
     //内容图片
     @BindView(R.id.content_img)
     ImageView contentImg;
+    //内容图片
+    @BindView(R.id.logo_img)
+    ImageView logoImg;
 
     //根布局的背景色
     private ColorDrawable mRootCDrawable;
@@ -98,10 +117,6 @@ public class DetailActivity extends BaseActivity {
     // private String mAppName;
 
     private boolean initData;
-
-
-
-
 
 
     @Override
@@ -168,6 +183,7 @@ public class DetailActivity extends BaseActivity {
                 mRootCDrawable.setAlpha((int) (mColorInitAlpha - mColorInitAlpha * ratio));
             }
         });
+
     }
 
     @SuppressLint("CheckResult")
@@ -196,20 +212,24 @@ public class DetailActivity extends BaseActivity {
                 });
     }
 
-    private Handler handler=new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             //super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case 0x11:
-                    mIconImageView.setImageBitmap((Bitmap)msg.obj);
+                    mIconImageView.setImageBitmap((Bitmap) msg.obj);
                     break;
                 case 0x12:
-                    contentImg.setImageBitmap((Bitmap)msg.obj);
+                    contentImg.setImageBitmap((Bitmap) msg.obj);
+                    break;
+                case 0x13:
+                    logoImg.setImageBitmap((Bitmap)msg.obj);
                     break;
             }
         }
     };
+
     /**
      * @param activityJsonObj
      */
@@ -218,27 +238,44 @@ public class DetailActivity extends BaseActivity {
         ActivityBean activityObj = JSON.parseObject(activityJsonObj, ActivityBean.class);
 
 
-        new Thread(){
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                Bitmap result = getURLimage(activityObj.getLogoImage());
+//                Message msg = Message.obtain();
+//                msg.what = 0x11;
+//                msg.obj = result;
+//                handler.sendMessage(msg);
+//            }
+//        }.start();
+        acName.setText("活动名称:"+activityObj.getActivityName());
+        acType.setText("活动类型: "+activityObj.getType());
+        acTime.setText("活动时间: "+activityObj.getActivityTime());
+        acPlace.setText("活动地点: "+activityObj.getPlace());
+        acTarget.setText("面向人群: "+activityObj.getTarget());
+        acLevel.setText("活动等级: "+activityObj.getLevel());
+        acSponsor.setText("举办单位: "+activityObj.getSponsor());
+        //<br>转成换行符
+        acContent.setText(activityObj.getContent().replaceAll("<br>", "\r\n"));
+        //活动图片
+        new Thread() {
             @Override
             public void run() {
-                Bitmap result=getURLimage(activityObj.getLogoImage());
-                Message msg=Message.obtain();
-                msg.what=0x11;
-                msg.obj=result;
+                Bitmap result = getURLimage(activityObj.getContentPicture());
+                Message msg = Message.obtain();
+                msg.what = 0x12;
+                msg.obj = result;
                 handler.sendMessage(msg);
             }
         }.start();
-        mAppNameTextView.setText(activityObj.getSponsor());
-        acType.setText(activityObj.getType());
-        acTime.setText(activityObj.getActivityTime());
-        acContent.setText(activityObj.getContent());
-        new Thread(){
+        //logo
+        new Thread() {
             @Override
             public void run() {
-                Bitmap result=getURLimage(activityObj.getContentPicture());
-                Message msg=Message.obtain();
-                msg.what=0x12;
-                msg.obj=result;
+                Bitmap result = getURLimage(activityObj.getLogoImage());
+                Message msg = Message.obtain();
+                msg.what = 0x13;
+                msg.obj = result;
                 handler.sendMessage(msg);
             }
         }.start();
@@ -297,6 +334,8 @@ public class DetailActivity extends BaseActivity {
                 }
             }
         });
+
+
     }
 
     private void startAnimation() {
@@ -340,5 +379,19 @@ public class DetailActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+
+//    @OnClick({R.id.tv_close,R.id.tv_collect})
+//    public void onViewClicked(View view) {
+//        switch (view.getId()) {
+//            case R.id.tv_close:
+//                ToastUtils.ToastShort("点击了关闭!");
+//                break;
+//            case R.id.tv_collect:
+//                ToastUtils.ToastShort("点击了收藏!");
+//                break;
+//
+//        }
+//    }
 
 }

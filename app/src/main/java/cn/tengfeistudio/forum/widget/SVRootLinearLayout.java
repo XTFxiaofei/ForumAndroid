@@ -8,13 +8,16 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import butterknife.OnClick;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.utils.BigDecimalUtils;
+import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 
 
 /**
@@ -37,7 +40,7 @@ public class SVRootLinearLayout extends LinearLayout {
     private int mContentLlHeight, mContentLlWidth, mIconImageViewHeight, mIconImageViewWidth;
 
     /**
-     *  拖拽
+     * 拖拽
      */
     private float mInitY;
     private int mTouchSlop;
@@ -74,11 +77,11 @@ public class SVRootLinearLayout extends LinearLayout {
     }
 
     public int getCenterVisibleViewHeight() {
-        return  mCenterVisibleViewHeight;
+        return mCenterVisibleViewHeight;
     }
 
     public void setInitBottom(int bottom) {
-            mInitBottom = bottom;
+        mInitBottom = bottom;
     }
 
     public void setAnimationStatus(boolean isAnimation) {
@@ -102,7 +105,7 @@ public class SVRootLinearLayout extends LinearLayout {
         int contentTop = mContentMarginTop + mTouchMoveOffset;
         mContentLL.layout(0, contentTop, mContentLlWidth, !mIsAnimation ? contentTop + mContentLlHeight : mInitBottom + mContentBottomOffset);
 
-        if(!mIsLayoutImageView) return;
+        if (!mIsLayoutImageView) return;
         int left = mMargin + mImageLeftOffset;
         int top = mMargin + mImageTopOffset;
         mIconImageView.layout(left, top, left + mIconImageViewWidth, top + mIconImageViewHeight);
@@ -113,10 +116,10 @@ public class SVRootLinearLayout extends LinearLayout {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         measureChildren(widthMeasureSpec, heightMeasureSpec);
         int childNumHeight = 0;
-        for(int i = 0; i < getChildCount(); i++) {
+        for (int i = 0; i < getChildCount(); i++) {
             childNumHeight += getChildAt(i).getMeasuredHeight();
         }
-        if(childNumHeight > getMeasuredHeight()) {
+        if (childNumHeight > getMeasuredHeight()) {
             setMeasuredDimension(getMeasuredWidth(), childNumHeight);
         }
 
@@ -126,7 +129,7 @@ public class SVRootLinearLayout extends LinearLayout {
         mIconImageViewHeight = mIconImageView.getMeasuredHeight();
         mIconImageViewWidth = mIconImageView.getMeasuredWidth();
 
-        if(mParentScrollView == null) mParentScrollView = (ScrollView) getParent();
+        if (mParentScrollView == null) mParentScrollView = (ScrollView) getParent();
         mCenterVisibleViewHeight = mParentScrollView.getHeight() - mTitleViewHeight;
     }
 
@@ -144,17 +147,17 @@ public class SVRootLinearLayout extends LinearLayout {
     }
 
     public void setTouchMoveOffset(float touchMoveOffset) {
-        if(touchMoveOffset < 0) touchMoveOffset = 0;
+        if (touchMoveOffset < 0) touchMoveOffset = 0;
         mTouchMoveOffset = (int) touchMoveOffset;
         requestLayout();
         updateBgColor(mTouchMoveOffset);
     }
 
     public void updateBgColor(int offset) {
-        if(mOnUpdateBgColorListener != null) {
+        if (mOnUpdateBgColorListener != null) {
             float ratio = BigDecimalUtils.divide(offset, mCenterVisibleViewHeight);
-            if(ratio > 1) ratio = 1;
-            if(ratio < 0) ratio = 0;
+            if (ratio > 1) ratio = 1;
+            if (ratio < 0) ratio = 0;
             mOnUpdateBgColorListener.onUpdate(ratio);
         }
     }
@@ -177,7 +180,7 @@ public class SVRootLinearLayout extends LinearLayout {
                 float moveY = event.getY();
                 float yOffset = moveY - mInitY;
                 //拖动
-                if((mParentScrollView.getScrollY() <= 0 && moveY >= mInitY) || mIsDrag) {
+                if ((mParentScrollView.getScrollY() <= 0 && moveY >= mInitY) || mIsDrag) {
                     setTouchMoveOffset(yOffset);
                     mIsDrag = true;
                     consumption = true;
@@ -190,7 +193,7 @@ public class SVRootLinearLayout extends LinearLayout {
                 mIsDrag = false;
                 boolean isUp = false;
                 int animationMoveOffset;
-                if(mContentLL.getTop() <= mCenterVisibleViewHeight / 2 + mTitleViewHeight) {
+                if (mContentLL.getTop() <= mCenterVisibleViewHeight / 2 + mTitleViewHeight) {
                     animationMoveOffset = mTouchMoveOffset;
                     isUp = true;
                 } else {
@@ -204,13 +207,13 @@ public class SVRootLinearLayout extends LinearLayout {
 
     public void startAnimation(final int moveOffset, final boolean isUp, final int currentMoveOffset) {
         int duration = moveOffset / mTouchSlop * 10;
-        if(duration <= 0) duration = 300;
+        if (duration <= 0) duration = 300;
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1).setDuration(duration);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float ratio = (float) animation.getAnimatedValue();
-                if(isUp)
+                if (isUp)
                     mTouchMoveOffset = (int) (moveOffset * (1 - ratio));
                 else
                     mTouchMoveOffset = currentMoveOffset + (int) (moveOffset * ratio);
@@ -223,9 +226,11 @@ public class SVRootLinearLayout extends LinearLayout {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                if(!isUp && mOnCloseListener != null) mOnCloseListener.onClose();
+                if (!isUp && mOnCloseListener != null) mOnCloseListener.onClose();
             }
         });
+
+
         valueAnimator.start();
     }
 
@@ -236,4 +241,7 @@ public class SVRootLinearLayout extends LinearLayout {
     public interface OnUpdateBgColorListener {
         void onUpdate(float ratio);
     }
-}
+
+
+
+    }
