@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.RatingBar;
@@ -36,6 +37,7 @@ import cn.tengfeistudio.forum.api.beans.TopicBean;
 import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
 import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
+import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 
 import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastShort;
@@ -108,9 +110,11 @@ public class TopicAdapter extends BaseAdapter {
         @BindView(R.id.post_time)
         TextView postTime;
         @BindView(R.id.reply_count)
-        TextView replyCount;
+        Button replyCount;
         @BindView(R.id.view_count)
-        TextView viewCount;
+        Button viewCount;
+        @BindView(R.id.praise_count)
+        Button praiseCount;
         @BindView(R.id.rb_grade)
         RatingBar level;
         @BindView(R.id.article_content)
@@ -155,6 +159,7 @@ public class TopicAdapter extends BaseAdapter {
                 @Override
                 public void onItemImageClick(Context context, ImageView imageView, int index, List<String> list) {
                     Log.d("onItemImageClick", list.get(index));
+
                 }
             });
             mNglContent.setItemImageLongClickListener(new ItemImageLongClickListener<String>() {
@@ -184,11 +189,13 @@ public class TopicAdapter extends BaseAdapter {
             imgUrls= JSONArray.parseArray(object.getContentPictureJson(),String.class);
             mNglContent.setImagesData(imgUrls, NineGridImageView.STYLE_GRID);
 
-            articleTitle.setText(object.getTitle());
+
+            articleTitle.setText("# "+object.getTitle()+" #");
             authorName.setText(" " + object.getUserByUserId().getNickname());
             postTime.setText(" " + StampToDate.getStringDate(object.getCreateTime()));
-            replyCount.setText(" " + object.getCommentNumber());
-            viewCount.setText(" " + object.getViewNumber());
+            replyCount.setText("" + object.getCommentNumber());
+            viewCount.setText("" + object.getViewNumber());
+            praiseCount.setText(""+0);
             level.setRating(object.getUserByUserId().getLevel());
             content.setText("" + object.getContent());
             Picasso.get()
@@ -200,6 +207,18 @@ public class TopicAdapter extends BaseAdapter {
                 Intent intent = new Intent(context, UserDetailActivity.class);
                 intent.putExtra("userid", object.getUserByUserId().getUserId());
                 context.startActivity(intent);
+            });
+            //点赞
+            praiseCount.setOnClickListener(view->{
+                ToastUtils.ToastShort("点赞成功");
+            });
+            //回复
+            replyCount.setOnClickListener(view->{
+
+            });
+            //评论
+            viewCount.setOnClickListener(view->{
+
             });
             //点击更多图
             moreImage.setOnClickListener(view -> {
@@ -255,6 +274,8 @@ public class TopicAdapter extends BaseAdapter {
                 popup.show();
             });
         }
+
+
 
     }
 }

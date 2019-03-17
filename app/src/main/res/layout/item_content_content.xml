@@ -46,10 +46,9 @@
     <RatingBar
         android:id="@+id/rb_grade"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="9dp"
+        android:layout_height="20dp"
+        android:paddingTop="2dp"
+        android:layout_toRightOf="@+id/bt_lable_lz"
         android:isIndicator="true"
         android:progressDrawable="@drawable/ratingbar_progress"
         android:rating="4"/>
@@ -102,7 +101,7 @@
         android:lineSpacingMultiplier="1.4"
         android:paddingBottom="4dp"
         android:paddingEnd="12dp"
-        android:paddingStart="12dp"
+        android:layout_marginLeft="@dimen/dimen_16"
         android:paddingTop="8dp"
         android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
@@ -113,6 +112,7 @@
         android:id="@+id/ngl_images"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_16"
         app:imgGap="3dp"
         app:showStyle="grid"
         app:singleImgSize="500dp" />

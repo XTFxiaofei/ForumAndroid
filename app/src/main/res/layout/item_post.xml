@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:pp="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/bg_primary"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,144 +20,219 @@
             android:id="@+id/author_img"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            pp:civ_border_color="@android:color/white"
+            android:src="@drawable/image_placeholder"
             app:civ_border_width="1dp"
-            android:src="@drawable/image_placeholder"/>
+            pp:civ_border_color="@android:color/white" />
 
-
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:orientation="vertical">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/author_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="姓名"
-                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
-                    android:textColor="#6b8747"
-                    android:textSize="13sp"/>
+            android:layout_height="50dp">
 
-                <RatingBar
-                    android:id="@+id/rb_grade"
-                    android:layout_width="wrap_content"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="9dp"
-                    android:isIndicator="true"
-                    android:progressDrawable="@drawable/ratingbar_progress"
-                    android:rating="4"/>
-
-                <ImageView
-                    android:id="@+id/btn_more2"
-                    style="@style/text_16_sec"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/author_name"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginTop="0dp"
-                    android:src="@drawable/ic_more_horiz_black_24dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:fontFamily="@fonts/fontawesome"
-                    android:gravity="center"
-                    android:padding="8dp" />
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/author_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                android:text="姓名"
+                android:textColor="#6b8747"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/post_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/author_name"
                 android:layout_marginTop="9dp"
                 android:drawableStart="@drawable/ic_access_time_black_24dp"
                 android:text="2015-12-31 12:30"
                 android:textColor="#8e8e8e"
-                android:textSize="10sp"/>
+                android:textSize="10sp" />
 
+            <RatingBar
+                android:id="@+id/rb_grade"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_toRightOf="@id/author_name"
+                android:isIndicator="true"
+                android:progressDrawable="@drawable/ratingbar_progress"
+                android:rating="4" />
 
+            <ImageView
+                android:id="@+id/btn_more2"
+                style="@style/text_16_sec"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/author_name"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="0dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@fonts/fontawesome"
+                android:gravity="center"
+                android:padding="8dp"
+                android:src="@drawable/ic_more_horiz_black_24dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/article_title"
-                style="@style/text_16_pri"
+                style="@style/text_18_pri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="帖子的标题" />
+                android:layout_marginBottom="@dimen/dimen_8"
+                android:layout_marginLeft="@dimen/dimen_16"
+                android:layout_marginRight="@dimen/dimen_16"
+                android:layout_marginTop="0dp"
+                android:text="帖子的标题"
+                android:textColor="@color/blue_light" />
 
             <TextView
                 android:id="@+id/article_content"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="@dimen/dimen_16"
+                android:layout_marginRight="@dimen/dimen_16"
+                android:layout_marginTop="0dp"
                 android:singleLine="false"
                 android:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
                 android:textColor="#505050"
-                android:textSize="12sp"/>
-
-            <com.jaeger.ninegridimageview.NineGridImageView
-                android:id="@+id/ngl_images"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:imgGap="3dp"
-                app:showStyle="grid"
-                app:singleImgSize="500dp" />
-
-            <!--<com.lzy.ninegrid.NineGridView-->
-                <!--android:id="@+id/nineGrid"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:paddingRight="5dp"-->
-                <!--android:paddingTop="6dp"/>-->
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <TextView
-                    android:id="@+id/reply_count"
-                    style="@style/text_12_sec"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="9dp"
-                    android:drawableStart="@drawable/ic_forum_black_24dp"
-                    android:text=" 111" />
-
-                <TextView
-                    android:id="@+id/view_count"
-                    style="@style/text_12_sec"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="9dp"
-                    android:layout_toRightOf="@id/reply_count"
-                    android:drawableStart="@mipmap/feed_more"
-                    android:text="222" />
-
-            </RelativeLayout>
-
-            <!--<com.lzy.widget.ExpandListView-->
-                <!--android:id="@+id/lv_comments"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginRight="5dp"-->
-                <!--android:layout_marginTop="9.5dp"-->
-                <!--android:background="@drawable/event_di"-->
-                <!--android:divider="@null"-->
-                <!--android:dividerHeight="0dp"-->
-                <!--android:orientation="vertical"-->
-                <!--android:paddingBottom="5dp"-->
-                <!--android:paddingLeft="8dp"-->
-                <!--android:paddingRight="8dp"-->
-                <!--android:paddingTop="16dp"/>-->
+                android:textSize="18sp" />
         </LinearLayout>
+
+
+        <com.jaeger.ninegridimageview.NineGridImageView
+            android:id="@+id/ngl_images"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="@dimen/dimen_16"
+            android:layout_marginRight="@dimen/dimen_16"
+            app:imgGap="3dp"
+            app:showStyle="grid"
+            app:singleImgSize="500dp" />
+
+        <!--<com.lzy.ninegrid.NineGridView-->
+        <!--android:id="@+id/nineGrid"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingRight="5dp"-->
+        <!--android:paddingTop="6dp"/>-->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_16"
+            android:layout_marginRight="@dimen/dimen_16"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/reply_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/buttonstyle"
+                android:drawableLeft="@drawable/comment"
+                android:paddingBottom="5dp"
+                android:text="回复"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:drawablePadding="10dip"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dip"
+                ></Button>
+
+            <Button
+                android:id="@+id/view_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/buttonstyle"
+                android:drawableLeft="@drawable/view"
+                android:paddingBottom="5dp"
+                android:text="浏览"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:drawablePadding="10dip"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dip"
+                ></Button>
+
+            <Button
+                android:id="@+id/praise_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/buttonstyle"
+                android:drawableLeft="@drawable/praise"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:text="点赞"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:drawablePadding="10dip"
+                android:gravity="center_vertical"
+               ></Button>
+
+            <!--<TextView-->
+            <!--android:id="@+id/reply_count"-->
+            <!--style="@style/text_12_sec"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="0.5"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_marginRight="@dimen/dimen_16"-->
+            <!--android:drawableStart="@drawable/ic_forum_black_24dp"-->
+            <!--android:text=" 111" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/view_count"-->
+            <!--style="@style/text_12_sec"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="0.5"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:layout_toRightOf="@id/reply_count"-->
+            <!--android:drawableStart="@mipmap/feed_more"-->
+            <!--android:text="222" />-->
+
+        </LinearLayout>
+
+        <!--<com.lzy.widget.ExpandListView-->
+        <!--android:id="@+id/lv_comments"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginRight="5dp"-->
+        <!--android:layout_marginTop="9.5dp"-->
+        <!--android:background="@drawable/event_di"-->
+        <!--android:divider="@null"-->
+        <!--android:dividerHeight="0dp"-->
+        <!--android:orientation="vertical"-->
+        <!--android:paddingBottom="5dp"-->
+        <!--android:paddingLeft="8dp"-->
+        <!--android:paddingRight="8dp"-->
+        <!--android:paddingTop="16dp"/>-->
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#8e8e8e" />
 </LinearLayout>

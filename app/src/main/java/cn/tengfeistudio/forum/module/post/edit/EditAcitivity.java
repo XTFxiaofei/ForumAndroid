@@ -22,6 +22,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
@@ -66,13 +68,13 @@ public class EditAcitivity extends BaseActivity {
     RecyclerView mRecyclerView;
 
 
-    private ArrayList<String> imagesPath=new ArrayList<>();
+    private ArrayList<String> imagesPath = new ArrayList<>();
     private int maxSelectNum = 9;
     private List<LocalMedia> selectList = new ArrayList<>();
     private GridImageAdapter adapter;
     private PopupWindow pop;
     private String[] categories = new String[]{
-            "daily","code","qa","suggests","feedback","transaction","activity",
+            "daily", "code", "qa", "suggests", "feedback", "transaction", "activity",
     };
     String currentCategory = categories[0];
 
@@ -110,8 +112,8 @@ public class EditAcitivity extends BaseActivity {
         String temp = intent.getExtras().getString("category");
         if (temp.equals("E-M-P-T-Y"))
             return;
-        for (int pos = 0;pos < categories.length;pos++)
-            if (temp.equals(categories[pos])){
+        for (int pos = 0; pos < categories.length; pos++)
+            if (temp.equals(categories[pos])) {
                 currentCategory = temp;
                 spinner.setSelectedIndex(pos);
                 break;
@@ -170,7 +172,7 @@ public class EditAcitivity extends BaseActivity {
                         })
                         .create()
                         .show();
-            else{
+            else {
                 setResult(RESULT_OK);
                 finishActivity();
             }
@@ -228,42 +230,48 @@ public class EditAcitivity extends BaseActivity {
      */
     @SuppressLint("CheckResult")
     private void sendTopic(String title, String content) {
-        if (currentCategory.equals(categories[6]) && !App.getRole().equals("admin")){
+        if (currentCategory.equals(categories[6]) && !App.getRole().equals("admin")) {
             ToastShort("不好意思,管理员才能发公告!");
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                UploadUtil.uploadImage(Store.getInstance().getToken(),title,content,currentCategory,imagesPath, NetConfig.BASE_TOPIC_INCLUDE_IMAGES);
-            }
-        }).start();
-        setResult(RESULT_OK);
-        finishActivity();
-        ToastShort("发布成功");
+        //上传图片时
+        if (imagesPath.size() > 0) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    UploadUtil.uploadImage(Store.getInstance().getToken(), title, content, currentCategory, imagesPath, NetConfig.BASE_TOPIC_INCLUDE_IMAGES);
+                }
+            }).start();
+            setResult(RESULT_OK);
+            finishActivity();
+            ToastShort("发布成功");
+        } else {
+            //没有上传图片
+            RetrofitService.sendTopic(title, content, currentCategory)
+                    .subscribe(responseBody -> {
+                        String response = responseBody.string();
+                        if (!response.contains("code")) {
+                            ToastNetWorkError();
+                            return;
+                        }
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        if (jsonObject.getInteger("code") == Constants.TOKEN_OVERDUE) {
+                            getNewToken(title, content);
+                        } else if (jsonObject.getInteger("code") != Constants.RETURN_CONTINUE) {
+                            ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
+                            printLog("getInfoError" + response);
+                        } else {
+                            setResult(RESULT_OK);
+                            ToastShort("发布成功");
+                            finishActivity();
+                        }
+                    }, throwable -> {
+                        printLog("EditActivity doPost onError:" + throwable.getMessage());
+                        ToastNetWorkError();
+                    });
+        }
 
-//        RetrofitService.sendTopic(title, content, currentCategory)
-//                .subscribe(responseBody -> {
-//                    String response = responseBody.string();
-//                    if (!response.contains("code")) {
-//                        ToastNetWorkError();
-//                        return;
-//                    }
-//                    JSONObject jsonObject = JSON.parseObject(response);
-//                    if (jsonObject.getInteger("code") == Constants.TOKEN_OVERDUE) {
-//                        getNewToken(title, content);
-//                    } else if (jsonObject.getInteger("code") != Constants.RETURN_CONTINUE) {
-//                        ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
-//                        printLog("getInfoError" + response);
-//                    } else {
-//                        setResult(RESULT_OK);
-//                        ToastShort("发布成功");
-//                        finishActivity();
-//                    }
-//                }, throwable -> {
-//                    printLog("EditActivity doPost onError:" + throwable.getMessage());
-//                    ToastNetWorkError();
-//                });
+
     }
 
     /**
@@ -272,7 +280,7 @@ public class EditAcitivity extends BaseActivity {
     @SuppressLint("CheckResult")
     private void getNewToken(String title, String content) {
         RetrofitService.getNewToken()
-                .subscribe(s -> sendTopic(title,content));
+                .subscribe(s -> sendTopic(title, content));
     }
 
     /**
@@ -302,11 +310,10 @@ public class EditAcitivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (etPostTitle.getText().toString().isEmpty() && editor.getText().toString().isEmpty()){
+        if (etPostTitle.getText().toString().isEmpty() && editor.getText().toString().isEmpty()) {
             setResult(RESULT_OK);
             super.onBackPressed();
-        }
-        else {
+        } else {
             new AlertDialog.Builder(this)
                     .setMessage("程序猿还没开发保存的功能喔，确定返回吗|ω・）")
                     .setCancelable(true)
@@ -320,7 +327,6 @@ public class EditAcitivity extends BaseActivity {
                     .show();
         }
     }
-
 
 
     private GridImageAdapter.onAddPicClickListener onAddPicClickListener = new GridImageAdapter.onAddPicClickListener() {
@@ -445,9 +451,9 @@ public class EditAcitivity extends BaseActivity {
                     images = PictureSelector.obtainMultipleResult(data);
                     selectList.addAll(images);
                     //获取原本路径
-                    for(LocalMedia i:images){
-                        if(i!=null)
-                        imagesPath.add(i.getPath());
+                    for (LocalMedia i : images) {
+                        if (i != null)
+                            imagesPath.add(i.getPath());
                     }
 
 //                    selectList = PictureSelector.obtainMultipleResult(data);

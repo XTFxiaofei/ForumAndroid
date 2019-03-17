@@ -99,7 +99,7 @@ public class NetConfig {
 
     /** ----------- 我的url地址 ------------------ */
 
-    public static final String BASE_DOMAIN="http://10.0.2.2:8080/";
+    public static final String BASE_DOMAIN="http://192.168.191.1:8080/";
 
     /** 发帖 **/
     public static final String BASE_TOPIC_INCLUDE_IMAGES=BASE_DOMAIN+"topic/send_topic_image";
