@@ -7,7 +7,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -31,6 +34,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import cn.tengfeistudio.forum.adapter.CommentReplyAdapter;
+import cn.tengfeistudio.forum.adapter.MyRecyclerViewAdapter;
 import cn.tengfeistudio.forum.api.beans.Comment;
 import cn.tengfeistudio.forum.api.beans.CommentBean;
 import cn.tengfeistudio.forum.api.beans.TopicBean;
@@ -55,12 +59,15 @@ import com.jaeger.ninegridimageview.ItemImageClickListener;
 import com.jaeger.ninegridimageview.ItemImageLongClickListener;
 import com.jaeger.ninegridimageview.NineGridImageView;
 import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -100,11 +107,10 @@ public class PostFragment extends BaseFragment {
     ImageView closePanel;
     @BindView(R.id.rb_grade)
     RatingBar userLevel;
-    @BindView(R.id.ngl_images)
-    NineGridImageView<String> mNglContent;
+    @BindView(R.id.rv)
+    RecyclerView rv;
 
     private List<CommentBean> beanList;
-
     private List<Comment> comments;
     //private Post postObj;
     private TopicBean topicObj;
@@ -121,8 +127,15 @@ public class PostFragment extends BaseFragment {
     private CommentAdapter adapter = null;
     //评论回复适配器
     private CommentReplyAdapter commentReplyAdapter=null;
-
     private String from = "";
+    /** -----------  九图 ---------------  */
+    private List<String> images=new ArrayList<String>();//图片地址
+    private Context mContext;
+    private DisplayImageOptions options;
+    private MyRecyclerViewAdapter adapter2;
+    private HashMap<Integer, float[]> xyMap=new HashMap<Integer, float[]>();//所有子项的坐标
+    private int screenWidth;//屏幕宽度
+    private int screenHeight;//屏幕高度
 
     @Override
     public int getLayoutid() {
@@ -133,29 +146,21 @@ public class PostFragment extends BaseFragment {
     protected void initData(Context content) {
         getPostObj();
         getCommentListData();
+
+        mContext=getContext();
+        onResume();
         initView();
+        initData();
+        setEvent();
     }
 
-    @Override
-    protected void initView() {
-        //九格图
-        mNglContent.setAdapter(mAdapter);
-        mNglContent.setItemImageClickListener(new ItemImageClickListener<String>() {
-            @Override
-            public void onItemImageClick(Context context, ImageView imageView, int index, List<String> list) {
-                Log.d("onItemImageClick", list.get(index));
-            }
-        });
-        mNglContent.setItemImageLongClickListener(new ItemImageLongClickListener<String>() {
-            @Override
-            public boolean onItemImageLongClick(Context context, ImageView imageView, int index, List<String> list) {
-                Log.d("onItemImageLongClick", list.get(index));
-                return true;
-            }
-        });
-
-        initHead();
+    public void onResume() {
+        super.onResume();
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        screenWidth = wm.getDefaultDisplay().getWidth();
+        screenHeight = wm.getDefaultDisplay().getHeight();
     }
+
 
     /**
      * 初始化底部输入框
@@ -291,57 +296,29 @@ public class PostFragment extends BaseFragment {
         }
     }
 
-    //九格图适配器
-    private NineGridImageViewAdapter<String> mAdapter = new NineGridImageViewAdapter<String>() {
-        @Override
-        protected void onDisplayImage(Context context, ImageView imageView, String s) {
-            Picasso.get().load(s).placeholder(R.drawable.image_placeholder).into(imageView);
-        }
 
-        @Override
-        protected ImageView generateImageView(Context context) {
-            return super.generateImageView(context);
-        }
 
-        @Override
-        protected void onItemImageClick(Context context, ImageView imageView, int index, List<String> list) {
-          //  Toast.makeText(context, "image position is " + index, Toast.LENGTH_SHORT).show();
-            ToastUtils.ToastShort(list.get(index));
-        }
-
-        @Override
-        protected boolean onItemImageLongClick(Context context, ImageView imageView, int index, List<String> list) {
-            Toast.makeText(context, "image long click position is " + index, Toast.LENGTH_SHORT).show();
-            return true;
-        }
-    };
-    private String[] IMG_URL_LIST = {
-            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
-            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
-            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
-            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
-            "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=935292084,2640874667&fm=27&gp=0.jpg", "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=873265023,1618187578&fm=27&gp=0.jpg",
-    };
 
     /**
      * 初始化标题等等信息
      */
     private void initHead() {
-        //样例数据
         List<String> imgUrls = new ArrayList<>();
-        //imgUrls.addAll(Arrays.asList(IMG_URL_LIST));
         imgUrls= JSONArray.parseArray(topicObj.getContentPictureJson(),String.class);
+        if(imgUrls!=null){
+            images.clear();
+            images.addAll(imgUrls);
+        }
 
         if (from.equals("PostActivity")) {
             closePanel.setVisibility(View.GONE);
             initMyInputBar();
         }
-        mNglContent.setImagesData(imgUrls, NineGridImageView.STYLE_GRID);
+
         articleTitle.setText(topicObj.getTitle());
         articleUsername.setText(topicObj.getUserByUserId().getNickname());
         articlePostTime.setText(getStringDate(topicObj.getCreateTime()));
         userLevel.setRating(topicObj.getUserByUserId().getLevel());
-//        content.setText(postObj.getBody());
         if(topicObj.getContent().isEmpty()){
             content.setVisibility(View.GONE);
         }else{
@@ -355,9 +332,6 @@ public class PostFragment extends BaseFragment {
     }
 
     private void initCommentList() {
-//        adapter = new CommentAdapter(getContext(), commentList, topicObj.getUserByUserId().getUserId());
-//        adapter.setOnItemClickListener(listener);
-//        rvComment.setAdapter(adapter);
         commentReplyAdapter = new CommentReplyAdapter(getContext(), comments, topicObj.getUserByUserId().getUserId());
         commentReplyAdapter.setOnItemClickListener(listener);
         rvComment.setAdapter(commentReplyAdapter);
@@ -565,4 +539,106 @@ public class PostFragment extends BaseFragment {
                 break;
         }
     }
+
+
+    /** -------------- 九图 -------------------- */
+    /**
+     * recyclerView item点击事件
+     */
+    private void setEvent() {
+        adapter2.setmOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent=new Intent(mContext,SecondActivity.class);
+                intent.putStringArrayListExtra("urls", (ArrayList<String>) images);
+                intent.putExtra("position", position);
+                xyMap.clear();//每一次点击前子项坐标都不一样，所以清空子项坐标
+
+                //子项前置判断，是否在屏幕内，不在的话获取屏幕边缘坐标
+                View view0=rv.getChildAt(0);
+                int position0=rv.getChildPosition(view0);
+                if(position0>0)
+                {
+                    for(int j=0;j<position0;j++)
+                    {
+                        float[] xyf=new float[]{(1/6.0f+(j%3)*(1/3.0f))*screenWidth,0};//每行3张图，每张图的中心点横坐标自然是屏幕宽度的1/6,3/6,5/6
+                        xyMap.put(j, xyf);
+                    }
+                }
+
+                //其余子项判断
+                for(int i=position0;i<rv.getAdapter().getItemCount();i++)
+                {
+                    View view1=rv.getChildAt(i-position0);
+                    if(rv.getChildPosition(view1)==-1)//子项末尾不在屏幕部分同样赋值屏幕底部边缘
+                    {
+                        float[] xyf=new float[]{(1/6.0f+(i%3)*(1/3.0f))*screenWidth,screenHeight};
+                        xyMap.put(i, xyf);
+                    }
+                    else
+                    {
+                        int[] xy = new int[2];
+                        view1.getLocationOnScreen(xy);
+                        float[] xyf=new float[]{xy[0]*1.0f+view1.getWidth()/2,xy[1]*1.0f+view1.getHeight()/2};
+                        xyMap.put(i, xyf);
+                    }
+                }
+                intent.putExtra("xyMap",xyMap);
+                mContext.startActivity(intent);
+            }
+        });
+    }
+
+    protected void initView()
+    {
+        GridLayoutManager glm=new GridLayoutManager(mContext,3);//定义3列的网格布局
+        rv.setLayoutManager(glm);
+        rv.addItemDecoration(new RecyclerViewItemDecoration(20,3));//初始化子项距离和列数
+        options=new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(R.mipmap.ic_launcher)
+                .showImageOnLoading(R.mipmap.ic_launcher)
+                .showImageOnFail(R.mipmap.ic_launcher)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .displayer(new FadeInBitmapDisplayer(5))
+                .build();
+        adapter2=new MyRecyclerViewAdapter(images,mContext,options,glm);
+        rv.setAdapter(adapter2);
+
+        initHead();
+    }
+
+    /**
+     * 初始化网络图片地址，来自百度图片
+     */
+    private void initData()
+    {
+        adapter2.notifyDataSetChanged();
+    }
+    public class RecyclerViewItemDecoration extends RecyclerView.ItemDecoration
+    {
+        private int itemSpace;//定义子项间距
+        private int itemColumnNum;//定义子项的列数
+
+        public RecyclerViewItemDecoration(int itemSpace, int itemColumnNum) {
+            this.itemSpace = itemSpace;
+            this.itemColumnNum = itemColumnNum;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            outRect.bottom=itemSpace;//底部留出间距
+            if(parent.getChildPosition(view)%itemColumnNum==0)//每行第一项左边不留间距，其他留出间距
+            {
+                outRect.left=0;
+            }
+            else
+            {
+                outRect.left=itemSpace;
+            }
+
+        }
+    }
+
 }

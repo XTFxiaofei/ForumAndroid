@@ -107,20 +107,27 @@
         android:textSize="16sp"
         tools:text="在点(110,10)处绘制一个宽和高均为50像素的正方形边框 context.strokeRect(110,10,50,50); //在点(30,10)处绘制一个宽和高均为50像素的正方形边框 " />
 
-    <com.jaeger.ninegridimageview.NineGridImageView
+    <!--<com.jaeger.ninegridimageview.NineGridImageView-->
+        <!--android:layout_below="@+id/content"-->
+        <!--android:id="@+id/ngl_images"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="@dimen/dimen_16"-->
+        <!--app:imgGap="3dp"-->
+        <!--app:showStyle="grid"-->
+        <!--app:singleImgSize="500dp" />-->
+    <android.support.v7.widget.RecyclerView
         android:layout_below="@+id/content"
-        android:id="@+id/ngl_images"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_16"
-        app:imgGap="3dp"
-        app:showStyle="grid"
-        app:singleImgSize="500dp" />
+        android:id="@+id/rv"
+        />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="12dp"
-        android:layout_below="@+id/ngl_images"
+        android:layout_below="@+id/rv"
         android:layout_marginTop="4dp"
         android:background="@color/bg_secondary" />
 

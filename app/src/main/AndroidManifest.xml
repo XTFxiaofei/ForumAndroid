@@ -114,6 +114,10 @@
             android:name=".module.post.postcontent.fullscreen.PostActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".module.post.postcontent.main.SecondActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name=".module.activity.DetailActivity"

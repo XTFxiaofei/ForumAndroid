@@ -77,4 +77,7 @@ dependencies {
     /*PictureSelector*/
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.0'
 
+
+
+    implementation files('libs/universal-image-loader-1.9.3.jar')
 }

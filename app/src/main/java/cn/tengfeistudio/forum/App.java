@@ -4,11 +4,18 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
 
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
+
+import java.io.File;
 
 import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.checknet.NetworkReceiver;
@@ -39,6 +46,19 @@ public class App extends Application {
         initInjector();
         initConfig();
         regReciever();
+        initImageLoader();//初始化ImageLoader
+    }
+    private void initImageLoader()
+    {
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true).cacheOnDisk(true)
+                .showImageOnFail(R.mipmap.ic_launcher)
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .diskCache(new UnlimitedDiscCache(new File(Environment.getExternalStorageDirectory()+File.separator+"ImageObserverDemo"+File.separator+"Image_cache")))
+                .defaultDisplayImageOptions(options). // 上面的options对象，一些属性配置
+                build();
+        ImageLoader.getInstance().init(config); // 初始化
     }
 
     public static ApplicationComponent getAppComponent() {
