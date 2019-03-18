@@ -57,13 +57,13 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#8e8e8e" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg_secondary"
-        android:layout_marginLeft="@dimen/dimen_8"
-        android:layout_marginStart="@dimen/dimen_8"
-        android:overScrollMode="never"/>
+        android:paddingLeft="@dimen/dimen_8"
+        android:overScrollMode="never" />
 
 </LinearLayout>

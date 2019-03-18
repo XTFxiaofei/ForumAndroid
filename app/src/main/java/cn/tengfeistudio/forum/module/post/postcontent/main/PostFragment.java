@@ -13,7 +13,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -33,6 +32,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
 import cn.tengfeistudio.forum.adapter.CommentReplyAdapter;
 import cn.tengfeistudio.forum.adapter.MyRecyclerViewAdapter;
 import cn.tengfeistudio.forum.api.beans.Comment;
@@ -48,31 +48,20 @@ import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.module.base.BaseFragment;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.utils.Constants;
-import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
-import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 import cn.tengfeistudio.forum.utils.IntentUtils;
 import cn.tengfeistudio.forum.utils.StringUtils;
-
-import com.jaeger.ninegridimageview.ItemImageClickListener;
-import com.jaeger.ninegridimageview.ItemImageLongClickListener;
-import com.jaeger.ninegridimageview.NineGridImageView;
-import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.OnClick;
-
 import static cn.tengfeistudio.forum.utils.StampToDate.getStringDate;
 import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastNetWorkError;
 import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastShort;
@@ -126,14 +115,16 @@ public class PostFragment extends BaseFragment {
     private View mInputBarView;
     private CommentAdapter adapter = null;
     //评论回复适配器
-    private CommentReplyAdapter commentReplyAdapter=null;
+    private CommentReplyAdapter commentReplyAdapter = null;
     private String from = "";
-    /** -----------  九图 ---------------  */
-    private List<String> images=new ArrayList<String>();//图片地址
+    /**
+     * -----------  九图 ---------------
+     */
+    private List<String> images = new ArrayList<String>();//图片地址
     private Context mContext;
     private DisplayImageOptions options;
     private MyRecyclerViewAdapter adapter2;
-    private HashMap<Integer, float[]> xyMap=new HashMap<Integer, float[]>();//所有子项的坐标
+    private HashMap<Integer, float[]> xyMap = new HashMap<Integer, float[]>();//所有子项的坐标
     private int screenWidth;//屏幕宽度
     private int screenHeight;//屏幕高度
 
@@ -147,7 +138,7 @@ public class PostFragment extends BaseFragment {
         getPostObj();
         getCommentListData();
 
-        mContext=getContext();
+        mContext = getContext();
         onResume();
         initView();
         initData();
@@ -247,7 +238,7 @@ public class PostFragment extends BaseFragment {
         //帖子id
         targetId = topicObj.getTopicId();
         //等级
-        level=topicObj.getUserByUserId().getLevel();
+        level = topicObj.getUserByUserId().getLevel();
     }
 
     /**
@@ -275,10 +266,10 @@ public class PostFragment extends BaseFragment {
 
 
     private void initCommentListData(JSONObject CommentJsonObj) {
-        if(comments==null){
-            comments=new ArrayList<>();
+        if (comments == null) {
+            comments = new ArrayList<>();
         }
-        List<Comment> commentTempList=JSON.parseArray(CommentJsonObj.getString("data"), Comment.class);
+        List<Comment> commentTempList = JSON.parseArray(CommentJsonObj.getString("data"), Comment.class);
         //对回复进行排序
         Collections.sort(commentTempList);
         if (comments.size() != commentTempList.size()) {
@@ -297,15 +288,13 @@ public class PostFragment extends BaseFragment {
     }
 
 
-
-
     /**
      * 初始化标题等等信息
      */
     private void initHead() {
         List<String> imgUrls = new ArrayList<>();
-        imgUrls= JSONArray.parseArray(topicObj.getContentPictureJson(),String.class);
-        if(imgUrls!=null){
+        imgUrls = JSONArray.parseArray(topicObj.getContentPictureJson(), String.class);
+        if (imgUrls != null) {
             images.clear();
             images.addAll(imgUrls);
         }
@@ -319,9 +308,9 @@ public class PostFragment extends BaseFragment {
         articleUsername.setText(topicObj.getUserByUserId().getNickname());
         articlePostTime.setText(getStringDate(topicObj.getCreateTime()));
         userLevel.setRating(topicObj.getUserByUserId().getLevel());
-        if(topicObj.getContent().isEmpty()){
+        if (topicObj.getContent().isEmpty()) {
             content.setVisibility(View.GONE);
-        }else{
+        } else {
             RichText.fromMarkdown(topicObj.getContent()).into(content);
         }
 
@@ -549,52 +538,46 @@ public class PostFragment extends BaseFragment {
         adapter2.setmOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Intent intent=new Intent(mContext,SecondActivity.class);
+                Intent intent = new Intent(mContext, SecondActivity.class);
                 intent.putStringArrayListExtra("urls", (ArrayList<String>) images);
                 intent.putExtra("position", position);
                 xyMap.clear();//每一次点击前子项坐标都不一样，所以清空子项坐标
 
                 //子项前置判断，是否在屏幕内，不在的话获取屏幕边缘坐标
-                View view0=rv.getChildAt(0);
-                int position0=rv.getChildPosition(view0);
-                if(position0>0)
-                {
-                    for(int j=0;j<position0;j++)
-                    {
-                        float[] xyf=new float[]{(1/6.0f+(j%3)*(1/3.0f))*screenWidth,0};//每行3张图，每张图的中心点横坐标自然是屏幕宽度的1/6,3/6,5/6
+                View view0 = rv.getChildAt(0);
+                int position0 = rv.getChildPosition(view0);
+                if (position0 > 0) {
+                    for (int j = 0; j < position0; j++) {
+                        float[] xyf = new float[]{(1 / 6.0f + (j % 3) * (1 / 3.0f)) * screenWidth, 0};//每行3张图，每张图的中心点横坐标自然是屏幕宽度的1/6,3/6,5/6
                         xyMap.put(j, xyf);
                     }
                 }
 
                 //其余子项判断
-                for(int i=position0;i<rv.getAdapter().getItemCount();i++)
-                {
-                    View view1=rv.getChildAt(i-position0);
-                    if(rv.getChildPosition(view1)==-1)//子项末尾不在屏幕部分同样赋值屏幕底部边缘
+                for (int i = position0; i < rv.getAdapter().getItemCount(); i++) {
+                    View view1 = rv.getChildAt(i - position0);
+                    if (rv.getChildPosition(view1) == -1)//子项末尾不在屏幕部分同样赋值屏幕底部边缘
                     {
-                        float[] xyf=new float[]{(1/6.0f+(i%3)*(1/3.0f))*screenWidth,screenHeight};
+                        float[] xyf = new float[]{(1 / 6.0f + (i % 3) * (1 / 3.0f)) * screenWidth, screenHeight};
                         xyMap.put(i, xyf);
-                    }
-                    else
-                    {
+                    } else {
                         int[] xy = new int[2];
                         view1.getLocationOnScreen(xy);
-                        float[] xyf=new float[]{xy[0]*1.0f+view1.getWidth()/2,xy[1]*1.0f+view1.getHeight()/2};
+                        float[] xyf = new float[]{xy[0] * 1.0f + view1.getWidth() / 2, xy[1] * 1.0f + view1.getHeight() / 2};
                         xyMap.put(i, xyf);
                     }
                 }
-                intent.putExtra("xyMap",xyMap);
+                intent.putExtra("xyMap", xyMap);
                 mContext.startActivity(intent);
             }
         });
     }
 
-    protected void initView()
-    {
-        GridLayoutManager glm=new GridLayoutManager(mContext,3);//定义3列的网格布局
+    protected void initView() {
+        GridLayoutManager glm = new GridLayoutManager(mContext, 3);//定义3列的网格布局
         rv.setLayoutManager(glm);
-        rv.addItemDecoration(new RecyclerViewItemDecoration(20,3));//初始化子项距离和列数
-        options=new DisplayImageOptions.Builder()
+        rv.addItemDecoration(new RecyclerViewItemDecoration(20, 3));//初始化子项距离和列数
+        options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.mipmap.ic_launcher)
                 .showImageOnLoading(R.mipmap.ic_launcher)
                 .showImageOnFail(R.mipmap.ic_launcher)
@@ -602,7 +585,7 @@ public class PostFragment extends BaseFragment {
                 .cacheOnDisk(true)
                 .displayer(new FadeInBitmapDisplayer(5))
                 .build();
-        adapter2=new MyRecyclerViewAdapter(images,mContext,options,glm);
+        adapter2 = new MyRecyclerViewAdapter(images, mContext, options, glm);
         rv.setAdapter(adapter2);
 
         initHead();
@@ -611,12 +594,11 @@ public class PostFragment extends BaseFragment {
     /**
      * 初始化网络图片地址，来自百度图片
      */
-    private void initData()
-    {
+    private void initData() {
         adapter2.notifyDataSetChanged();
     }
-    public class RecyclerViewItemDecoration extends RecyclerView.ItemDecoration
-    {
+
+    public class RecyclerViewItemDecoration extends RecyclerView.ItemDecoration {
         private int itemSpace;//定义子项间距
         private int itemColumnNum;//定义子项的列数
 
@@ -628,17 +610,17 @@ public class PostFragment extends BaseFragment {
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
             super.getItemOffsets(outRect, view, parent, state);
-            outRect.bottom=itemSpace;//底部留出间距
-            if(parent.getChildPosition(view)%itemColumnNum==0)//每行第一项左边不留间距，其他留出间距
+            outRect.bottom = itemSpace;//底部留出间距
+            if (parent.getChildPosition(view) % itemColumnNum == 0)//每行第一项左边不留间距，其他留出间距
             {
-                outRect.left=0;
-            }
-            else
-            {
-                outRect.left=itemSpace;
+                outRect.left = 0;
+            } else {
+                outRect.left = itemSpace;
             }
 
         }
     }
+
+
 
 }

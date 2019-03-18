@@ -1,5 +1,6 @@
 package cn.tengfeistudio.forum.module.schedule.home;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,8 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListPopupWindow;
 import android.widget.PopupMenu;
 
 import com.alibaba.fastjson.JSON;
@@ -142,7 +145,7 @@ public class ScheduleFragment extends BaseFragment
                 startActivity(intent);
             } else {
                 //创建弹出式菜单对象（最低版本11）
-                PopupMenu popup = new PopupMenu(getContext(), getView());//第二个参数是绑定的那个view
+                PopupMenu popup = new PopupMenu(getContext(), ivToolbarMenu);//第二个参数是绑定的那个view
                 //获取菜单填充器
                 MenuInflater inflater = popup.getMenuInflater();
                 //填充菜单
@@ -151,7 +154,8 @@ public class ScheduleFragment extends BaseFragment
                 popup.setOnMenuItemClickListener(this::onMenuItemClick);
                 //显示(这一行代码不要忘记了)
                 popup.show();
-                //ToastShort("已经登录了!");
+
+
             }
 
         });
@@ -391,26 +395,6 @@ public class ScheduleFragment extends BaseFragment
         return false;
     }
 
-    // @OnClick(R.id.iv_toolbar_menu)
-    public void onViewClicked() {
-        //ToastUtils.ToastShort("由于技术升级，爬虫不可用，此功能暂时下线");
-        if (App.getEduid().isEmpty() && App.getEduPwd().isEmpty()) {
-            Intent intent = new Intent(mActivity, EduLoginActivity.class);
-            startActivity(intent);
-        } else {
-            //创建弹出式菜单对象（最低版本11）
-            PopupMenu popup = new PopupMenu(getContext(), getView());//第二个参数是绑定的那个view
-            //获取菜单填充器
-            MenuInflater inflater = popup.getMenuInflater();
-            //填充菜单
-            inflater.inflate(R.menu.menu_semester, popup.getMenu());
-            //绑定菜单项的点击事件
-            popup.setOnMenuItemClickListener(this::onMenuItemClick);
-            //显示(这一行代码不要忘记了)
-            popup.show();
-            //ToastShort("已经登录了!");
-        }
-    }
 
     @Override
     public void loadSchedule() {

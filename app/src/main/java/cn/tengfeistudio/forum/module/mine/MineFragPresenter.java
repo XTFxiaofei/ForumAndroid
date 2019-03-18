@@ -47,7 +47,7 @@ public class MineFragPresenter implements BasePresenter {
             "分享Plus客户端",
             "关于本程序",
             "热爱开源，感谢分享",
-            "实验室功能",
+            "教务系统登录",
     };
 
     public MineFragPresenter(MineFragment mView){

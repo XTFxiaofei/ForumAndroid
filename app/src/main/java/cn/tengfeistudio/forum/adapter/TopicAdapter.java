@@ -1,6 +1,6 @@
 package cn.tengfeistudio.forum.adapter;
 
-import android.app.Activity;
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -20,27 +19,17 @@ import android.widget.PopupMenu;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.alibaba.fastjson.JSONArray;
-import com.jaeger.ninegridimageview.ItemImageClickListener;
-import com.jaeger.ninegridimageview.ItemImageLongClickListener;
-import com.jaeger.ninegridimageview.NineGridImageView;
-import com.jaeger.ninegridimageview.NineGridImageViewAdapter;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
-
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.api.beans.TopicBean;
 import cn.tengfeistudio.forum.module.post.postcontent.main.SecondActivity;
@@ -135,7 +124,6 @@ public class TopicAdapter extends BaseAdapter {
         RecyclerView rv;
 
         private List<String> images=new ArrayList<String>();//图片地址
-        private Context mContext;
         private DisplayImageOptions options;
         private MyRecyclerViewAdapter adapter;
         private HashMap<Integer, float[]> xyMap=new HashMap<Integer, float[]>();//所有子项的坐标
@@ -149,13 +137,12 @@ public class TopicAdapter extends BaseAdapter {
         NormalViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            mContext=context;
             onResume();
         }
 
         protected void onResume() {
            // super.onResume();
-            WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             screenWidth = wm.getDefaultDisplay().getWidth();
             screenHeight = wm.getDefaultDisplay().getHeight();
         }
@@ -167,7 +154,7 @@ public class TopicAdapter extends BaseAdapter {
             adapter.setmOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
                 @Override
                 public void onClick(View view, int position) {
-                    Intent intent=new Intent(mContext,SecondActivity.class);
+                    Intent intent=new Intent(context,SecondActivity.class);
                     intent.putStringArrayListExtra("urls", (ArrayList<String>) images);
                     intent.putExtra("position", position);
                     xyMap.clear();//每一次点击前子项坐标都不一样，所以清空子项坐标
@@ -202,14 +189,14 @@ public class TopicAdapter extends BaseAdapter {
                         }
                     }
                     intent.putExtra("xyMap",xyMap);
-                    mContext.startActivity(intent);
+                    context.startActivity(intent);
                 }
             });
         }
 
         private void initView()
         {
-            GridLayoutManager glm=new GridLayoutManager(mContext,3);//定义3列的网格布局
+            GridLayoutManager glm=new GridLayoutManager(context,3);//定义3列的网格布局
             rv.setLayoutManager(glm);
             rv.addItemDecoration(new RecyclerViewItemDecoration(20,3));//初始化子项距离和列数
             options=new DisplayImageOptions.Builder()
@@ -220,7 +207,7 @@ public class TopicAdapter extends BaseAdapter {
                     .cacheOnDisk(true)
                     .displayer(new FadeInBitmapDisplayer(5))
                     .build();
-            adapter=new MyRecyclerViewAdapter(images,mContext,options,glm);
+            adapter=new MyRecyclerViewAdapter(images,context,options,glm);
             rv.setAdapter(adapter);
         }
 
@@ -264,22 +251,20 @@ public class TopicAdapter extends BaseAdapter {
             }
         }
 
-        /**
-         * 重写startActivity方法，禁用activity默认动画
+//        /**
+//         * 重写startActivity方法，禁用activity默认动画
 //         * @param intent
 //         */
-////        private void startActivity(Intent intent) {
-////            mContext.startActivity(intent);
-////            mContext.getoverridePendingTransition(0,0);
-////        }
+//        private void startActivity(Intent intent) {
+//            context.startActivity(intent);
+//            mContext.getoverridePendingTransition(0,0);
+//        }
 
 
         @Override
         void setData(int pos) {
 
             List<String> imgUrls = new ArrayList<>();
-            //imgUrls.addAll(Arrays.asList(IMG_URL_LIST));
-
 
             TopicBean object = topicList.get(pos);
             imgUrls= JSONArray.parseArray(object.getContentPictureJson(),String.class);
@@ -288,11 +273,6 @@ public class TopicAdapter extends BaseAdapter {
                 images.addAll(imgUrls);
             }
             //images=JSONArray.parseArray(object.getContentPictureJson(),String.class);
-
-
-
-
-
 
             if(object.getTitle().isEmpty()){
                 articleTitle.setVisibility(View.GONE);

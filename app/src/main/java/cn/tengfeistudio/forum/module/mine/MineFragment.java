@@ -20,6 +20,7 @@ import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.injector.components.DaggerMineFragComponent;
 import cn.tengfeistudio.forum.injector.modules.MineFragModule;
 import cn.tengfeistudio.forum.module.base.BaseFragment;
+import cn.tengfeistudio.forum.module.edu.login.EduLoginActivity;
 import cn.tengfeistudio.forum.module.home.HomeActivity;
 import cn.tengfeistudio.forum.module.setting.about.AboutActivity;
 import cn.tengfeistudio.forum.module.setting.lab.LabActivity;
@@ -149,7 +150,9 @@ public class MineFragment extends BaseFragment
                 break;
             case 5:
                 // 实验室功能
-                gotoActivity(LabActivity.class);
+               // gotoActivity(LabActivity.class);
+                //改成教务系统登录
+                gotoActivity(EduLoginActivity.class);
                 break;
         }
     }
