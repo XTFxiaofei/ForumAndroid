@@ -51,15 +51,15 @@ public class ActivityFragPresenter {
         this.mView = mView;
     }
 
-    public void getData(boolean isRefresh, Context context) {
+    public void getData(boolean isRefresh, Context context,String acPlace,String acType) {
         if (!isRefresh) {
             initList();
             initObserver();
-            getListData(Constants.DEFAULT_PAGE_NUMBER);
+            getListData(Constants.DEFAULT_PAGE_NUMBER,acPlace,acType);
         } else {
             if (activityList == null)
                 mView.initData(context);
-            getListData(Constants.DEFAULT_PAGE_NUMBER);
+            getListData(Constants.DEFAULT_PAGE_NUMBER,acPlace,acType);
             max_page_post = Constants.DEFAULT_PAGE_NUMBER;
         }
     }
@@ -119,10 +119,10 @@ public class ActivityFragPresenter {
             activityList.add(JSON.parseObject(array.getString(i), ActivityBean.class));
     }
 
-    void getListData(int page) {
+    void getListData(int page,String acPlace,String acType) {
         if (page == Constants.DEFAULT_PAGE_NUMBER)
             activityAdapter = null;
-        getActivityListData(page);
+        getActivityListData(page,acPlace,acType);
 
     }
 
@@ -153,34 +153,13 @@ public class ActivityFragPresenter {
     /**
      * 从服务器获取活动
      */
-    private void getActivityListData(int page) {
-//        Observable.create((ObservableOnSubscribe<String>) emitter ->RetrofitService.getAllActivity(page)
-//                .subscribe(responseBody -> {
-//                    String response=responseBody.string();
-//                    if (!response.contains("code")) {
-//                        ToastNetWorkError();
-//                        if (activityAdapter != null)
-//                            activityAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
-//                        return;
-//                    }
-//                    JSONObject  dataObj=JSON.parseObject(response);
-//                    if( dataObj.getInteger("code")!=Constants.RETURN_CONTINUE){
-//                        ToastShort("服务器出状况惹，稍等喔( • ̀ω•́ )✧");
-//                    } else {
-//                        max_page_post = max_page_post >= page ? max_page_post : page;
-//                        JSONObject obj = new JSONObject();
-//                        obj.put("type", TYPE_NEW);
-//                        obj.put("data", dataObj.getString("data"));
-//                        emitter.onNext(obj.toJSONString());
-//                    }
-//                }))
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(observer);
+    private void getActivityListData(int page,String place,String type) {
 
         Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.get()
-                .url(NetConfig.BASE_ACTIVITY + "get_all_activity")
+                .url(NetConfig.BASE_ACTIVITY + "get_all_activity_byPlaceAndType")
                 .addParams("page", page + "")
+                .addParams("place",place+"")
+                .addParams("type",type+"")
                 .build()
                 .execute(new StringCallback() {
                     @Override

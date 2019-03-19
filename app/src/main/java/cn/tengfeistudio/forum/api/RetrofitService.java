@@ -272,6 +272,18 @@ public class RetrofitService {
 
 
     /**
+     * 删除帖子
+     * @param topicId
+     * @return
+     */
+    public static Observable<ResponseBody> deleteTopic(int topicId){
+        return topicApi.deleteTopicByTopicId(Store.getInstance().getToken(),topicId)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
      * 获取帖子
      */
 //    public static Observable<ResponseBody> getPost(long id) {
@@ -329,6 +341,18 @@ public class RetrofitService {
      */
     public static Observable<ResponseBody> addComment(int targetId,String content,int topicId){
         return commentApi.addComment(Store.getInstance().getToken(),targetId,content,topicId)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 删除评论
+     * @param commentId
+     * @return
+     */
+    public static Observable<ResponseBody> deleteComment(int commentId){
+        return commentApi.deleteCommentbyCommentId(Store.getInstance().getToken(),commentId)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

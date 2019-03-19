@@ -12,6 +12,8 @@ public interface CommentApi {
     Observable<ResponseBody> addComment(@Header("authorization") String authorization, @Query("targetId") int targetId, @Query("content") String content, @Query("topicId") int topicId);
     @GET("get_topic_comment")
     Observable<ResponseBody> getCommentsByTopicId(@Query("topicId") int page);
+    @POST("delete_comment_byCommentId")
+    Observable<ResponseBody> deleteCommentbyCommentId(@Header("authorization") String authorization,@Query("commentId")int commentId);
     @GET("get_comment_byToUserId")
     Observable<ResponseBody> getCommentsByToUserId(@Header("authorization") String authorization, @Query("page") int page);
     @GET("get_comment_byUserId")

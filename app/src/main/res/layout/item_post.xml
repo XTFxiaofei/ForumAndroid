@@ -108,7 +108,7 @@
                 android:layout_marginRight="@dimen/dimen_16"
                 android:layout_marginTop="0dp"
                 android:singleLine="false"
-                android:text="内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容"
+                android:text="只有图片，没有内容哦"
                 android:textColor="#505050"
                 android:textSize="18sp" />
         </LinearLayout>

@@ -79,6 +79,7 @@ public abstract class BaseActivity extends FragmentActivity {
         ToastShort("程序猿还在努力开发中 ♪(´∇`*)");
     }
 
+
     /**
      * 初始化状态栏
      */

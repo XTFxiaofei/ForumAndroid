@@ -46,13 +46,18 @@ public class ActivityFragment extends BaseFragment
     @BindView(R.id.swiperefresh_hotnews2)
     SwipeRefreshLayout refreshLayout;
 
+    //活动地点
+    private String acPlace="";
+    //活动类型
+    private String acType="";
+
 
 
     //private String headers[] = {"城市", "年龄", "性别", "星座"};
     private String headers[] = {"城市", "素拓类型",};
     //private int[] types = new int[]{DropDownMenu.TYPE_LIST_CITY, DropDownMenu.TYPE_LIST_SIMPLE, DropDownMenu.TYPE_CUSTOM, DropDownMenu.TYPE_GRID};
     private int[] types = new int[]{DropDownMenu.TYPE_LIST_CITY, DropDownMenu.TYPE_LIST_SIMPLE};
-    private String citys[] = {"不限", "广州", "佛山"};
+    private String citys[] = {"不限", "本部", "佛山"};
     private String actypes[] = {"不限", "身心", "文化", "创新创业", "思想品德", "技能"};
     //private String constellations[] = {"不限", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
 
@@ -98,7 +103,7 @@ public class ActivityFragment extends BaseFragment
             return;
         }
         tvHotnewsShowlogin.setText("刷新中...");
-        mPresenter.getData(false, mContent);
+        mPresenter.getData(false, mContent,acPlace,acType);
         //不用放到initView()否则每次跳回都刷新添加到标题
         initNewLayout();
         initView();
@@ -111,9 +116,6 @@ public class ActivityFragment extends BaseFragment
     }
     private void initNewLayout() {
 
-//        View contentView = getLayoutInflater().inflate(R.layout.contentview, null);
-//        mDropDownMenu.setDropDownMenu(Arrays.asList(headers), initViewData(), contentView);
-
        ((ViewGroup)rv.getParent()).removeAllViews();
         mDropDownMenu.setDropDownMenu(Arrays.asList(headers), initViewData(), rv);
 
@@ -124,6 +126,17 @@ public class ActivityFragment extends BaseFragment
                 //index:点击的tab索引，pos：单项菜单中点击的位置索引，clickstr：点击位置的字符串
                 printLog("index:"+index+"  pos:"+pos+" clickstr:"+clickstr);
                 Toast.makeText(getContext(), clickstr, Toast.LENGTH_SHORT).show();
+                if(0==index && pos!=0){
+                    acPlace=clickstr;
+                }else if(0==index && 0==pos){
+                    acPlace="";
+                }
+                if(1==index && pos!=0){
+                    acType=clickstr;
+                }else if(1==index && 0==pos){
+                    acType="";
+                }
+                doRefresh();
             }
         });
     }
@@ -223,7 +236,7 @@ public class ActivityFragment extends BaseFragment
                 });
             }
         }.start();
-        mPresenter.getData(true, mContent);
+        mPresenter.getData(true, mContent,acPlace,acType);
     }
 
     /**
@@ -295,7 +308,7 @@ public class ActivityFragment extends BaseFragment
         if (isPullDownRefresh || isPullUpRefresh)
             return;
         isPullUpRefresh = true;
-        mPresenter.getListData(mPresenter.max_page_post + 1);
+        mPresenter.getListData(mPresenter.max_page_post + 1,acPlace,acType);
     }
 
 

@@ -30,7 +30,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.R;
+import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.api.beans.TopicBean;
 import cn.tengfeistudio.forum.module.post.postcontent.main.SecondActivity;
 import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
@@ -39,6 +41,8 @@ import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 
+import static cn.tengfeistudio.forum.utils.LogUtils.printLog;
+import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastNetWorkError;
 import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastShort;
 
 /**
@@ -322,6 +326,7 @@ public class TopicAdapter extends BaseAdapter {
                     switch (menuItem.getItemId()) {
                         //编辑
                         case R.id.tv_edit:
+                            ToastShort("OK已举报!");
                             break;
                         //复制
                         case R.id.tv_copy:
@@ -330,7 +335,7 @@ public class TopicAdapter extends BaseAdapter {
                             ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                             if (cm != null) {
                                 cm.setPrimaryClip(ClipData.newPlainText(null, s));
-                                ToastShort("已复制" + user + "的评论");
+                                ToastShort("已复制" + user + "的内容");
                             }
                             break;
                         //删除
@@ -344,14 +349,26 @@ public class TopicAdapter extends BaseAdapter {
                             delDialog.setLeftOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(context, "取消", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(context, "取消", Toast.LENGTH_SHORT).show();
                                     delDialog.dismiss();
                                 }
                             });
                             delDialog.setRightOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(context, "确定", Toast.LENGTH_SHORT).show();
+                                    RetrofitService.deleteTopic(object.getTopicId())
+                                                    .subscribe(responseBody -> {
+                                                        String response=responseBody.string();
+                                                        if(!response.contains("code")){
+                                                            ToastNetWorkError();
+                                                        }else {
+                                                            Toast.makeText(context, "已删除,要刷新(⊙o⊙)", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }, throwable -> {
+                                                        printLog("TopicAdapter:" + throwable.getMessage());
+                                                        ToastNetWorkError();
+                                                    });
+
                                     delDialog.dismiss();
                                 }
                             });
@@ -363,9 +380,13 @@ public class TopicAdapter extends BaseAdapter {
                 MenuInflater inflater = popup.getMenuInflater();
                 inflater.inflate(R.menu.menu_post_more, popup.getMenu());
                 // 判断是不是本人
+                if(object.getUserByUserId().getUserId()== App.getUid() || App.getRole().equals("admin")){
+                    // 如果有管理权限,则显示删除
+                    // popup.getMenu().removeGroup(R.id.menu_manege);
+                }else{
+                    popup.getMenu().removeGroup(R.id.menu_manege);
+                }
                 // popup.getMenu().removeItem(R.id.tv_edit);
-                // 如果有管理权限,则显示删除
-                // popup.getMenu().removeGroup(R.id.menu_manege);
                 popup.show();
             });
         }

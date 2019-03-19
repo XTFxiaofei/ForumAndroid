@@ -62,6 +62,8 @@ import java.util.HashMap;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static cn.tengfeistudio.forum.utils.LogUtils.printLog;
 import static cn.tengfeistudio.forum.utils.StampToDate.getStringDate;
 import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastNetWorkError;
 import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastShort;
@@ -374,6 +376,9 @@ public class PostFragment extends BaseFragment {
         hideAnimator.start();
     }
 
+    /**
+     * 评论的
+     */
     private CommentReplyAdapter.OnItemClickListener listener = (view, pos) -> {
         switch (view.getId()) {
             //回复
@@ -392,6 +397,7 @@ public class PostFragment extends BaseFragment {
                 popup.setOnMenuItemClickListener(menuItem -> {
                     switch (menuItem.getItemId()) {
                         case R.id.tv_edit:
+                            ToastShort("OK已举报!");
                             break;
                         case R.id.tv_copy:
                             //String user = commentList.get(pos).getUser().getName();
@@ -414,14 +420,25 @@ public class PostFragment extends BaseFragment {
                             delDialog.setLeftOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
                                     delDialog.dismiss();
                                 }
                             });
                             delDialog.setRightOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(getContext(), "确定", Toast.LENGTH_SHORT).show();
+                                    RetrofitService.deleteComment(comments.get(pos).getCommentId())
+                                            .subscribe(responseBody -> {
+                                                String response=responseBody.string();
+                                                if(!response.contains("code")){
+                                                    ToastNetWorkError();
+                                                }else {
+                                                    Toast.makeText(getContext(), "已删除,要刷新(⊙o⊙)", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }, throwable -> {
+                                                printLog("PostFragement Comment:" + throwable.getMessage());
+                                                ToastNetWorkError();
+                                            });
                                     delDialog.dismiss();
                                 }
                             });
@@ -432,10 +449,14 @@ public class PostFragment extends BaseFragment {
                 });
                 MenuInflater inflater = popup.getMenuInflater();
                 inflater.inflate(R.menu.menu_post_more, popup.getMenu());
+                //popup.getMenu().removeItem(R.id.tv_edit);
                 // 判断是不是本人
-                popup.getMenu().removeItem(R.id.tv_edit);
-                // 如果有管理权限,则显示删除
-                //popup.getMenu().removeGroup(R.id.menu_manege);
+                if(comments.get(pos).getFromId()==App.getUid() || App.getRole().equals("admin")){
+                    // 如果有管理权限,则显示删除
+                    //popup.getMenu().removeGroup(R.id.menu_manege);
+                }else{
+                    popup.getMenu().removeGroup(R.id.menu_manege);
+                }
                 popup.show();
                 break;
         }
@@ -456,6 +477,10 @@ public class PostFragment extends BaseFragment {
         super.onDestroyView();
     }
 
+    /**
+     * 帖子内容
+     * @param view
+     */
     @OnClick({R.id.share_panel, R.id.close_panel, R.id.btn_more, R.id.article_user_image, R.id.article_username})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -475,6 +500,7 @@ public class PostFragment extends BaseFragment {
                 popup.setOnMenuItemClickListener(menuItem -> {
                     switch (menuItem.getItemId()) {
                         case R.id.tv_edit:
+                            ToastShort("ok已举报!");
                             break;
                         case R.id.tv_copy:
                             String user = articleUsername.getText().toString();
@@ -482,7 +508,7 @@ public class PostFragment extends BaseFragment {
                             ClipboardManager cm = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                             if (cm != null) {
                                 cm.setPrimaryClip(ClipData.newPlainText(null, s));
-                                ToastShort("已复制" + user + "的评论");
+                                ToastShort("已复制" + user + "的内容");
                             }
                             break;
                         case R.id.tv_remove:
@@ -495,14 +521,25 @@ public class PostFragment extends BaseFragment {
                             delDialog.setLeftOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getContext(), "取消", Toast.LENGTH_SHORT).show();
                                     delDialog.dismiss();
                                 }
                             });
                             delDialog.setRightOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(getContext(), "确定", Toast.LENGTH_SHORT).show();
+                                    RetrofitService.deleteTopic(topicObj.getTopicId())
+                                            .subscribe(responseBody -> {
+                                                String response=responseBody.string();
+                                                if(!response.contains("code")){
+                                                    ToastNetWorkError();
+                                                }else {
+                                                    Toast.makeText(getContext(), "已删除,要刷新(⊙o⊙)", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }, throwable -> {
+                                                printLog("PostFragment Content:" + throwable.getMessage());
+                                                ToastNetWorkError();
+                                            });
                                     delDialog.dismiss();
                                 }
                             });
@@ -515,8 +552,12 @@ public class PostFragment extends BaseFragment {
                 inflater.inflate(R.menu.menu_post_more, popup.getMenu());
                 // 判断是不是本人
                 //popup.getMenu().removeItem(R.id.tv_edit);
-                // 如果有管理权限,则显示删除
-                //popup.getMenu().removeGroup(R.id.menu_manege);
+                if(topicObj.getUserByUserId().getUserId()==App.getUid() || App.getRole().equals("admin")){
+                    // 如果有管理权限,则显示删除
+                    //popup.getMenu().removeGroup(R.id.menu_manege);
+                }else{
+                    popup.getMenu().removeGroup(R.id.menu_manege);
+                }
                 popup.show();
                 break;
             case R.id.article_user_image:

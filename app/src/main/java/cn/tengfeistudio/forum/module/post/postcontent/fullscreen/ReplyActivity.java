@@ -2,9 +2,11 @@ package cn.tengfeistudio.forum.module.post.postcontent.fullscreen;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -15,6 +17,7 @@ import cn.tengfeistudio.forum.module.post.postcontent.main.PostFragment;
 import cn.tengfeistudio.forum.utils.Constants;
 
 import butterknife.BindView;
+
 
 public class ReplyActivity extends BaseActivity {
     @BindView(R.id.fragment)
@@ -50,15 +53,24 @@ public class ReplyActivity extends BaseActivity {
                 .subscribe(responseBody -> {
                     String response = responseBody.string();
                     if (!response.contains("code")) {
+                        Looper.prepare();
                         ToastNetWorkError();
+                        Looper.loop();// 进入loop中的循环，查看消息队列
                         printLog("getPost onResponse !response.contains(\"code\")");
                         return;
                     }
                     JSONObject dataObj = JSON.parseObject(response);
                     if (dataObj.getInteger("code") != Constants.RETURN_CONTINUE) {
+                        Looper.prepare();
                         ToastShort("服务器出状况惹，稍等喔( • ̀ω•́ )✧");
-                    } else {
+                        Looper.loop();// 进入loop中的循环，查看消息队列
+                    } else if(dataObj.getString("data")!=null){
                         setIntentData(dataObj.getString("data"));
+                    }else{
+                        Looper.prepare();
+                        ToastShort("帖子已删了( • ̀ω•́ )✧");
+                        Looper.loop();// 进入loop中的循环，查看消息队列
+                       // return;
                     }
                 }, throwable -> {
                     ToastNetWorkError();
@@ -67,6 +79,7 @@ public class ReplyActivity extends BaseActivity {
     }
 
     private void setIntentData(String postJsonObj) {
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         PostFragment postFragment = new PostFragment();
