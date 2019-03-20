@@ -169,6 +169,9 @@ public class MineFragment extends BaseFragment
         tvMineUserEmail.setText(App.getEmail());
     }
 
+
+
+
     private HomeActivity mActivity;
 
     @Override

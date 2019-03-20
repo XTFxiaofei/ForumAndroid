@@ -106,6 +106,8 @@ public class NetConfig {
 
     public static final String BASE_USER=BASE_DOMAIN+"user/";
 
+    public static final String BASE_USER_MODIFY_ICON=BASE_USER+"modify";
+
     /** 获取用户具体信息 */
     public static final String BASE_GET_USER_DETAILS=BASE_USER+"get_user_details";
 

@@ -254,4 +254,102 @@ public class UploadUtil {
         URL url = cosClient.generatePresignedUrl(bucketName, key, expiration);
         return url;
     }
+
+
+    /**
+     * 上传头像进行更改
+     * @param token
+     * @param files
+     * @param RequestURL
+     * @return
+     */
+    public static String uploadIcon(String token,ArrayList<String> files, String RequestURL) {
+        String result = "error";
+        String BOUNDARY = UUID.randomUUID().toString();//边界标识 随机生成
+        String PREFIX = "--", LINE_END = "\r\n";
+        String CONTENT_TYPE = "multipart/form-data";//内容类型
+        try {
+            URL url = new URL(RequestURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(TIME_OUT);
+            conn.setConnectTimeout(TIME_OUT);
+            conn.setDoInput(true);//允许输入流
+            conn.setDoOutput(true);//允许输出流
+            conn.setUseCaches(false);//不允许使用缓存
+            conn.setRequestMethod("POST");//请求方式
+            conn.setRequestProperty("Charset", CHARSET);//设置编码
+            conn.setRequestProperty("connection", "keep-alive");
+            conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+            conn.connect();
+            if (files != null && files.size()>0) {
+                DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
+                StringBuffer sb1 = new StringBuffer();
+                sb1.append(PREFIX);
+                sb1.append(BOUNDARY);
+                sb1.append(LINE_END);
+                sb1.append("Content-Disposition: form-data; name=\"token\"; filename=\"" + token + "\"" + LINE_END);
+                sb1.append("Content-Type: application/octet-stream; charset=UTF-8" + LINE_END);
+                sb1.append(LINE_END);
+                Log.i("------------", "--Header--"+sb1.toString());
+                dos.write(sb1.toString().getBytes());
+                dos.write(LINE_END.getBytes());
+
+
+                //设置文件
+                for (int i = 0; i < files.size(); i++) {
+                    File file=new File(files.get(i).toString());
+                    Log.i("--------------------", "file"+i+"="+file.getName());
+                    /**
+                     * 当文件不为空，把文件包装并且上传
+                     */
+                    StringBuffer sb = new StringBuffer();
+                    sb.append(PREFIX);
+                    sb.append(BOUNDARY);
+                    sb.append(LINE_END);
+                    /**
+                     * 这里重点注意： name里面的值为服务端需要key 只有这个key 才可以得到对应的文件
+                     * filename是文件的名字，包含后缀名的 比如:abc.png
+                     */
+                    sb.append("Content-Disposition: form-data; name=\"inputName\"; filename=\"" + file.getName() + "\"" + LINE_END);
+                    sb.append("Content-Type: application/octet-stream; charset=UTF-8" + LINE_END);
+                    sb.append(LINE_END);
+                    Log.i("------------", "--Header--"+sb.toString());
+                    dos.write(sb.toString().getBytes());
+
+                    InputStream is = new FileInputStream(file);
+                    byte[] bytes = new byte[1024];
+                    int len = 0;
+                    while ((len = is.read(bytes)) != -1) {
+                        dos.write(bytes, 0, len);
+                    }
+                    is.close();
+                    dos.write(LINE_END.getBytes());
+
+                }
+
+                byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
+                dos.write(end_data);
+                dos.flush();
+
+                /*
+          *  获取响应码  200=成功
+         * 当响应成功，获取响应的流  
+         */
+                int res = conn.getResponseCode();
+                if (res == 200) {
+                    InputStream input = conn.getInputStream();
+                    StringBuilder sbs = new StringBuilder();
+                    int ss;
+                    while ((ss = input.read()) != -1) {
+                        sbs.append((char) ss);
+                    }
+                    result = sbs.toString();
+                    Log.i(TAG, "result------------------>>" + result);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

@@ -40,6 +40,8 @@ public class MineFragPresenter implements BasePresenter {
             R.drawable.ic_lab_24dp,
     };
 
+
+
     private static final String[] titles = new String[]{
 //            "签到中心",
             "主题设置",

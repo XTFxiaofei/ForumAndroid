@@ -366,6 +366,17 @@ public class App extends Application {
         editor.apply();
     }
 
+    public static String isUserIcon(){
+        SharedPreferences sp=context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        return sp.getString(USER_ICON,"");
+    }
+    public static void setUserIcon(String value){
+        SharedPreferences sp=context.getSharedPreferences(MY_SP_NAME,MODE_PRIVATE);
+        SharedPreferences.Editor editor=sp.edit();
+        editor.putString(USER_ICON,value);
+        editor.apply();
+    }
+
     public static final String MY_SP_NAME = "PlusClub";
     public static final String USER_EMAIL_KEY = "user_email";
     public static final String USER_UID_KEY = "user_uid";
@@ -389,6 +400,7 @@ public class App extends Application {
     public static final String IS_LOGIN ="is_login";
     public static final String SCHEDULE_START_WEEK = "schedule_start_week";
     public static final String _VIEWSTATE_VALUE = "viewstate";
+    public static final String USER_ICON="user_icon";
 
     public static final String GitHubURL = "https://github.com/WithLei/plusClub";
 

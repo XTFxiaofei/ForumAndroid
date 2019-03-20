@@ -8,6 +8,7 @@
     android:background="@color/bg_primary"
     android:fitsSystemWindows="true">
 
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -77,6 +78,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
+        android:id="@+id/listdetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -86,19 +88,22 @@
             android:background="@color/bg_primary"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </FrameLayout>
 
     <Button
         android:id="@+id/btn_logout"
         style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_margin="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:visibility="gone"
-        android:text="退出登录"
         android:layout_gravity="center"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:visibility="gone"
+        android:layout_margin="20dp"
+        android:text="退出登录"
+        android:textColor="@color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

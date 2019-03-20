@@ -201,11 +201,11 @@ public class ActivityFragment extends BaseFragment
 
     private void initRecyclerView() {
         // 设置监听事件
-        if (loadMoreListener == null) {
+        //if (loadMoreListener == null) {
             mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             rv.setLayoutManager(mLayoutManager);
             loadMoreListener = new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 5);
-        }
+       // }
         rv.addOnScrollListener(loadMoreListener);
 
         rv.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));

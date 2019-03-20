@@ -1,6 +1,9 @@
 package cn.tengfeistudio.forum.module.user.userdetail;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,30 +11,48 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import cn.tengfeistudio.forum.adapter.FullyGridLayoutManager;
+import cn.tengfeistudio.forum.adapter.GridImageAdapter;
 import cn.tengfeistudio.forum.api.bean.Store;
 import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
+import cn.tengfeistudio.forum.module.mine.MineFragment;
+import cn.tengfeistudio.forum.module.post.edit.EditAcitivity;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.StampToDate;
+import cn.tengfeistudio.forum.utils.UploadUtil;
 import cn.tengfeistudio.forum.utils.toast.MyToast;
 import cn.tengfeistudio.forum.utils.NetConfig;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 import cn.tengfeistudio.forum.widget.GradeProgressView;
+
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.compress.Luban;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +61,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Call;
+
+import static com.luck.picture.lib.config.PictureConfig.LUBAN_COMPRESS_MODE;
 
 public class UserDetailActivity extends BaseActivity {
     @BindView(R.id.user_detail_img_avatar)
@@ -64,6 +87,9 @@ public class UserDetailActivity extends BaseActivity {
     private final List<String>keys = new ArrayList<>();
     private final List<String>values = new ArrayList<>();
 
+
+
+
     public static final int requestCode = 128;
     @BindView(R.id.listView)
     ListView listView;
@@ -73,6 +99,10 @@ public class UserDetailActivity extends BaseActivity {
     private String imageUrl = null;
     // 对象是否为登陆用户
     private boolean isLoginUser = false;
+    //选择图片
+    private PopupWindow pop;
+    private List<LocalMedia> selectList = new ArrayList<>();
+    private ArrayList<String> imagesPath = new ArrayList<>();
 
     @Override
     protected int getLayoutID() {
@@ -112,6 +142,173 @@ public class UserDetailActivity extends BaseActivity {
     public void onViewClicked() {
         onLogout();
     }
+
+    /**
+     * 点击头像
+     * @param view
+     */
+    @OnClick(R.id.user_detail_img_avatar)
+    public void onClick(View view){
+        showPop();
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        List<LocalMedia> images;
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 图片选择结果回调
+                    images = PictureSelector.obtainMultipleResult(data);
+                    selectList.addAll(images);
+                    for (LocalMedia i : images) {
+                        if (i.isCompressed() && i != null){
+                            imagesPath.clear();
+                            imagesPath.add(i.getCompressPath());
+                        }
+                        else if(i!=null) {
+                            imagesPath.clear();
+                            //获取原本路径
+                            imagesPath.add(i.getPath());
+                        }
+                    }
+
+//                    selectList = PictureSelector.obtainMultipleResult(data);
+                    // 例如 LocalMedia 里面返回三种path
+                    // 1.media.getPath(); 为原图path
+                    // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true
+                    // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true
+                    // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
+                   userDetailImgAvatar.setImageURI(Uri.fromFile(new File(imagesPath.get(0))));
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            UploadUtil.uploadIcon(Store.getInstance().getToken(),imagesPath,NetConfig.BASE_USER_MODIFY_ICON);
+                        }
+                    }).start();
+                    break;
+            }
+        }
+    }
+
+    /**
+     * 底部弹出菜单选择拍照
+     */
+    private void showPop() {
+        View bottomView = View.inflate(UserDetailActivity.this, R.layout.layout_bottom_dialog, null);
+        TextView mAlbum = (TextView) bottomView.findViewById(R.id.tv_album);
+        TextView mCamera = (TextView) bottomView.findViewById(R.id.tv_camera);
+        TextView mCancel = (TextView) bottomView.findViewById(R.id.tv_cancel);
+
+        pop = new PopupWindow(bottomView, -1, -2);
+        //设置背景透明
+        pop.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+        pop.setOutsideTouchable(true);
+        pop.setFocusable(true);
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 0.5f;
+        getWindow().setAttributes(lp);
+        pop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = getWindow().getAttributes();
+                lp.alpha = 1f;
+                getWindow().setAttributes(lp);
+            }
+        });
+        pop.setAnimationStyle(R.style.main_menu_photo_anim);
+        pop.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
+
+        View.OnClickListener clickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (view.getId()) {
+                    case R.id.tv_album:
+                        //相册
+                        PictureSelector.create(UserDetailActivity.this)
+                                .openGallery(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                                .maxSelectNum(1)// 最大图片选择数量
+                                .minSelectNum(1)// 最小选择数量
+                                .imageSpanCount(4)// 每行显示个数
+                                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选PictureConfig.MULTIPLE : PictureConfig.SINGLE
+                                .previewImage(true)// 是否可预览图片
+                                .compressGrade(Luban.CUSTOM_GEAR)// luban压缩档次，默认3档 Luban.FIRST_GEAR、Luban.CUSTOM_GEAR,Luban.THIRD_GEAR
+                                .isCamera(false)// 是否显示拍照按钮
+                                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                                //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+                                .enableCrop(true)// 是否裁剪
+                                .compress(true)// 是否压缩
+                                .compressMode(LUBAN_COMPRESS_MODE)//系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
+                                //.sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
+                                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+                                .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                                .selectionMedia(selectList)// 是否传入已选图片
+                                //.previewEggs(false)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                                //.cropCompressQuality(90)// 裁剪压缩质量 默认100
+                                .compressMaxKB(5000)//压缩最大值kb compressGrade()为Luban.CUSTOM_GEAR有效
+                                //.compressWH() // 压缩宽高比 compressGrade()为Luban.CUSTOM_GEAR有效
+                                //.cropWH()// 裁剪宽高比，设置如果大于图片本身宽高则无效
+                                .rotateEnabled(true) // 裁剪是否可旋转图片
+                                .scaleEnabled(true)// 裁剪是否可放大缩小图片
+                                //.recordVideoSecond()//录制视频秒数 默认60s
+                                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+                        break;
+                    case R.id.tv_camera:
+                        //拍照
+                        PictureSelector.create(UserDetailActivity.this)
+                                .openCamera(PictureMimeType.ofImage())// 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                                .maxSelectNum(1)// 最大图片选择数量
+                                .minSelectNum(1)// 最小选择数量
+                                .imageSpanCount(1)// 每行显示个数
+                                .selectionMode(PictureConfig.SINGLE)// 多选 or 单选PictureConfig.MULTIPLE : PictureConfig.SINGLE
+                                .previewImage(true)// 是否可预览图片
+                                .compressGrade(Luban.CUSTOM_GEAR)// luban压缩档次，默认3档 Luban.FIRST_GEAR、Luban.CUSTOM_GEAR,Luban.THIRD_GEAR
+                                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                                //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
+                                .enableCrop(true)// 是否裁剪
+                                .compress(true)// 是否压缩
+                                .compressMode(LUBAN_COMPRESS_MODE)//系统自带 or 鲁班压缩 PictureConfig.SYSTEM_COMPRESS_MODE or LUBAN_COMPRESS_MODE
+                                //.sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
+                                .glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度
+                                .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                                .selectionMedia(selectList)// 是否传入已选图片
+                                //.previewEggs(false)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+                                //.cropCompressQuality(90)// 裁剪压缩质量 默认100
+                                .compressMaxKB(5000)//压缩最大值kb compressGrade()为Luban.CUSTOM_GEAR有效
+                                //.compressWH() // 压缩宽高比 compressGrade()为Luban.CUSTOM_GEAR有效
+                                //.cropWH()// 裁剪宽高比，设置如果大于图片本身宽高则无效
+                                .rotateEnabled(true) // 裁剪是否可旋转图片
+                                .scaleEnabled(true)// 裁剪是否可放大缩小图片
+                                //.recordVideoSecond()//录制视频秒数 默认60s
+                                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+                        break;
+                    case R.id.tv_cancel:
+                        //取消
+                        //closePopupWindow();
+                        break;
+                }
+                closePopupWindow();
+            }
+        };
+
+        mAlbum.setOnClickListener(clickListener);
+        mCamera.setOnClickListener(clickListener);
+        mCancel.setOnClickListener(clickListener);
+    }
+
+    public void closePopupWindow() {
+        if (pop != null && pop.isShowing()) {
+            pop.dismiss();
+            pop = null;
+        }
+    }
+
+
+
 
     /**
      * 点击退出登录按钮后
