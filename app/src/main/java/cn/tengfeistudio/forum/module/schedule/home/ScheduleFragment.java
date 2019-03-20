@@ -108,6 +108,8 @@ public class ScheduleFragment extends BaseFragment
         userName = App.getEduName();
         //cookie
         cookie = App.getCookie();
+
+        initView();
     }
 
     @Override
@@ -218,8 +220,8 @@ public class ScheduleFragment extends BaseFragment
         Observable.create((ObservableOnSubscribe<String>) emitter -> {
             OkHttpUtils.get()
                     .url(NetConfig.BASE_SCHEDULE)
-                    .addParams("card", eduid)  //学号
-                    .addParams("cardpassword", edupwd) //教务系统密码
+                    .addParams("card", App.getEduid())  //学号
+                    .addParams("cardpassword", App.getEduPwd()) //教务系统密码
                     .addParams("week", String.valueOf(nowWeek))  //第几周
                     .addParams("schoolyear", App.getSchoolYear()) //学年
                     .build()
@@ -276,7 +278,7 @@ public class ScheduleFragment extends BaseFragment
                 contents[x][y] = "";
         for (int i = 0; i < scheduleList.size(); i++) {
             Course course = scheduleList.get(i);
-            printLog(course.toString());
+           // printLog(course.toString());
             contents[(course.getStartSection() - 1) / 2][course.getWeekDay() - 1] = course.getCourseName() + "\n" + course.getPlace();
         }
         adapter = new ScheduleGridAdapter(getContext(), scheduleList);

@@ -1,7 +1,16 @@
 package cn.tengfeistudio.forum.utils;
 
 
+
 import android.util.Log;
+
+import com.qcloud.cos.COSClient;
+import com.qcloud.cos.ClientConfig;
+import com.qcloud.cos.auth.BasicCOSCredentials;
+import com.qcloud.cos.auth.COSCredentials;
+import com.qcloud.cos.model.PutObjectRequest;
+import com.qcloud.cos.region.Region;
+
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -11,6 +20,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -220,5 +230,28 @@ public class UploadUtil {
         } else {
             return "image/jpg";
         }
+    }
+
+
+    public static URL picCOS(File cosFile) throws Exception {
+        String SecretId="AKID1sjOt07V3Vk8LcscJl6E8oDOKAnF2Xaa";
+        String SecretKey="wgFZufBMK3YAXhjZ5PaYLuEe43mLfhT1";
+        COSCredentials cred = new BasicCOSCredentials(SecretId,SecretKey);
+        // 2 设置bucket的区域, COS地域的简称请参照
+        // https://cloud.tencent.com/document/product/436/6224
+        ClientConfig clientConfig = new ClientConfig(new Region("ap-guangzhou"));
+        // 3 生成cos客户端
+        COSClient cosClient = new COSClient(cred, clientConfig);
+        String bucketName = "tengfeistudio"+"-1252503273";
+        String key = "images/"+new Date().getTime() + ".png";
+        // 简单文件上传, 最大支持 5 GB, 适用于小文件上传, 建议 20 M 以下的文件使用该接口
+        // 大文件上传请参照 API 文档高级 API 上传
+        // 指定要上传到 COS 上的路径
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, cosFile);
+        cosClient.putObject(putObjectRequest);
+        cosClient.shutdown();
+        Date expiration = new Date(new Date().getTime() + 5 * 60 * 10000);
+        URL url = cosClient.generatePresignedUrl(bucketName, key, expiration);
+        return url;
     }
 }

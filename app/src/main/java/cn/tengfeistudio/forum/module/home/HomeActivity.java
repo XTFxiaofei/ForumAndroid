@@ -7,6 +7,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
@@ -59,7 +61,7 @@ public class HomeActivity extends BaseActivity
     protected void initData() {
         initViewpager();
         //更新版本
-       // discoverVersion();
+        // discoverVersion();
     }
 
     @SuppressLint("CheckResult")
@@ -74,7 +76,7 @@ public class HomeActivity extends BaseActivity
         version_name = "1.0";
         if (info != null) {
             version_name = info.versionName;
-        } 
+        }
         RetrofitService.getRelease()
                 .subscribe(responseBody -> {
                     String response = responseBody.string();
@@ -86,12 +88,20 @@ public class HomeActivity extends BaseActivity
 
     @Override
     protected void initView() {
+
+        //登录教务系统后，跳转传过来的参数
+        Intent intent = getIntent();
+        int schedulePosition = intent.getIntExtra("schedule", 0);
+        if (schedulePosition == 2) {
+            //跳转到ScheduleFragment
+            viewPager.setCurrentItem(2);
+        }
         bottomBar.setOnTabChangeListener((v, position, isChange) -> setSelect(position, isChange));
     }
 
     private void setSelect(int position, boolean isChange) {
         if (isChange)
-           viewPager.setCurrentItem(position, false);
+            viewPager.setCurrentItem(position, false);
         else
             fragments.get(position).ScrollToTop();
     }
@@ -138,7 +148,7 @@ public class HomeActivity extends BaseActivity
     public static void doRefresh() {
 //        if (homeFragment != null)
 //            homeFragment.doRefresh();
-        if(activityFragment!=null)
+        if (activityFragment != null)
             activityFragment.doRefresh();
         if (hotNewsFragment != null)
             hotNewsFragment.doRefresh();
@@ -159,7 +169,7 @@ public class HomeActivity extends BaseActivity
         viewPager.setOffscreenPageLimit(4);
         viewPager.addOnPageChangeListener(this);
         //homeFragment = new HomeFragment();
-        activityFragment=new ActivityFragment();
+        activityFragment = new ActivityFragment();
         hotNewsFragment = new HotNewsFragment();
         scheduleFragment = new ScheduleFragment();
         mineFragment = new MineFragment();
@@ -175,6 +185,7 @@ public class HomeActivity extends BaseActivity
 
     /**
      * 解析更新版本信息
+     *
      * @param jsonObj
      */
     private void afterGetVersion(String jsonObj) {
@@ -188,10 +199,10 @@ public class HomeActivity extends BaseActivity
         String browser_download_url = assetObj.getString("browser_download_url");
         // eg:https://github.com/WithLei/DistanceMeasure/releases/download/1.4.0/DistanceMeasure.apk
 
-        if (tag_name.equals(version_name)){
+        if (tag_name.equals(version_name)) {
 //            MyToast.showText(this,"已经是最新版本");
             printLog("HomeActivity_afterGetVersion:已经是最新版本");
-        }else{
+        } else {
             printLog("HomeActivity_afterGetVersion:检测到新版本");
             new AlertDialog.Builder(this)
                     .setTitle("检测到新版本")
@@ -227,7 +238,7 @@ public class HomeActivity extends BaseActivity
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleMessageEvent(MessageEvent messageEvent){
+    public void handleMessageEvent(MessageEvent messageEvent) {
         // 使用EventBus接受消息，当更新schedule后返回主页刷新课程表
         if (scheduleFragment != null)
             scheduleFragment.doRefresh();

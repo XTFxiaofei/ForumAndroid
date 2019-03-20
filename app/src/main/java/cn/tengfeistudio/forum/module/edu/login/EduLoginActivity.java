@@ -1,10 +1,13 @@
 package cn.tengfeistudio.forum.module.edu.login;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,6 +35,8 @@ import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.listener.MyTextWatcher;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.module.edu.main.EduActivity;
+import cn.tengfeistudio.forum.module.home.HomeActivity;
+import cn.tengfeistudio.forum.module.schedule.home.ScheduleFragment;
 import cn.tengfeistudio.forum.utils.toast.MyToast;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
@@ -367,8 +372,13 @@ public class EduLoginActivity extends BaseActivity {
         editor.putString(App.USER_EDUPWD_KEY, user_edupwd);
         editor.putString(App.USER_EDUNAME_KEY,studentName);
         editor.apply();
-        gotoActivity(EduActivity.class);
+       // gotoActivity(EduActivity.class);
+        Intent intent=new Intent(EduLoginActivity.this,HomeActivity.class);
+        intent.putExtra("schedule",2);
+        startActivity(intent);
         finishActivity();
     }
+
+
 
 }

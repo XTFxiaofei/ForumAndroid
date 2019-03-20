@@ -33,6 +33,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 
 import org.angmarch.views.NiceSpinner;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -244,6 +245,14 @@ public class EditAcitivity extends BaseActivity {
                 @Override
                 public void run() {
                     UploadUtil.uploadImage(Store.getInstance().getToken(), title, content, currentCategory, imagesPath, NetConfig.BASE_TOPIC_INCLUDE_IMAGES);
+//                  for(String str:imagesPath){
+//                      try {
+//                     String s=UploadUtil.picCOS(new File(str)).toString();
+//                     printLog(s);
+//                      } catch (Exception e) {
+//                          e.printStackTrace();
+//                      }
+//                  }
                 }
             }).start();
             setResult(RESULT_OK);
@@ -351,7 +360,7 @@ public class EditAcitivity extends BaseActivity {
                     .imageSpanCount(4)// 每行显示个数
                     .selectionMode(PictureConfig.MULTIPLE)// 多选 or 单选PictureConfig.MULTIPLE : PictureConfig.SINGLE
                     .previewImage(true)// 是否可预览图片
-                    .compressGrade(Luban.THIRD_GEAR)// luban压缩档次，默认3档 Luban.FIRST_GEAR、Luban.CUSTOM_GEAR
+                    .compressGrade(Luban.CUSTOM_GEAR)// luban压缩档次，默认3档 Luban.FIRST_GEAR、Luban.CUSTOM_GEAR,Luban.THIRD_GEAR
                     .isCamera(true)// 是否显示拍照按钮
                     .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
                     //.setOutputCameraPath("/CustomPath")// 自定义拍照保存路径
@@ -364,7 +373,7 @@ public class EditAcitivity extends BaseActivity {
                     .selectionMedia(selectList)// 是否传入已选图片
                     //.previewEggs(false)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                     //.cropCompressQuality(90)// 裁剪压缩质量 默认100
-                    //.compressMaxKB()//压缩最大值kb compressGrade()为Luban.CUSTOM_GEAR有效
+                    .compressMaxKB(5000)//压缩最大值kb compressGrade()为Luban.CUSTOM_GEAR有效
                     //.compressWH() // 压缩宽高比 compressGrade()为Luban.CUSTOM_GEAR有效
                     //.cropWH()// 裁剪宽高比，设置如果大于图片本身宽高则无效
                     .rotateEnabled(false) // 裁剪是否可旋转图片
@@ -455,9 +464,11 @@ public class EditAcitivity extends BaseActivity {
                     // 图片选择结果回调
                     images = PictureSelector.obtainMultipleResult(data);
                     selectList.addAll(images);
-                    //获取原本路径
+
                     for (LocalMedia i : images) {
-                        if (i != null)
+                        if (i.isCompressed() && i != null)
+                            imagesPath.add(i.getCompressPath());
+                        else if(i!=null)  //获取原本路径
                             imagesPath.add(i.getPath());
                     }
 
