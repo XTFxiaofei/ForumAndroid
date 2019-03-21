@@ -11,6 +11,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -307,6 +308,17 @@ public class UserDetailActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 返回MineFragment
+     */
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent("android.intent.action.CART_BROADCAST");
+        intent.putExtra("data","refresh");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        sendBroadcast(intent);
+        super.onBackPressed();
+    }
 
 
 

@@ -463,6 +463,7 @@ public class EditAcitivity extends BaseActivity {
                 case PictureConfig.CHOOSE_REQUEST:
                     // 图片选择结果回调
                     images = PictureSelector.obtainMultipleResult(data);
+                    selectList.clear();
                     selectList.addAll(images);
 
                     for (LocalMedia i : images) {
