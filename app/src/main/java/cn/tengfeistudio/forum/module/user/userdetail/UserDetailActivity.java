@@ -150,7 +150,9 @@ public class UserDetailActivity extends BaseActivity {
      */
     @OnClick(R.id.user_detail_img_avatar)
     public void onClick(View view){
-        showPop();
+        if(userid==App.getUid()){
+            showPop();
+        }
     }
 
 

@@ -113,7 +113,7 @@ public class ScheduleFragment extends BaseFragment
     }
 
     @Override
-    public void onResume() {
+    public void onResume(){
         super.onResume();
     }
 
@@ -156,8 +156,6 @@ public class ScheduleFragment extends BaseFragment
                 popup.setOnMenuItemClickListener(this::onMenuItemClick);
                 //显示(这一行代码不要忘记了)
                 popup.show();
-
-
             }
 
         });

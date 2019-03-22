@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -92,9 +93,9 @@ public class HomeActivity extends BaseActivity
         //登录教务系统后，跳转传过来的参数
         Intent intent = getIntent();
         int schedulePosition = intent.getIntExtra("schedule", 0);
-        if (schedulePosition == 2) {
+        if (schedulePosition == 1) {
             //跳转到ScheduleFragment
-            viewPager.setCurrentItem(2);
+            viewPager.setCurrentItem(1);
         }
         bottomBar.setOnTabChangeListener((v, position, isChange) -> setSelect(position, isChange));
     }
@@ -102,9 +103,13 @@ public class HomeActivity extends BaseActivity
     private void setSelect(int position, boolean isChange) {
         if (isChange)
             viewPager.setCurrentItem(position, false);
-        else
+        else{
             fragments.get(position).ScrollToTop();
+        }
+
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -176,8 +181,8 @@ public class HomeActivity extends BaseActivity
         //fragments.add(homeFragment);
 
         fragments.add(activityFragment);
-        fragments.add(hotNewsFragment);
         fragments.add(scheduleFragment);
+        fragments.add(hotNewsFragment);
         fragments.add(mineFragment);
         MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(adapter);

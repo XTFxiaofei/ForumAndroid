@@ -11,6 +11,7 @@ import cn.tengfeistudio.forum.utils.DimmenUtils;
 
 public class BatchRadioButton extends android.support.v7.widget.AppCompatRadioButton {
 
+    //true显示点 ，false不显示点
     private boolean haveBatch = false;
     private int BADGE_SIZE = 3;
     private Paint paint_badge = new Paint();

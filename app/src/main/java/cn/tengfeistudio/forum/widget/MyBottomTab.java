@@ -31,12 +31,12 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     private int currentSelected = 0;
     private int[] icons_unselect = {
             R.drawable.ic_home_24dp,
-            R.drawable.ic_whatshot_white_24dp,
             R.drawable.ic_board_24dp,
+            R.drawable.ic_whatshot_white_24dp,
             R.drawable.ic_person_white_24dp
     };
 
-    private String[] tab_names = {"板块", "看贴", "课程表", "个人"};
+    private String[] tab_names = {"活动", "课程表", "看贴", "个人"};
     private OnTabChangeListener listener;
     private boolean ishaveMessage = false;
 
@@ -60,6 +60,10 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         init();
     }
 
+    /**
+     * 设置右上角显示绿点
+     * @param b
+     */
     public void setMessage(boolean b) {
         if (b != ishaveMessage) {
             ishaveMessage = b;
@@ -72,7 +76,6 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
         if (pos >= tab_names.length) {
             return;
         }
-
         if (pos != currentSelected) {
             setTabSelect(currentSelected, pos);
             currentSelected = pos;
@@ -83,6 +86,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
      * 初始化视图
      */
     private void init() {
+        //setMessage(true);
 //        COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
         COLOR_SELECT = ThemeUtil.getThemeColor(context, R.attr.colorPrimary);
         COLOR_UNSELECT = ContextCompat.getColor(context, R.color.colorDisableHintIcon);
@@ -147,6 +151,7 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+
         int tag = (Integer) v.getTag();
         boolean change = (currentSelected != tag);
         if (listener != null) {
@@ -191,10 +196,12 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        //ishaveMessage=!ishaveMessage;
 
         if (ishaveMessage) {
             int len = getWidth();
-            int end = len / 4 * 3;
+            //绿点显示在第3个位置
+            int end=len/4*3;
             int start = len / 2;
             int center = (end - start) / 2 + start;
             int centx = center + SIZE_2 * 6;

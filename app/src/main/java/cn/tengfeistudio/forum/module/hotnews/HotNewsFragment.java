@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 
 
 
@@ -28,9 +30,11 @@ import cn.tengfeistudio.forum.injector.components.DaggerHotNewsFragComponent;
 import cn.tengfeistudio.forum.injector.modules.HotNewsFragModule;
 import cn.tengfeistudio.forum.listener.LoadMoreListener;
 import cn.tengfeistudio.forum.module.base.BaseFragment;
+import cn.tengfeistudio.forum.module.home.HomeActivity;
 import cn.tengfeistudio.forum.module.post.edit.EditAcitivity;
 import cn.tengfeistudio.forum.module.user.login.LoginActivity;
 import cn.tengfeistudio.forum.widget.BatchRadioButton;
+import cn.tengfeistudio.forum.widget.MyBottomTab;
 
 import static android.app.Activity.RESULT_OK;
 import static cn.tengfeistudio.forum.utils.LogUtils.printLog;
@@ -62,6 +66,8 @@ public class HotNewsFragment extends BaseFragment
     @Inject
     protected HotNewsFragPresenter mPresenter;
 
+
+
     private MyHandler handler = new MyHandler(getActivity());
 
     class MyHandler extends Handler {
@@ -91,6 +97,9 @@ public class HotNewsFragment extends BaseFragment
         return R.layout.fragment_hotnews;
     }
 
+
+
+
     @Override
     protected void initData(Context content) {
         if (!App.ISLOGIN()) {
@@ -102,6 +111,7 @@ public class HotNewsFragment extends BaseFragment
         tvHotnewsShowlogin.setText("刷新中...");
         mPresenter.getData(false, mContent, currentType);
         initView();
+
     }
 
     /**
@@ -151,7 +161,13 @@ public class HotNewsFragment extends BaseFragment
         initRadioGroup();
         initRefreshLayout();
         initRecyclerView();
+
     }
+
+
+
+
+
 
     /**
      * 初始化单选条
@@ -235,7 +251,10 @@ public class HotNewsFragment extends BaseFragment
 
 
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
     /**
      * 下拉刷新样式
      * isRefresh

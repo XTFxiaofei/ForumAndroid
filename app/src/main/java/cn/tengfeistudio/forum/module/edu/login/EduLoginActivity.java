@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,9 +32,7 @@ import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.listener.MyTextWatcher;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
-import cn.tengfeistudio.forum.module.edu.main.EduActivity;
 import cn.tengfeistudio.forum.module.home.HomeActivity;
-import cn.tengfeistudio.forum.module.schedule.home.ScheduleFragment;
 import cn.tengfeistudio.forum.utils.toast.MyToast;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
@@ -374,7 +370,7 @@ public class EduLoginActivity extends BaseActivity {
         editor.apply();
        // gotoActivity(EduActivity.class);
         Intent intent=new Intent(EduLoginActivity.this,HomeActivity.class);
-        intent.putExtra("schedule",2);
+        intent.putExtra("schedule",1);
         startActivity(intent);
         finishActivity();
     }
