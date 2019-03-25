@@ -347,6 +347,16 @@ public class RetrofitService {
     }
 
     /**
+     * 获取未读的回复
+     * @return
+     */
+    public static Observable<ResponseBody> getUnreadReply() {
+        return commentApi.getAllUnreadReply(Store.getInstance().getToken())
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+    /**
      * 删除评论
      * @param commentId
      * @return

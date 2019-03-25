@@ -13,7 +13,7 @@ import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.squareup.leakcanary.LeakCanary;
+//import com.squareup.leakcanary.LeakCanary;
 
 import java.io.File;
 
@@ -37,11 +37,15 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
+        /**
+         *  This process is dedicated to LeakCanary for heap analysis.
+         *  You should not init your app in this process.
+         */
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            return;
+//        }
+
+
         context = getApplicationContext();
         initInjector();
         initConfig();
@@ -81,10 +85,10 @@ public class App extends Application {
     }
 
     private void initConfig() {
-        if (BuildConfig.DEBUG) {
-            Log.e("print","LeakCanary.install(this);");
-            LeakCanary.install(this);
-        }
+//        if (BuildConfig.DEBUG) {
+//            Log.e("print","LeakCanary.install(this);");
+//            LeakCanary.install(this);
+//        }
         RetrofitService.init();
         ToastUtils.init(getContext());
         StringUtils.init(getContext());

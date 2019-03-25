@@ -99,6 +99,10 @@ public class NetConfig {
 
     /** ----------- 我的url地址 ------------------ */
 
+
+
+
+
     public static final String BASE_DOMAIN="http://192.168.191.1:8080/";
 
     /** 发帖 **/
@@ -144,4 +148,13 @@ public class NetConfig {
     /** 安装包下载地址 */
     public static final String APK_DOWNLOAD_URL="";
 
+
+    /** 连接websocket */
+    public static final String CONNECT_WEBSOCKET_URL="ws://192.168.191.1:8080/cheat/websocket";
+
+    /** 拉取未读回复 */
+    public static final String RECEIVE_REPLY=BASE_COMMENT+"pull_unread_reply";
+
+    /** 拉取新的活动 */
+    public static final String RECEIVE_ACTIVITY="";
 }

@@ -5,22 +5,41 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 
+import org.java_websocket.WebSocket;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.R;
+import cn.tengfeistudio.forum.api.RetrofitService;
+import cn.tengfeistudio.forum.api.bean.Store;
+import cn.tengfeistudio.forum.module.post.postlist.PostsActivity;
+import cn.tengfeistudio.forum.utils.Constants;
+import cn.tengfeistudio.forum.utils.NetConfig;
+import cn.tengfeistudio.forum.utils.NotifictionUtils;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import ua.naiksoftware.stomp.LifecycleEvent;
+import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.client.StompClient;
+import ua.naiksoftware.stomp.client.StompMessage;
+
+import static android.content.ContentValues.TAG;
+import static cn.tengfeistudio.forum.utils.LogUtils.printLog;
 
 public class LaunchActivity extends Activity{
     private static final int WAIT_TIME = 2;
+
 
     @SuppressLint("CheckResult")
     @Override
@@ -47,6 +66,7 @@ public class LaunchActivity extends Activity{
      */
     private void doPreWrok() {
         App.setCookie("");
+
     }
 
     private void enterHome() {
@@ -87,4 +107,10 @@ public class LaunchActivity extends Activity{
         // 去掉自带的转场动画
         overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
     }
+
+
+
+
+
+
 }

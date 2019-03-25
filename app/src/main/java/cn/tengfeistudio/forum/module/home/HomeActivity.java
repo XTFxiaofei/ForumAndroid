@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -21,27 +22,45 @@ import com.alibaba.fastjson.JSONObject;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
+import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.adapter.MainPageAdapter;
 import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.api.bean.MessageEvent;
+import cn.tengfeistudio.forum.api.bean.Store;
 import cn.tengfeistudio.forum.module.activity.ActivityFragment;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.module.base.BaseFragment;
 import cn.tengfeistudio.forum.module.hotnews.HotNewsFragment;
 import cn.tengfeistudio.forum.module.mine.MineFragment;
+import cn.tengfeistudio.forum.module.post.postcontent.fullscreen.PostActivity;
+import cn.tengfeistudio.forum.module.post.postlist.PostsActivity;
 import cn.tengfeistudio.forum.module.schedule.edu.main.ScheduleActivity;
 import cn.tengfeistudio.forum.module.schedule.home.ScheduleFragment;
 import cn.tengfeistudio.forum.module.setting.main.SettingActivity;
 import cn.tengfeistudio.forum.module.setting.theme.ThemeActivity;
 import cn.tengfeistudio.forum.module.user.login.LoginActivity;
 import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
+import cn.tengfeistudio.forum.utils.Constants;
+import cn.tengfeistudio.forum.utils.NetConfig;
+import cn.tengfeistudio.forum.utils.NotifictionUtils;
 import cn.tengfeistudio.forum.widget.MyBottomTab;
+import rx.functions.Action1;
+import ua.naiksoftware.stomp.LifecycleEvent;
+import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.client.StompClient;
+import ua.naiksoftware.stomp.client.StompMessage;
+
+import static android.content.ContentValues.TAG;
+import static cn.tengfeistudio.forum.utils.LogUtils.printLog;
 
 public class HomeActivity extends BaseActivity
         implements ViewPager.OnPageChangeListener {
@@ -52,7 +71,7 @@ public class HomeActivity extends BaseActivity
 
     private long mExitTime;
     private String version_name;
-
+    private StompClient mStompClient;
     @Override
     protected int getLayoutID() {
         return R.layout.activity_home;
@@ -98,6 +117,30 @@ public class HomeActivity extends BaseActivity
             viewPager.setCurrentItem(1);
         }
         bottomBar.setOnTabChangeListener((v, position, isChange) -> setSelect(position, isChange));
+
+        //已经登录
+        if(Store.getInstance().getToken().length()>0){
+                //websocket连接服务端
+                createStompClient();
+                //接受回复
+                receiveReply();
+                //新活动
+                receiveActivity();
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        Thread.sleep(10*1000);//休眠10秒
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //拉取未读消息
+                    getAllUnreadReply();
+                }
+            }.start();
+
+        }
     }
 
     private void setSelect(int position, boolean isChange) {
@@ -234,7 +277,7 @@ public class HomeActivity extends BaseActivity
             getFragmentManager().popBackStack();
         } else {
             if ((System.currentTimeMillis() - mExitTime) > 1500) {
-                Toast.makeText(this, "再按一次退出Plus客户端(｡･ω･｡)~~", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "再按一次退出广财校园吧客户端(｡･ω･｡)~~", Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
             } else {
                 finish();
@@ -285,5 +328,81 @@ public class HomeActivity extends BaseActivity
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+
+    /**
+     * 连接服务端
+     */
+    private void createStompClient() {
+        Map<String,String> map=new HashMap<>();
+        map.put(Constants.AUTHORIZATION, Store.getInstance().getToken());
+        mStompClient = Stomp.over(WebSocket.class, NetConfig.CONNECT_WEBSOCKET_URL,map);
+        mStompClient.connect();
+        // Toast.makeText(LoginActivity.this,"开始连接 192.168.191.1:8080",Toast.LENGTH_SHORT).show();
+        mStompClient.lifecycle().subscribe(new Action1<LifecycleEvent>() {
+            @Override
+            public void call(LifecycleEvent lifecycleEvent) {
+                switch (lifecycleEvent.getType()) {
+                    case OPENED:
+                        Log.d(TAG, "Stomp connection opened");
+                        break;
+                    case ERROR:
+                        Log.e(TAG, "Stomp Error", lifecycleEvent.getException());
+                        break;
+                    case CLOSED:
+                        Log.d(TAG, "Stomp connection closed");
+                        break;
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 接受服务端返回数据(评论回复)
+     */
+    private void receiveReply() {
+        mStompClient.topic("/user/"+ App.getUid()+"/message").subscribe(new Action1<StompMessage>() {
+            @Override
+            public void call(StompMessage stompMessage) {
+                Log.e(TAG, App.getUid()+" launch_call: " +stompMessage.getPayload() );
+                String message=stompMessage.getPayload();
+                //回复内容
+                String content=message.substring(message.indexOf(":")+1).trim();
+                int topicId=Integer.parseInt(stompMessage.findHeader("topicId"));;
+                //通知栏
+                NotifictionUtils.showNotifictionIcon(getApplicationContext(), PostActivity.class,"新回复",content,topicId);
+            }
+        });
+    }
+
+
+    /**
+     * 暂未使用
+     * 接受服务端返回数据(新活动)
+     */
+    private void receiveActivity() {
+        mStompClient.topic("/user/"+App.getUid()+"/activity").subscribe(new Action1<StompMessage>() {
+            @Override
+            public void call(StompMessage stompMessage) {
+                Log.e(TAG, "call: " +stompMessage.getPayload() );
+                int activityId=1;
+                //通知栏
+                NotifictionUtils.showNotifictionIcon(getApplicationContext(), HomeActivity.class,"新活动","活动内容",activityId);
+            }
+        });
+    }
+
+    /**
+     * 拉取未读消息
+     */
+    private void getAllUnreadReply(){
+        RetrofitService.getUnreadReply()
+                .subscribe(responseBody -> {
+                    String response = responseBody.string();
+                    if (!response.contains("code"))
+                        return;
+                }, throwable -> printLog("获取未读消息:" + throwable.getMessage()));
     }
 }

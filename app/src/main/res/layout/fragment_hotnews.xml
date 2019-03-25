@@ -11,6 +11,8 @@
         android:background="?android:attr/colorPrimary"
         android:elevation="4dp">
 
+
+
         <RadioGroup
             android:id="@+id/btn_change"
             android:layout_width="191dp"
@@ -92,6 +94,8 @@
         android:gravity="center"
         android:text="登陆后就可以看了喔 ٩(๑❛ᴗ❛๑)۶"
         android:visibility="visible" />
+
+
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh_hotnews"

@@ -86,7 +86,6 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
      * 初始化视图
      */
     private void init() {
-        //setMessage(true);
 //        COLOR_SELECT = ContextCompat.getColor(context, R.color.colorAccent);
         COLOR_SELECT = ThemeUtil.getThemeColor(context, R.attr.colorPrimary);
         COLOR_UNSELECT = ContextCompat.getColor(context, R.color.colorDisableHintIcon);
@@ -196,8 +195,6 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //ishaveMessage=!ishaveMessage;
-
         if (ishaveMessage) {
             int len = getWidth();
             //绿点显示在第3个位置
@@ -217,5 +214,13 @@ public class MyBottomTab extends LinearLayout implements OnClickListener {
 
     public void setOnTabChangeListener(OnTabChangeListener linstener) {
         this.listener = linstener;
+    }
+
+    public boolean isIshaveMessage() {
+        return ishaveMessage;
+    }
+
+    public void setIshaveMessage(boolean ishaveMessage) {
+        this.ishaveMessage = ishaveMessage;
     }
 }
