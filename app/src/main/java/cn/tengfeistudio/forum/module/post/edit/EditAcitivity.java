@@ -34,10 +34,12 @@ import com.luck.picture.lib.entity.LocalMedia;
 import org.angmarch.views.NiceSpinner;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -50,6 +52,7 @@ import cn.tengfeistudio.forum.api.bean.Store;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.NetConfig;
+import cn.tengfeistudio.forum.utils.SensitiveWordUtil;
 import cn.tengfeistudio.forum.utils.UploadUtil;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -179,8 +182,26 @@ public class EditAcitivity extends BaseActivity {
             }
         });
         addToolbarMenu(R.drawable.ic_check_black_24dp).setOnClickListener(view -> {
-            if (checkInput())
-                sendTopic(etPostTitle.getText().toString(), editor.getText().toString());
+            if (checkInput()){
+                //标题
+                String title=etPostTitle.getText().toString();
+                //内容
+                String content= editor.getText().toString();
+                /** 敏感词汇过滤 */
+                SensitiveWordUtil filterEngine = SensitiveWordUtil.getInstance();
+                Vector<Integer> levelSet = new Vector<Integer>();
+                try {
+                    title=filterEngine.parse(new String(title.getBytes(), "UTF-8"), levelSet);
+                    content=filterEngine.parse(new String(content.getBytes(), "UTF-8"), levelSet);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                printLog(title);
+                printLog(content);
+                //发送帖子
+                sendTopic(title,content);
+            }
+
         });
         initEditor();
         initTextWatcher();
@@ -235,6 +256,8 @@ public class EditAcitivity extends BaseActivity {
      */
     @SuppressLint("CheckResult")
     private void sendTopic(String title, String content) {
+
+
         if (currentCategory.equals(categories[6]) && !App.getRole().equals("admin")) {
             ToastShort("不好意思,管理员才能发公告!");
             return;
@@ -372,7 +395,7 @@ public class EditAcitivity extends BaseActivity {
                     .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                     .selectionMedia(selectList)// 是否传入已选图片
                     //.previewEggs(false)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
-                    .cropCompressQuality(80)// 裁剪压缩质量 默认100
+                    .cropCompressQuality(90)// 裁剪压缩质量 默认100
                     .compressMaxKB(5000)//压缩最大值kb compressGrade()为Luban.CUSTOM_GEAR有效
                     //.compressWH() // 压缩宽高比 compressGrade()为Luban.CUSTOM_GEAR有效
                     //.cropWH()// 裁剪宽高比，设置如果大于图片本身宽高则无效
