@@ -277,7 +277,13 @@ public class ScheduleFragment extends BaseFragment
         for (int i = 0; i < scheduleList.size(); i++) {
             Course course = scheduleList.get(i);
            // printLog(course.toString());
-            contents[(course.getStartSection() - 1) / 2][course.getWeekDay() - 1] = course.getCourseName() + "\n" + course.getPlace();
+            if(course.getCourseName().length()>6){
+                //课程名称只显示6各子
+                contents[(course.getStartSection() - 1) / 2][course.getWeekDay() - 1] = course.getCourseName().substring(0,6) + "\n" + course.getPlace();
+            }else{
+                contents[(course.getStartSection() - 1) / 2][course.getWeekDay() - 1] = course.getCourseName() + "\n" + course.getPlace();
+            }
+
         }
         adapter = new ScheduleGridAdapter(getContext(), scheduleList);
         adapter.setContent(contents, 6, 7);
