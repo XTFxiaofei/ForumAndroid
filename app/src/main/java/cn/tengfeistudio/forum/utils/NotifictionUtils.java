@@ -62,7 +62,8 @@ public class NotifictionUtils {
         stackBuilder.addParentStack(cls);
         stackBuilder.addNextIntent(intent);
 
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        //PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent=PendingIntent.getActivity(context,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
         Notification notification = new NotificationCompat.Builder(context, "default")
                 .setSmallIcon(R.drawable.message)
                 .setContentTitle(title)
@@ -73,7 +74,7 @@ public class NotifictionUtils {
                 .setContentIntent(pendingIntent)
                 .build();
 
-        manager.notify(1, notification);
+        manager.notify(0, notification);
 
     }
 }
