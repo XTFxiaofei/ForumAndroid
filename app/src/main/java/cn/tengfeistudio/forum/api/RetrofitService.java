@@ -421,8 +421,8 @@ public class RetrofitService {
      * @param commentId
      * @return
      */
-    public static Observable<ResponseBody> deleteComment(int commentId){
-        return commentApi.deleteCommentbyCommentId(Store.getInstance().getToken(),commentId)
+    public static Observable<ResponseBody> deleteComment(int commentId,int flag){
+        return commentApi.deleteCommentbyCommentId(Store.getInstance().getToken(),commentId,flag)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

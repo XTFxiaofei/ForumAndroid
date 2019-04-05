@@ -414,7 +414,18 @@ public class PostFragment extends BaseFragment {
                 popup.setOnMenuItemClickListener(menuItem -> {
                     switch (menuItem.getItemId()) {
                         case R.id.tv_edit:
-                            ToastShort("OK已举报!");
+                            RetrofitService.deleteComment(comments.get(pos).getCommentId(),Constants.REPORT_FLAG)
+                                    .subscribe(responseBody -> {
+                                        String response=responseBody.string();
+                                        if(!response.contains("code")){
+                                            ToastNetWorkError();
+                                        }else {
+                                            ToastShort("OK已举报!");
+                                        }
+                                    }, throwable -> {
+                                        printLog("PostFragement Comment:" + throwable.getMessage());
+                                        ToastNetWorkError();
+                                    });
                             break;
                         case R.id.tv_copy:
                             //String user = commentList.get(pos).getUser().getName();
@@ -444,7 +455,7 @@ public class PostFragment extends BaseFragment {
                             delDialog.setRightOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RetrofitService.deleteComment(comments.get(pos).getCommentId())
+                                    RetrofitService.deleteComment(comments.get(pos).getCommentId(),Constants.DELETE_FLAG)
                                             .subscribe(responseBody -> {
                                                 String response=responseBody.string();
                                                 if(!response.contains("code")){
@@ -523,13 +534,13 @@ public class PostFragment extends BaseFragment {
                                         if(!response.contains("code")){
                                             ToastNetWorkError();
                                         }else {
-                                            Toast.makeText(getContext(), "已删除,要刷新(⊙o⊙)", Toast.LENGTH_SHORT).show();
+                                            ToastShort("ok已举报!");
                                         }
                                     }, throwable -> {
                                         printLog("PostFragment Content:" + throwable.getMessage());
                                         ToastNetWorkError();
                                     });
-                            ToastShort("ok已举报!");
+
                             break;
                         case R.id.tv_copy:
                             String user = articleUsername.getText().toString();

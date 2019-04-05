@@ -331,13 +331,12 @@ public class TopicAdapter extends BaseAdapter {
                                         if(!response.contains("code")){
                                             ToastNetWorkError();
                                         }else {
-                                            Toast.makeText(context, "已删除,要刷新(⊙o⊙)", Toast.LENGTH_SHORT).show();
+                                            ToastShort("OK已举报!");
                                         }
                                     }, throwable -> {
                                         printLog("TopicAdapter:" + throwable.getMessage());
                                         ToastNetWorkError();
                                     });
-                            ToastShort("OK已举报!");
                             break;
                         //复制
                         case R.id.tv_copy:

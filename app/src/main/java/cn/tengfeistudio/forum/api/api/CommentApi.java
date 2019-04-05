@@ -13,7 +13,7 @@ public interface CommentApi {
     @GET("get_topic_comment")
     Observable<ResponseBody> getCommentsByTopicId(@Query("topicId") int page);
     @POST("delete_comment_byCommentId")
-    Observable<ResponseBody> deleteCommentbyCommentId(@Header("authorization") String authorization,@Query("commentId")int commentId);
+    Observable<ResponseBody> deleteCommentbyCommentId(@Header("authorization") String authorization,@Query("commentId")int commentId,@Query("flag")int flag);
     @GET("pull_unread_reply")
     Observable<ResponseBody> getAllUnreadReply(@Header("authorization") String authorization);
     @GET("get_comment_byToUserId")
