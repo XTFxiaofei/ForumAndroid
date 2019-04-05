@@ -39,6 +39,10 @@ public class Constants {
     public static final String DEFAULT_USER_ROLE="user";
 
     public static final int DEFAULT_EACH_PAGE_SIZE=8;
+    /** 删除状态位 */
+    public static final int DELETE_FLAG=0;
+    /** 举报状态位 */
+    public static final int REPORT_FLAG=2;
 
     /** -----------   -------------------- */
     /** token过期返回 */

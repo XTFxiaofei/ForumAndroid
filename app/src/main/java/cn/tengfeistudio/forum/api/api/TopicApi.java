@@ -39,6 +39,6 @@ public interface TopicApi {
     Observable<ResponseBody> getTopicsByTheme(@Query("theme") String theme, @Query("page") int page);
 
     @POST("delete_topic_byTopicId")
-    Observable<ResponseBody> deleteTopicByTopicId(@Header("authorization") String authorization,@Query("topicId")int topicId);
+    Observable<ResponseBody> deleteTopicByTopicId(@Header("authorization") String authorization,@Query("topicId")int topicId,@Query("flag")int flag);
 
 }

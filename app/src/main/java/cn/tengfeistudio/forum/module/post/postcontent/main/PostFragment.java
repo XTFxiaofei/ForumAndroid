@@ -53,6 +53,8 @@ import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 import cn.tengfeistudio.forum.utils.IntentUtils;
 import cn.tengfeistudio.forum.utils.StringUtils;
+
+import com.luck.picture.lib.tools.Constant;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.squareup.picasso.Picasso;
@@ -515,6 +517,18 @@ public class PostFragment extends BaseFragment {
                 popup.setOnMenuItemClickListener(menuItem -> {
                     switch (menuItem.getItemId()) {
                         case R.id.tv_edit:
+                            RetrofitService.deleteTopic(topicObj.getTopicId(), Constants.REPORT_FLAG)
+                                    .subscribe(responseBody -> {
+                                        String response=responseBody.string();
+                                        if(!response.contains("code")){
+                                            ToastNetWorkError();
+                                        }else {
+                                            Toast.makeText(getContext(), "已删除,要刷新(⊙o⊙)", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }, throwable -> {
+                                        printLog("PostFragment Content:" + throwable.getMessage());
+                                        ToastNetWorkError();
+                                    });
                             ToastShort("ok已举报!");
                             break;
                         case R.id.tv_copy:
@@ -543,7 +557,7 @@ public class PostFragment extends BaseFragment {
                             delDialog.setRightOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RetrofitService.deleteTopic(topicObj.getTopicId())
+                                    RetrofitService.deleteTopic(topicObj.getTopicId(), Constants.DELETE_FLAG)
                                             .subscribe(responseBody -> {
                                                 String response=responseBody.string();
                                                 if(!response.contains("code")){

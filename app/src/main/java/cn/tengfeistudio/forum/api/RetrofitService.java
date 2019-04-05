@@ -332,12 +332,12 @@ public class RetrofitService {
 
 
     /**
-     * 删除帖子
+     * 删除帖子/举报帖子
      * @param topicId
      * @return
      */
-    public static Observable<ResponseBody> deleteTopic(int topicId){
-        return topicApi.deleteTopicByTopicId(Store.getInstance().getToken(),topicId)
+    public static Observable<ResponseBody> deleteTopic(int topicId,int flag){
+        return topicApi.deleteTopicByTopicId(Store.getInstance().getToken(),topicId,flag)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

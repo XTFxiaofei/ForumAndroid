@@ -39,6 +39,7 @@ import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.api.beans.TopicBean;
 import cn.tengfeistudio.forum.module.post.postcontent.main.SecondActivity;
 import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
+import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.utils.toast.ToastUtils;
@@ -324,6 +325,18 @@ public class TopicAdapter extends BaseAdapter {
                     switch (menuItem.getItemId()) {
                         //编辑
                         case R.id.tv_edit:
+                            RetrofitService.deleteTopic(object.getTopicId(), Constants.REPORT_FLAG)
+                                    .subscribe(responseBody -> {
+                                        String response=responseBody.string();
+                                        if(!response.contains("code")){
+                                            ToastNetWorkError();
+                                        }else {
+                                            Toast.makeText(context, "已删除,要刷新(⊙o⊙)", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }, throwable -> {
+                                        printLog("TopicAdapter:" + throwable.getMessage());
+                                        ToastNetWorkError();
+                                    });
                             ToastShort("OK已举报!");
                             break;
                         //复制
@@ -354,7 +367,7 @@ public class TopicAdapter extends BaseAdapter {
                             delDialog.setRightOnclick(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RetrofitService.deleteTopic(object.getTopicId())
+                                    RetrofitService.deleteTopic(object.getTopicId(), Constants.DELETE_FLAG)
                                                     .subscribe(responseBody -> {
                                                         String response=responseBody.string();
                                                         if(!response.contains("code")){
