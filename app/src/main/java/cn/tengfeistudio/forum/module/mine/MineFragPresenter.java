@@ -46,7 +46,7 @@ public class MineFragPresenter implements BasePresenter {
             "我的收藏",
             "主题设置",
             "设置",
-            "分享Plus客户端",
+            "分享客户端",
             "关于本程序",
             "热爱开源，感谢分享",
             "教务系统登录",
@@ -106,9 +106,11 @@ public class MineFragPresenter implements BasePresenter {
                                 return;
                             }
                             JSONObject jsonObject = JSON.parseObject(responseString);
-                            String avatarSrc = "", name = "";
+                            String avatarSrc = "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3269115595,4045078490&fm=27&gp=0.jpg", name = "xxx";
                             JSONObject obj = JSON.parseObject(jsonObject.getString("data"));
-                            avatarSrc = obj.getString("icon");
+                            if(obj.getString("icon").trim().length()>0){
+                                avatarSrc = obj.getString("icon");
+                            }
                             name = obj.getString("nickname");
                             mView.loadInfo(avatarSrc, name);
                         }, throwable -> Log.e("print","MineFragment_getAvatar_subscribe_onError:" + throwable.getMessage()));

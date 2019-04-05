@@ -212,7 +212,6 @@ public class CollectionActivity extends BaseActivity implements LoadMoreListener
     }
 
     void afterGetDataSuccess1(String data) {
-        initListData(data);
         afterGetDataSuccess2(data, getBaseContext());
         isPullDownRefresh = false;
         isPullUpRefresh = false;
