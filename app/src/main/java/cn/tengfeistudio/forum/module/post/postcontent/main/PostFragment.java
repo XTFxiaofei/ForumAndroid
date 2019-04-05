@@ -48,6 +48,7 @@ import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.module.base.BaseFragment;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.utils.Constants;
+import cn.tengfeistudio.forum.utils.SensitiveWordUtil;
 import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 import cn.tengfeistudio.forum.utils.IntentUtils;
@@ -56,10 +57,14 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -173,7 +178,17 @@ public class PostFragment extends BaseFragment {
                     return;
                 }
                 if (!TextUtils.isEmpty(et.getText().toString())) {
-                    postComments(et.getText().toString());
+                    //评论的内容
+                    String commentString=et.getText().toString();
+                    /** 敏感词汇过滤 */
+                    SensitiveWordUtil filterEngine = SensitiveWordUtil.getInstance();
+                    Vector<Integer> levelSet = new Vector<Integer>();
+                    try {
+                        commentString=filterEngine.parse(new String(commentString.getBytes(), "UTF-8"), levelSet);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    postComments(commentString);
                     et.setText("");
                 } else
                     ToastShort("回复内容不能为空喔(ฅ′ω`ฅ)");
