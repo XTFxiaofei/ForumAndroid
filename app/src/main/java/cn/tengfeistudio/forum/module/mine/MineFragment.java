@@ -27,6 +27,7 @@ import cn.tengfeistudio.forum.module.base.BaseFragment;
 import cn.tengfeistudio.forum.module.edu.login.EduLoginActivity;
 import cn.tengfeistudio.forum.module.home.HomeActivity;
 import cn.tengfeistudio.forum.module.setting.about.AboutActivity;
+import cn.tengfeistudio.forum.module.setting.collection.CollectionActivity;
 import cn.tengfeistudio.forum.module.setting.lab.LabActivity;
 import cn.tengfeistudio.forum.module.setting.main.SettingActivity;
 import cn.tengfeistudio.forum.module.setting.opensource.OpenSourceActivity;
@@ -35,6 +36,7 @@ import cn.tengfeistudio.forum.module.user.login.LoginActivity;
 import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
 import cn.tengfeistudio.forum.utils.IntentUtils;
 import cn.tengfeistudio.forum.utils.NetConfig;
+import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 
 public class MineFragment extends BaseFragment
@@ -155,31 +157,34 @@ public class MineFragment extends BaseFragment
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         switch (position) {
             case 0:
+                gotoActivity(CollectionActivity.class);
+                break;
+            case 1:
                 // 主题设置
                 Intent intent = new Intent(mActivity, ThemeActivity.class);
                 mActivity.startActivityForResult(intent, ThemeActivity.requestCode);
 //                mActivity.overridePendingTransition(R.anim.translate_in, R.anim.translate_out);
                 break;
-            case 1:
+            case 2:
                 // 设置
                 Intent intent1 = new Intent(mActivity, SettingActivity.class);
                 mActivity.startActivityForResult(intent1, SettingActivity.requestCode);
                 break;
-            case 2:
+            case 3:
                 // 分享Plus客户端
                 //String data = "这个Plus Club客户端非常不错，分享给你们。" + NetConfig.PLUSCLUB_ITEM;
                 String data="户端非常不错，分享给你们。"+ NetConfig.APK_DOWNLOAD_URL;
                 IntentUtils.shareApp(mActivity, data);
                 break;
-            case 3:
+            case 4:
                 // 关于本程序
                 gotoActivity(AboutActivity.class);
                 break;
-            case 4:
+            case 5:
                 // 热爱开源，感谢分享
                 gotoActivity(OpenSourceActivity.class);
                 break;
-            case 5:
+            case 6:
                 // 实验室功能
                // gotoActivity(LabActivity.class);
                 //改成教务系统登录

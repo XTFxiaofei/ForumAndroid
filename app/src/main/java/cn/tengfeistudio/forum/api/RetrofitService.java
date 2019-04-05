@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.api.api.ActivityApi;
+import cn.tengfeistudio.forum.api.api.CollectionApi;
 import cn.tengfeistudio.forum.api.api.CommentApi;
 import cn.tengfeistudio.forum.api.api.GithubApi;
 import cn.tengfeistudio.forum.api.api.PlusClubApi;
@@ -55,6 +56,8 @@ public class RetrofitService {
     private static CommentApi commentApi;
     //活动api
     private static ActivityApi activityApi;
+    //收藏
+    private static CollectionApi collectionApi;
 
     private RetrofitService() {
         throw new AssertionError();
@@ -89,6 +92,15 @@ public class RetrofitService {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         userApi=retrofit.create(UserApi.class);
+
+        /** 收藏base_user */
+        retrofit=new Retrofit.Builder()
+                .client(client)
+                .baseUrl(NetConfig.BASE_COLLECTION)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+        collectionApi=retrofit.create(CollectionApi.class);
 
         /** 帖子base_url */
         retrofit=new Retrofit.Builder()
@@ -242,6 +254,54 @@ public class RetrofitService {
                .observeOn(AndroidSchedulers.mainThread());
    }
 
+
+    /**
+     * 已经收藏的活动
+     * @return
+     */
+    public static Observable<ResponseBody> getCollectionActivity(){
+        return collectionApi.getCollectActivity(Store.getInstance().getToken())
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 收藏活动
+     * @param activiytId
+     * @return
+     */
+    public static Observable<ResponseBody> collectActivity(int activiytId){
+        return collectionApi.collectActivity(Store.getInstance().getToken(),activiytId)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 取消收藏活动
+     * @param activiytId
+     * @return
+     */
+    public static Observable<ResponseBody> cancelCollectActivity(int activiytId){
+        return collectionApi.cancelCollectActivity(Store.getInstance().getToken(),activiytId)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    /**
+     * 用户收藏的活动列表
+     * @param page
+     * @return
+     */
+    public static Observable<ResponseBody> collectActivityList(int page){
+        return collectionApi.collectActivityList(Store.getInstance().getToken(),page)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
 
     /**

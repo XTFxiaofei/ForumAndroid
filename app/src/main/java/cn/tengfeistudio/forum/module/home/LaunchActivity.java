@@ -11,10 +11,16 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import org.java_websocket.WebSocket;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +45,8 @@ import static cn.tengfeistudio.forum.utils.LogUtils.printLog;
 
 public class LaunchActivity extends Activity{
     private static final int WAIT_TIME = 2;
+    //玩家收藏活动的Id集合
+    public static List<Integer> collectActivityIds=new ArrayList<Integer>();
 
 
     @SuppressLint("CheckResult")
@@ -67,7 +75,22 @@ public class LaunchActivity extends Activity{
     private void doPreWrok() {
         App.setCookie("");
 
-    }
+
+        if(Store.getInstance().getToken().length()>0){
+            /** 获取玩家已经收藏的活动 */
+            RetrofitService.getCollectionActivity()
+                    .subscribe(responseBody -> {
+                        JSONObject jsonObject = JSON.parseObject(responseBody.string());
+                        if (jsonObject.getInteger("code") != Constants.RETURN_CONTINUE){
+                        }else{
+                            //收藏的活动id集合
+                            collectActivityIds=JSON.parseArray(jsonObject.getString("data"), Integer.class);
+                        }
+                    });
+        }
+        }
+
+
 
     private void enterHome() {
         startActivity(new Intent(LaunchActivity.this,HomeActivity.class));
@@ -76,14 +99,14 @@ public class LaunchActivity extends Activity{
 
     //自动续命copyright
     private void setCopyRight() {
-        int year = 2016;
+        int year = 2029;
         int yearNow = Calendar.getInstance().get(Calendar.YEAR);
 
         if (year < yearNow) {
             year = yearNow;
         }
         ((TextView) findViewById(R.id.copyright))
-                .setText("©2016-" + year + " lsuplus.top");
+                .setText("©2019-" + year + " tengfeistudio.cn");
     }
 
     /**

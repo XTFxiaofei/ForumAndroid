@@ -1,5 +1,6 @@
 package cn.tengfeistudio.forum.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,14 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.tengfeistudio.forum.R;
+import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.api.beans.ActivityBean;
+import cn.tengfeistudio.forum.module.home.LaunchActivity;
+import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.toast.ScaleAnimatorUtils;
 import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 import cn.tengfeistudio.forum.widget.CircleImageView;
@@ -107,8 +114,10 @@ public class ActivityAdapter extends BaseAdapter {
             articleTitle2.setText("【" +object.getType()+"】" +object.getActivityName());
             authorName2.setText(" " + object.getPlace());
             postTime2.setText(" " + object.getActivityTime());
-            //replyCount.setText(" " + object.getCommentNumber());
-            //viewCount.setText(" " + object.getViewNumber());
+            if(LaunchActivity.collectActivityIds.contains(collectionId)){
+                ivCollect.setImageResource(R.drawable.collect_yes);
+                ivCollect.setSelected(true);
+            }
 
             Picasso.get()
                     .load(object.getLogoImage())
@@ -126,21 +135,75 @@ public class ActivityAdapter extends BaseAdapter {
             ivCollect.setOnClickListener(view -> {
                 switch (view.getId()) {
                     case R.id.iv_collect:
-                        if (ivCollect.isSelected() == false) {
+                       // if (ivCollect.isSelected() == false) {
+                        //已经收藏
+                        if(!LaunchActivity.collectActivityIds.contains(collectionId)){
                             ivCollect.setImageResource(R.drawable.collect_yes);
                             ivCollect.setSelected(true);
                             ScaleAnimatorUtils.setScalse(ivCollect);
-                            ToastUtils.ToastShort("收藏成功" + collectionId);
+                            //ToastUtils.ToastShort("收藏成功" + collectionId);
+                            //本地收藏活动
+                            LaunchActivity.collectActivityIds.add(collectionId);
+                            //收藏活动发到服务端
+                            collectActivityId(collectionId);
                         } else {
                             ivCollect.setImageResource(R.drawable.collect_no);
                             ivCollect.setSelected(false);
                             ScaleAnimatorUtils.setScalse(ivCollect);
-                            ToastUtils.ToastShort("取消收藏" + collectionId);
+                            //ToastUtils.ToastShort("取消收藏" + collectionId);
+                            //本地取消收藏
+                            LaunchActivity.collectActivityIds.remove((Integer)collectionId);
+                            //取消收藏发送服务端
+                            cancelCollectActivityId(collectionId);
                         }
                         break;
                 }
             });
         }
+
+
+        /**
+         * 收藏活动
+         * @param activityId
+         */
+        @SuppressLint("CheckResult")
+        private void collectActivityId(int activityId) {
+            RetrofitService.collectActivity(activityId)
+                    .subscribe(responseBody -> {
+                        JSONObject obj = null;
+                        try {
+                            obj = JSON.parseObject(responseBody.string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        int statusCode = obj.getInteger("code");
+                        if(statusCode== Constants.RETURN_CONTINUE){
+                            ToastUtils.ToastShort("收藏成功");
+                        }
+                    });
+        }
+
+        /**
+         * 取消收藏
+         * @param activityId
+         */
+        @SuppressLint("CheckResult")
+        private void cancelCollectActivityId(int activityId) {
+            RetrofitService.cancelCollectActivity(activityId)
+                    .subscribe(responseBody -> {
+                        JSONObject obj = null;
+                        try {
+                            obj = JSON.parseObject(responseBody.string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        int statusCode = obj.getInteger("code");
+                        if(statusCode== Constants.RETURN_CONTINUE){
+                            ToastUtils.ToastShort("取消收藏");
+                        }
+                    });
+        }
+
 
     }
 }

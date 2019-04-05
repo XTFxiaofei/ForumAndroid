@@ -1,6 +1,8 @@
 package cn.tengfeistudio.forum.api.beans;
 
-public class ActivityBean {
+import java.io.Serializable;
+
+public class ActivityBean implements Serializable{
     private int activityId;
     private Integer userId;
     private String title;

@@ -119,7 +119,7 @@ public class ActivityFragPresenter {
             activityList.add(JSON.parseObject(array.getString(i), ActivityBean.class));
     }
 
-    void getListData(int page,String acPlace,String acType) {
+    public void getListData(int page,String acPlace,String acType) {
         if (page == Constants.DEFAULT_PAGE_NUMBER)
             activityAdapter = null;
         getActivityListData(page,acPlace,acType);

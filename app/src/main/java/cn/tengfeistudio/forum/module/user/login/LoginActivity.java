@@ -24,6 +24,7 @@ import cn.tengfeistudio.forum.api.bean.Store;
 import cn.tengfeistudio.forum.listener.MyTextWatcher;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.module.home.HomeActivity;
+import cn.tengfeistudio.forum.module.home.LaunchActivity;
 import cn.tengfeistudio.forum.module.post.postcontent.fullscreen.PostActivity;
 import cn.tengfeistudio.forum.module.post.postcontent.fullscreen.ReplyActivity;
 import cn.tengfeistudio.forum.module.post.postlist.PostsActivity;
@@ -186,9 +187,23 @@ public class LoginActivity extends BaseActivity {
         MyToast.showText(getApplicationContext(),"登录成功", Toast.LENGTH_SHORT,true);
         printLog("登录成功");
         getUserInfo();
+        getCollectActivity();
+    }
 
 
-
+    /** 获取玩家已经收藏的活动 */
+    private void getCollectActivity(){
+        if(Store.getInstance().getToken().length()>0){
+            RetrofitService.getCollectionActivity()
+                    .subscribe(responseBody -> {
+                        JSONObject jsonObject = JSON.parseObject(responseBody.string());
+                        if (jsonObject.getInteger("code") != Constants.RETURN_CONTINUE){
+                        }else{
+                            //收藏的活动id集合
+                            LaunchActivity.collectActivityIds=JSON.parseArray(jsonObject.getString("data"), Integer.class);
+                        }
+                    });
+        }
     }
 
     /**

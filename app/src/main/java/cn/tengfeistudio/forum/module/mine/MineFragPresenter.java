@@ -31,19 +31,19 @@ import okhttp3.Request;
 public class MineFragPresenter implements BasePresenter {
     private final MineFragment mView;
     private static final int[] icons = new int[]{
-//            R.drawable.ic_autorenew_black_24dp,
+            R.drawable.ic_favorite_white_12dp,
             R.drawable.ic_palette_black_24dp,
             R.drawable.ic_settings_24dp,
             R.drawable.ic_menu_share_24dp,
             R.drawable.ic_info_24dp,
-            R.drawable.ic_favorite_white_12dp,
+            R.drawable.ic_autorenew_black_24dp,
             R.drawable.ic_lab_24dp,
     };
 
 
 
     private static final String[] titles = new String[]{
-//            "签到中心",
+            "我的收藏",
             "主题设置",
             "设置",
             "分享Plus客户端",
