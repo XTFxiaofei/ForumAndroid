@@ -254,6 +254,19 @@ public class RetrofitService {
                .observeOn(AndroidSchedulers.mainThread());
    }
 
+    /**
+     * 修改用户信息
+     * @param infoType
+     * @param info
+     * @return
+     */
+    public static Observable<ResponseBody> modifyUserInfo(String infoType,String info){
+        return userApi.modifyUserInfo(Store.getInstance().getToken(),infoType,info)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 
     /**
      * 已经收藏的活动

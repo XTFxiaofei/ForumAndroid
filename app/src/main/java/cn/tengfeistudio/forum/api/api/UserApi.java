@@ -14,6 +14,16 @@ public interface UserApi {
     /** 获取用户信息 */
     @GET("get_user_details")
     Observable<ResponseBody> getUserDetails(@Header("authorization") String authorization);
+
+    /**
+     * 修改用户信息
+     * @param authorization
+     * @param infoType 信息类型:昵称nickname,手机号phone,学号studentCard
+     * @param info 修改后的内容
+     * @return
+     */
+    @POST("modify_user_info")
+    Observable<ResponseBody> modifyUserInfo(@Header("authorization") String authorization,@Query("infoType")String infoType,@Query("info")String info);
     /** 重置密码 */
     @POST("reset_password")
     Observable<ResponseBody> resetPassword(@Header("authorization") String authorization, @Query("oldPassword") String oldPassword, @Query("newPassword") String newPassword);

@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -35,6 +36,7 @@ import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.module.mine.MineFragment;
 import cn.tengfeistudio.forum.module.post.edit.EditAcitivity;
+import cn.tengfeistudio.forum.module.schedule.edu.set.ScheduleDetailSetActivity;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.UploadUtil;
@@ -65,7 +67,7 @@ import okhttp3.Call;
 
 import static com.luck.picture.lib.config.PictureConfig.LUBAN_COMPRESS_MODE;
 
-public class UserDetailActivity extends BaseActivity {
+public class UserDetailActivity extends BaseActivity implements AdapterView.OnItemClickListener{
     @BindView(R.id.user_detail_img_avatar)
     CircleImageView userDetailImgAvatar;
     @BindView(R.id.grade_progress)
@@ -84,17 +86,12 @@ public class UserDetailActivity extends BaseActivity {
     CoordinatorLayout mainWindow;
     @BindView(R.id.btn_logout)
     Button btnLogout;
-
-    private final List<String>keys = new ArrayList<>();
-    private final List<String>values = new ArrayList<>();
-
-
-
-
-    public static final int requestCode = 128;
     @BindView(R.id.listView)
     ListView listView;
 
+    private final List<String>keys = new ArrayList<>();
+    private final List<String>values = new ArrayList<>();
+    public static final int requestCode = 128;
     private int userid;
     private String username = null;
     private String imageUrl = null;
@@ -309,7 +306,6 @@ public class UserDetailActivity extends BaseActivity {
             pop = null;
         }
     }
-
     /**
      * 返回MineFragment
      */
@@ -453,20 +449,24 @@ public class UserDetailActivity extends BaseActivity {
                 .placeholder(R.drawable.image_placeholder)
                 .into(userDetailImgAvatar);
         toolbarLayout.setTitle(obj.getString("nickname"));
-        keys.add("邮箱");
-        values.add(obj.getString("email"));
-        keys.add("账号");
-        values.add(obj.getString("account").trim().isEmpty() ? "null" : obj.getString("account"));
-        keys.add("等级");
-        values.add(obj.getString("level").trim().isEmpty()?"0":obj.getString("level"));
+        gradeProgress.setProgress(Float.parseFloat(obj.getString("level"))/5);
+        progressText.setText(obj.getString("level")+"/5");
+
+
         //如果是本人则显示全部
         if (isLoginUser) {
-            keys.add("学号");
+            keys.add("邮箱");
+            values.add(obj.getString("email"));
+            keys.add("账号");
+            values.add(obj.getString("account").trim().isEmpty() ? "null" : obj.getString("account"));
+            keys.add("昵称(可修改)");
+            values.add(obj.getString("nickname").trim().isEmpty() ? "null" : obj.getString("nickname"));
+            keys.add("等级");
+            values.add(obj.getString("level").trim().isEmpty()?"0":obj.getString("level"));
+            keys.add("学号(可修改)");
             values.add(obj.getString("studentCard").trim().isEmpty() ? "null" : obj.getString("studentCard"));
-            keys.add("手机号");
+            keys.add("手机号(可修改)");
             values.add(obj.getString("phone").trim().isEmpty() ? "null" : obj.getString("phone"));
-            keys.add("最近发帖/回帖");
-            values.add(obj.getString("updateTime").trim().isEmpty() ? "null" : StampToDate.stampToDate(obj.getString("updateTime")));
             if (obj.containsKey("role")){
                 keys.add("身份");
                 values.add(obj.getString("role").equals("user") ? "普通用户" : obj.getString("role"));
@@ -474,7 +474,20 @@ public class UserDetailActivity extends BaseActivity {
             keys.add("注册时间");
             values.add(obj.getString("createTime").trim().isEmpty() ?"null":StampToDate.stampToDate(obj.getString("createTime")));
         }else{
-            values.add(obj.getString("level").trim().isEmpty()  ? "null" : obj.getString("level"));
+            //不是本人
+            keys.add("邮箱");
+            values.add(obj.getString("email"));
+            keys.add("账号");
+            values.add(obj.getString("account").trim().isEmpty() ? "null" : obj.getString("account"));
+            keys.add("昵称");
+            values.add(obj.getString("nickname").trim().isEmpty() ? "null" : obj.getString("nickname"));
+            keys.add("等级");
+            values.add(obj.getString("level").trim().isEmpty()?"0":obj.getString("level"));
+            keys.add("学号");
+            values.add(obj.getString("studentCard").trim().isEmpty() ? "null" : obj.getString("studentCard"));
+            keys.add("手机号");
+            values.add(obj.getString("phone").trim().isEmpty() ? "null" : obj.getString("phone"));
+
         }
 
 
@@ -486,6 +499,45 @@ public class UserDetailActivity extends BaseActivity {
             list.add(ob);
         }
         listView.setAdapter(new SimpleAdapter(this, list, R.layout.item_sim_list, new String[]{"key", "value"}, new int[]{R.id.key, R.id.value}));
+        listView.setOnItemClickListener(this::onItemClick);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        //通过view获取其内部的组件，进而进行操作
+         String text = (String) ((TextView)view.findViewById(R.id.value)).getText();
+        //大多数情况下，position和id相同，并且都从0开始
+//        String showText = "点击第" + position + "项，文本内容为：" + text + "，ID为：" + id;
+//        Toast.makeText(this, showText, Toast.LENGTH_LONG).show();
+        if(!isLoginUser || position==0 || position==1 ||position==3 || position==6){
+            return;
+        }
+        Intent intent = new Intent(this,UserDetailSetActivity.class);
+        intent.putExtra("content",text);
+        switch (position) {
+            case 0: //点击第1个
+                intent.putExtra("set","email");
+                break;
+            case 1://点击第2个
+                intent.putExtra("set","account");
+                break;
+            case 2://点击第3个，可以修改
+                intent.putExtra("set","nickname");
+                break;
+            case 3://点击第4个
+               intent.putExtra("set","level");
+                break;
+            case 4://点击第5个，可以修改
+                intent.putExtra("set","studentCard");
+                break;
+            case 5://点击第6个，可以修改
+                intent.putExtra("set","phone");
+                break;
+            case 6://点击第7个
+                intent.putExtra("set","role");
+                break;
+        }
+        startActivityForResult(intent, UserDetailSetActivity.requestCode);
     }
 
 }

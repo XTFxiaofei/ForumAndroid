@@ -56,6 +56,10 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".module.user.userdetail.UserDetailSetActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
             android:name=".module.setting.about.AboutActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
