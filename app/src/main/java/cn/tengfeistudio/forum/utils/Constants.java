@@ -7,6 +7,12 @@ package cn.tengfeistudio.forum.utils;
  */
 public class Constants {
     /**
+     * 当前app版本号
+     */
+    public static final String version_name="1.0.2";
+
+    public static final int version_code=1;
+    /**
      * 存储当前登录用户id的字段名
      */
     public static final String CURRENT_USER_ID = "CURRENT_USER_ID";

@@ -51,7 +51,7 @@ public class NetConfig {
     public static final String PLUSCLUB_ITEM = "https://github.com/WithLei/plusClub";
 
     // 获取PlusClub realease api
-    public static final String GITHUB_GET_RELEASE = "https://api.github.com/repos/WithLei/plusClub/releases/latest";
+    //public static final String GITHUB_GET_RELEASE = "https://api.github.com/repos/WithLei/plusClub/releases/latest";
 
     // PlusClub 登陆
     public static final String BASE_LOGIN_PLUS = BASE_PLUSCLUB + "login";
@@ -101,7 +101,8 @@ public class NetConfig {
 
 
 
-
+    /** github版本更新地址 */
+    public static final String GITHUB_GET_RELEASE="https://api.github.com/repos/XTFxiaofei/ForumAndroid/releases/latest";
 
     public static final String BASE_DOMAIN="http://192.168.191.1:8080/";
 
@@ -148,7 +149,7 @@ public class NetConfig {
     public static final String BASE_EDU_GDUFE="http://jwxt.gdufe.edu.cn/jsxsd/";
 
     /** 安装包下载地址 */
-    public static final String APK_DOWNLOAD_URL="";
+    public static final String APK_DOWNLOAD_URL="https://github.com/XTFxiaofei/ForumAndroid/releases/download/1.0.2/app-debug.apk";
 
 
     /** 连接websocket */

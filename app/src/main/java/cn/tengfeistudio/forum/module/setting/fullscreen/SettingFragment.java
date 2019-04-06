@@ -25,6 +25,7 @@ import cn.tengfeistudio.forum.module.user.changepwd.ChangePwdActivity;
 import cn.tengfeistudio.forum.module.setting.main.SettingActivity;
 import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.App;
+import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.toast.MyToast;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.utils.DataManager;
@@ -104,8 +105,8 @@ public class SettingFragment extends PreferenceFragment
         }
 
         // 初始化版本
-        version_code = 1;
-        version_name = "1.0";
+        version_code = Constants.version_code;
+        version_name = Constants.version_name;
         if (info != null) {
             version_code = info.versionCode;
             version_name = info.versionName;

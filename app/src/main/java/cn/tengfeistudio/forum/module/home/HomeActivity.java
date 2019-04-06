@@ -81,7 +81,7 @@ public class HomeActivity extends BaseActivity
     protected void initData() {
         initViewpager();
         //更新版本
-        // discoverVersion();
+         discoverVersion();
     }
 
     @SuppressLint("CheckResult")
@@ -93,7 +93,7 @@ public class HomeActivity extends BaseActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-        version_name = "1.0";
+        version_name = Constants.version_name;
         if (info != null) {
             version_name = info.versionName;
         }

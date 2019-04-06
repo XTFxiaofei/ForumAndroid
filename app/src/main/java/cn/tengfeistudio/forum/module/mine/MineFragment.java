@@ -173,7 +173,7 @@ public class MineFragment extends BaseFragment
             case 3:
                 // 分享Plus客户端
                 //String data = "这个Plus Club客户端非常不错，分享给你们。" + NetConfig.PLUSCLUB_ITEM;
-                String data="户端非常不错，分享给你们。"+ NetConfig.APK_DOWNLOAD_URL;
+                String data="这个app非常不错，分享给你们。"+ NetConfig.APK_DOWNLOAD_URL;
                 IntentUtils.shareApp(mActivity, data);
                 break;
             case 4:
