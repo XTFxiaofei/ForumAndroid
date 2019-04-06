@@ -149,7 +149,7 @@ public class NetConfig {
     public static final String BASE_EDU_GDUFE="http://jwxt.gdufe.edu.cn/jsxsd/";
 
     /** 安装包下载地址 */
-    public static final String APK_DOWNLOAD_URL="https://github.com/XTFxiaofei/ForumAndroid/releases/download/1.0.2/app-debug.apk";
+    public static final String APK_DOWNLOAD_URL="https://github.com/XTFxiaofei/ForumAndroid/releases/download/"+Constants.version_name+"/app-debug.apk";
 
 
     /** 连接websocket */
