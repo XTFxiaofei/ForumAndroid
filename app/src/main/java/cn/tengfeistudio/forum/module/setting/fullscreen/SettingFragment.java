@@ -108,12 +108,12 @@ public class SettingFragment extends PreferenceFragment
         version_code = Constants.version_code;
         version_name = Constants.version_name;
         if (info != null) {
-            version_code = info.versionCode;
+            version_code = info.versionCode;  //不应该给用户看到的
             version_name = info.versionName;
         }
 
         findPreference("about_this")
-                .setSummary("当前版本" + version_name + "  version code:" + version_code);
+                .setSummary("当前版本" + version_name);
         findPreference("about_this")
                 .setOnPreferenceClickListener(preference -> {
                     RetrofitService.getRelease()

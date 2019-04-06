@@ -99,7 +99,7 @@ public class LaunchActivity extends Activity{
 
     //自动续命copyright
     private void setCopyRight() {
-        int year = 2029;
+        int year = 2019;
         int yearNow = Calendar.getInstance().get(Calendar.YEAR);
 
         if (year < yearNow) {
