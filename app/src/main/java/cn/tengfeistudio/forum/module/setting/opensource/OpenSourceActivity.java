@@ -25,16 +25,14 @@ public class OpenSourceActivity extends BaseActivity {
         String content = "**# 一切伟大的行动和思想**  \n**都有一个微不足道的开始**\n" +
                 "\n" +
                 "## 项目介绍\n" +
-                "[PlusClub](http://118.24.0.78/#/home)校园论坛\n" +
-                "支持主题切换、发帖、回帖、课程表、校园卡收支\n" +
+                "[广财校园吧](https://github.com/XTFxiaofei/ForumAndroid)\n" +
+                "支持广财素拓活动、主题切换、发帖、回帖、课程表\n" +
                 "\n" +
-                "Web端项目：[Robinson28years/lsuplusclub](https://github.com/Robinson28years/lsuplusclub)  \n" +
-                "前移动端项目：[xiaoshidefeng/PLUS-for-Android](https://github.com/xiaoshidefeng/PLUS-for-Android)\n" +
+                "前移动端项目：[XTFxiaofei/ForumAndroid](https://github.com/XTFxiaofei/ForumAndroid)\n" +
                 "\n" +
                 "## 意见和反馈\n" +
                 "联系我们：\n" +
-                " - heyrenly@163.com\n" +
-                " - bb.chen@outlook.com\n" +
+                " - 2323533690@qq.com\n" +
                 "\n" +
                 "## 开源框架\n" +
                 "### RxJava\n" +

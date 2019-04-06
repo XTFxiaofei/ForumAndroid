@@ -87,7 +87,7 @@ public class SettingFragment extends PreferenceFragment
     private void initOpenSource() {
         // 项目地址
         findPreference("open_sourse").setOnPreferenceClickListener(preference -> {
-            IntentUtils.openBroswer(mActivity, "https://github.com/WithLei/plusClub");
+            IntentUtils.openBroswer(mActivity, "https://github.com/XTFxiaofei/ForumAndroid");
             return false;
         });
     }

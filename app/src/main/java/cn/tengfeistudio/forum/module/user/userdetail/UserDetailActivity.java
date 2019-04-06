@@ -456,11 +456,11 @@ public class UserDetailActivity extends BaseActivity {
         keys.add("邮箱");
         values.add(obj.getString("email"));
         keys.add("账号");
-
+        values.add(obj.getString("account").trim().isEmpty() ? "null" : obj.getString("account"));
+        keys.add("等级");
+        values.add(obj.getString("level").trim().isEmpty()?"0":obj.getString("level"));
+        //如果是本人则显示全部
         if (isLoginUser) {
-            values.add(obj.getString("account").trim().isEmpty() ? "null" : obj.getString("account"));
-//            keys.add("等级");
-//            values.add(obj.getString("level").trim().isEmpty()?"0":obj.getString("level"));
             keys.add("学号");
             values.add(obj.getString("studentCard").trim().isEmpty() ? "null" : obj.getString("studentCard"));
             keys.add("手机号");
@@ -471,11 +471,11 @@ public class UserDetailActivity extends BaseActivity {
                 keys.add("身份");
                 values.add(obj.getString("role").equals("user") ? "普通用户" : obj.getString("role"));
             }
+            keys.add("注册时间");
+            values.add(obj.getString("createTime").trim().isEmpty() ?"null":StampToDate.stampToDate(obj.getString("createTime")));
         }else{
             values.add(obj.getString("level").trim().isEmpty()  ? "null" : obj.getString("level"));
         }
-        keys.add("注册时间");
-        values.add(obj.getString("createTime").trim().isEmpty() ?"null":StampToDate.stampToDate(obj.getString("createTime")));
 
 
         List<Map<String, String>> list = new ArrayList<>();
