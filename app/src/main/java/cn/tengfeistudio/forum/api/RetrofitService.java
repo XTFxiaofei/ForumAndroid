@@ -356,6 +356,20 @@ public class RetrofitService {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+
+    /**
+     * 点赞
+     * @param topicId
+     * @return
+     */
+    public static Observable<ResponseBody> praiseTopic(int topicId){
+        return topicApi.praiseTopic(Store.getInstance().getToken(),topicId)
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
     /**
      * 获取帖子
      */

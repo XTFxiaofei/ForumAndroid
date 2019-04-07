@@ -41,4 +41,10 @@ public interface TopicApi {
     @POST("delete_topic_byTopicId")
     Observable<ResponseBody> deleteTopicByTopicId(@Header("authorization") String authorization,@Query("topicId")int topicId,@Query("flag")int flag);
 
+    /**
+     * 点赞
+     */
+    @POST("praise_topic")
+    Observable<ResponseBody> praiseTopic(@Header("authorization") String authorization, @Query("topicId") int topicId);
+
 }

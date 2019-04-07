@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,9 +39,12 @@ import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.api.beans.TopicBean;
+import cn.tengfeistudio.forum.module.post.postcontent.fullscreen.PostActivity;
 import cn.tengfeistudio.forum.module.post.postcontent.main.SecondActivity;
 import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
 import cn.tengfeistudio.forum.utils.Constants;
+import cn.tengfeistudio.forum.utils.IntentUtils;
+import cn.tengfeistudio.forum.utils.NetConfig;
 import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.utils.toast.ToastUtils;
@@ -263,6 +268,22 @@ public class TopicAdapter extends BaseAdapter {
             }
         }
 
+        /**
+         * 判断点赞用户是否包含某个用户id
+         * @param strs
+         * @param userId
+         * @return
+         */
+        private boolean isInclude(String[] strs,int userId){
+            String userid=String.valueOf(userId);
+            for(String s:strs){
+                if(s.equals(userid)){
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         @Override
         void setData(int pos) {
@@ -277,6 +298,11 @@ public class TopicAdapter extends BaseAdapter {
             }
             //images=JSONArray.parseArray(object.getContentPictureJson(),String.class);
 
+            String praiseUsers=object.getPraiseAccountJson();
+            //点赞的用户id数字
+            String[] userids=praiseUsers.split(Constants.COMMA);
+            //点赞数量
+            int praiseNumber=userids.length;
             if(object.getTitle().isEmpty()){
                 articleTitle.setVisibility(View.GONE);
             }else {
@@ -284,9 +310,22 @@ public class TopicAdapter extends BaseAdapter {
             }
             authorName.setText(" " + object.getUserByUserId().getNickname());
             postTime.setText(" " + StampToDate.getStringDate(object.getCreateTime()));
+            //评论数量
             replyCount.setText("" + object.getCommentNumber());
-            viewCount.setText("" + object.getViewNumber());
-            praiseCount.setText(""+0);
+            //阅读量,现在先用点赞计算  object.getViewNumber(),改成转发
+           // viewCount.setText("" + object.getCommentNumber());
+            viewCount.setText("转发");
+
+            //点赞数量
+            praiseCount.setText(""+praiseNumber);
+            //已经点赞
+            if(isInclude(userids,App.getUid())){
+                // 使用代码设置drawableleft
+                Drawable drawable = context.getDrawable(R.drawable.praised);
+                // / 这一步必须要做,否则不会显示.
+                drawable.setBounds(0, 0,drawable.getMinimumWidth() , drawable.getMinimumHeight());
+                praiseCount.setCompoundDrawables(drawable,null, null, null);
+            }
             level.setRating(object.getUserByUserId().getLevel());
             if(object.getContent().isEmpty()){
                 content.setVisibility(View.GONE);
@@ -308,14 +347,46 @@ public class TopicAdapter extends BaseAdapter {
             });
             //点赞
             praiseCount.setOnClickListener(view->{
-                ToastUtils.ToastShort("点赞成功");
+                if(isInclude(userids,App.getUid())){
+                    ToastShort("你已点赞");
+                    return ;
+                }else{
+                    praiseCount.setText(""+(praiseNumber+1));
+                    // 使用代码设置drawableleft
+                    Drawable drawable = context.getDrawable(R.drawable.praised);
+                    // / 这一步必须要做,否则不会显示.
+                    drawable.setBounds(0, 0,drawable.getMinimumWidth() , drawable.getMinimumHeight());
+                    praiseCount.setCompoundDrawables(drawable,null, null, null);
+                    RetrofitService.praiseTopic(object.getTopicId())
+                            .subscribe(responseBody -> {
+                                String response=responseBody.string();
+                                if(!response.contains("code")){
+                                    ToastNetWorkError();
+                                }else {
+                                    ToastShort("点赞成功");
+                                }
+                            }, throwable -> {
+                                printLog("TopicAdapter:" + throwable.getMessage());
+                                ToastNetWorkError();
+                            });
+                }
+
             });
             //回复
             replyCount.setOnClickListener(view->{
-
+                Intent intent = new Intent(context, PostActivity.class);
+                intent.putExtra("topicId", object.getTopicId());
+                intent.putExtra("isNormalPost", false);
+                context.startActivity(intent);
             });
-            //评论
+            //浏览量,改成转发了
             viewCount.setOnClickListener(view->{
+//                Intent intent = new Intent(context, PostActivity.class);
+//                intent.putExtra("topicId", object.getTopicId());
+//                intent.putExtra("isNormalPost", false);
+//                context.startActivity(intent);
+                String data = "这篇文章不错，分享给你们 【" + articleTitle + " \n链接地址："+ NetConfig.SHARE_TOPIC + object.getTopicId() + "】\n来自广财校园吧";
+                IntentUtils.sharePost(context, data);
 
             });
             //点击更多图

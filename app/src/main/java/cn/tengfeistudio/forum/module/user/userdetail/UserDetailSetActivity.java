@@ -85,10 +85,10 @@ public class UserDetailSetActivity extends BaseActivity {
                             if (jsonObject.getInteger("code") != Constants.RETURN_CONTINUE){
                                 ToastShort("服务器出状况惹，再试试( • ̀ω•́ )✧");
                             }else{
-//                                Intent intent = new Intent(this, UserDetailActivity.class);
-//                                intent.putExtra("userid", App.getUid());
-//                                this.startActivity(intent);
-                                 finishActivity();
+                                Intent intent = new Intent(this, UserDetailActivity.class);
+                                intent.putExtra("userid", App.getUid());
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                this.startActivity(intent);
 
                             }
                         });

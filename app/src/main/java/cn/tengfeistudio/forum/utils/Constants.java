@@ -57,6 +57,8 @@ public class Constants {
     public static final int RETURN_CONTINUE=100;
    /** 默认查找第几页 */
    public static final int DEFAULT_PAGE_NUMBER=0;
+    /** 逗号 */
+    public static final String COMMA=",";
 
 
 

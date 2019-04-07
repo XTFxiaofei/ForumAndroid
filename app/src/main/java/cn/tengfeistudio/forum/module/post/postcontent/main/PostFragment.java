@@ -48,6 +48,7 @@ import cn.tengfeistudio.forum.module.base.BaseActivity;
 import cn.tengfeistudio.forum.module.base.BaseFragment;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.utils.Constants;
+import cn.tengfeistudio.forum.utils.NetConfig;
 import cn.tengfeistudio.forum.utils.SensitiveWordUtil;
 import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.widget.CircleImageView;
@@ -514,7 +515,7 @@ public class PostFragment extends BaseFragment {
         switch (view.getId()) {
             //分享
             case R.id.share_panel:
-                String data = "这篇文章不错，分享给你们 【" + articleTitle.getText() + " \n链接地址：http://118.24.0.78/#/forum/" + topicId + "】\n来自PlusClub客户端";
+                String data = "这篇文章不错，分享给你们 【" + articleTitle + " \n链接地址："+ NetConfig.SHARE_TOPIC + topicId + "】\n来自广财校园吧";
                 IntentUtils.sharePost(getActivity(), data);
                 break;
             //隐藏

@@ -101,10 +101,14 @@ public class NetConfig {
 
 
 
+
     /** github版本更新地址 */
     public static final String GITHUB_GET_RELEASE="https://api.github.com/repos/XTFxiaofei/ForumAndroid/releases/latest";
 
     public static final String BASE_DOMAIN="http://192.168.191.1:8080/";
+
+    /** 分享web网页的帖子 */
+    public static final String SHARE_TOPIC=BASE_DOMAIN+"forum/";
 
     /** 发帖 **/
     public static final String BASE_TOPIC_INCLUDE_IMAGES=BASE_DOMAIN+"topic/send_topic_image";
