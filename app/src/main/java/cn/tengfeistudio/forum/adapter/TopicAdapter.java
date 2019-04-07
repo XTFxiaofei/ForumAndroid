@@ -385,7 +385,7 @@ public class TopicAdapter extends BaseAdapter {
 //                intent.putExtra("topicId", object.getTopicId());
 //                intent.putExtra("isNormalPost", false);
 //                context.startActivity(intent);
-                String data = "这篇文章不错，分享给你们 【" + articleTitle + " \n链接地址："+ NetConfig.SHARE_TOPIC + object.getTopicId() + "】\n来自广财校园吧";
+                String data = "这篇文章不错，分享给你们 【" +" \n链接地址："+ NetConfig.SHARE_TOPIC + object.getTopicId() + "】\n来自广财校园吧";
                 IntentUtils.sharePost(context, data);
 
             });
