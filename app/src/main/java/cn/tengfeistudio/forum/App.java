@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +17,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 //import com.squareup.leakcanary.LeakCanary;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.checknet.NetworkReceiver;
@@ -52,7 +55,28 @@ public class App extends Application {
         regReciever();
         /** 已经在MyRecyclerView类中添加 */
        // initImageLoader();//初始化ImageLoader
+
+        disableAPIDialog();
     }
+
+    /**
+     * 反射 禁止弹窗
+     */
+    private void disableAPIDialog(){
+        if (Build.VERSION.SDK_INT < 28)return;
+        try {
+            Class clazz = Class.forName("android.app.ActivityThread");
+            Method currentActivityThread = clazz.getDeclaredMethod("currentActivityThread");
+            currentActivityThread.setAccessible(true);
+            Object activityThread = currentActivityThread.invoke(null);
+            Field mHiddenApiWarningShown = clazz.getDeclaredField("mHiddenApiWarningShown");
+            mHiddenApiWarningShown.setAccessible(true);
+            mHiddenApiWarningShown.setBoolean(activityThread, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 

@@ -509,7 +509,7 @@ public class UserDetailActivity extends BaseActivity implements AdapterView.OnIt
         //大多数情况下，position和id相同，并且都从0开始
 //        String showText = "点击第" + position + "项，文本内容为：" + text + "，ID为：" + id;
 //        Toast.makeText(this, showText, Toast.LENGTH_LONG).show();
-        if(!isLoginUser || position==0 || position==1 ||position==3 || position==6){
+        if(!isLoginUser || position==0 || position==1 ||position==3 || position==6 ||position==7){
             return;
         }
         Intent intent = new Intent(this,UserDetailSetActivity.class);
