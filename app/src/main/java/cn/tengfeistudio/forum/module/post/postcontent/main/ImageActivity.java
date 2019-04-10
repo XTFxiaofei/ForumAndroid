@@ -28,7 +28,7 @@ import cn.tengfeistudio.forum.R;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class SecondActivity extends Activity {
+public class ImageActivity extends Activity {
     private ViewPager vp;
     private List<ImageView> imageViews=new ArrayList<ImageView>();//显示图片的ImageView
     private int position;//从上个页面获取的子项position
@@ -36,8 +36,8 @@ public class SecondActivity extends Activity {
     private DisplayImageOptions options;
     private MyViewPagerAdapter adapter=new MyViewPagerAdapter();
     private LinearLayout vp_ll;
-    private Map<Integer,float[]> xyMap=new HashMap<Integer,float[]>();//接收所有图片的坐标
-    private float pivotX,pivotY;//放大缩小的中心点
+   // private Map<Integer,float[]> xyMap=new HashMap<Integer,float[]>();//接收所有图片的坐标
+    //private float pivotX,pivotY;//放大缩小的中心点
     private TextView vp_text;
     private Context mContext;
     @Override
@@ -48,13 +48,13 @@ public class SecondActivity extends Activity {
         setContentView(R.layout.activity_second);
         mContext=this;
         initView();
-        xyMap=(HashMap<Integer,float[]>)getIntent().getExtras().get("xyMap");
+       // xyMap=(HashMap<Integer,float[]>)getIntent().getExtras().get("xyMap");
         position=getIntent().getIntExtra("position", 0);
         //得到放缩中心点
-        pivotX=xyMap.get(position)[0];
-        pivotY=xyMap.get(position)[1];
+        //pivotX=xyMap.get(position)[0];
+        //pivotY=xyMap.get(position)[1];
         //放大动画
-        ScaleAnimation scaleAnimation=new ScaleAnimation(0, 1, 0, 1, pivotX,pivotY);//设置动画从0放大到正常大小
+        ScaleAnimation scaleAnimation=new ScaleAnimation(0, 1, 0, 1);//设置动画从0放大到正常大小
         scaleAnimation.setDuration(350);//设置动画时长
         scaleAnimation.setFillAfter(true);
         vp_ll.startAnimation(scaleAnimation);
@@ -77,9 +77,10 @@ public class SecondActivity extends Activity {
 
             @Override
             public void onPageSelected(int position1) {//左右滑动时更新中心点和文字信息
-                pivotX=xyMap.get(position1)[0];
-                pivotY=xyMap.get(position1)[1];
-                vp_text.setText((position1+1)+"/"+xyMap.size());
+                //pivotX=xyMap.get(position1)[0];
+               // pivotY=xyMap.get(position1)[1];
+              //  vp_text.setText((position1+1)+"/"+xyMap.size());
+                vp_text.setText((position1+1)+"/"+urls.size());
             }
 
             @Override
@@ -115,7 +116,7 @@ public class SecondActivity extends Activity {
             photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {//单击图片退出大图
                 @Override
                 public void onPhotoTap(View view, float v, float v1) {
-                    SecondActivity.this.finish();
+                    ImageActivity.this.finish();
                 }
             });
             ImageLoader.getInstance().displayImage(urls.get(i), photoView, options);
@@ -123,7 +124,8 @@ public class SecondActivity extends Activity {
         }
         vp.setAdapter(adapter);
         vp.setCurrentItem(position, true);
-        vp_text.setText((position+1)+"/"+xyMap.size());
+       // vp_text.setText((position+1)+"/"+xyMap.size());
+        vp_text.setText((position+1)+"/"+urls.size());
 
     }
 
@@ -161,7 +163,7 @@ public class SecondActivity extends Activity {
     public void finish() {
         //大图页面是全屏，小图页面非全屏，从全屏退到非全屏页面会产生抖动现象，因此退出前设置成非全屏模式
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        ScaleAnimation scaleAnimation=new ScaleAnimation(1, 0, 1, 0, pivotX,pivotY);//动画从正常大小缩小至0
+        ScaleAnimation scaleAnimation=new ScaleAnimation(1, 0, 1, 0);//动画从正常大小缩小至0
         scaleAnimation.setDuration(350);
         scaleAnimation.setFillAfter(true);
         vp_ll.startAnimation(scaleAnimation);
@@ -182,7 +184,7 @@ public class SecondActivity extends Activity {
             @Override
             public void onAnimationEnd(Animation animation) {
 
-                SecondActivity.super.finish();//动画结束时调用Activity的finish方法
+                ImageActivity.super.finish();//动画结束时调用Activity的finish方法
                 overridePendingTransition(0, 0);//紧跟着禁用Activity默认动画
             }
         });

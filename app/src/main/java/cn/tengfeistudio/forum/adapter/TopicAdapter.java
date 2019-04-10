@@ -5,16 +5,11 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -22,15 +17,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,16 +29,16 @@ import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.api.beans.TopicBean;
+import cn.tengfeistudio.forum.model.NineGridTestModel;
 import cn.tengfeistudio.forum.module.post.postcontent.fullscreen.PostActivity;
-import cn.tengfeistudio.forum.module.post.postcontent.main.SecondActivity;
 import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.IntentUtils;
 import cn.tengfeistudio.forum.utils.NetConfig;
 import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
-import cn.tengfeistudio.forum.utils.toast.ToastUtils;
 import cn.tengfeistudio.forum.widget.CircleImageView;
+import cn.tengfeistudio.forum.widget.NineGridTestLayout;
 
 import static cn.tengfeistudio.forum.utils.LogUtils.printLog;
 import static cn.tengfeistudio.forum.utils.toast.ToastUtils.ToastNetWorkError;
@@ -79,6 +69,8 @@ public class TopicAdapter extends BaseAdapter {
             return TYPE_NORMAL;
         }
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -133,157 +125,28 @@ public class TopicAdapter extends BaseAdapter {
         TextView content;
         @BindView(R.id.btn_more2)
         ImageView moreImage;
-        @BindView(R.id.rv)
-        RecyclerView rv;
+        @BindView(R.id.layout_nine_grid)
+        NineGridTestLayout nineGridTestLayout;
 
-        private List<String> images=new ArrayList<String>();//图片地址
-        private DisplayImageOptions options;
-        private MyRecyclerViewAdapter adapter;
-        private HashMap<Integer, float[]> xyMap=new HashMap<Integer, float[]>();//所有子项的坐标
-        private int screenWidth;//屏幕宽度
-        private int screenHeight;//屏幕高度
-
-
-
+        /** 9宫图model */
+        private List<NineGridTestModel> mList = new ArrayList<>();
+        private List<String> praiseUseridList=new ArrayList<>();
 
 
         NormalViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            onResume();
         }
 
-        protected void onResume() {
-           // super.onResume();
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            screenWidth = wm.getDefaultDisplay().getWidth();
-            screenHeight = wm.getDefaultDisplay().getHeight();
-        }
-
-        /**
-         * recyclerView item点击事件
-         */
-        private void setEvent() {
-            adapter.setmOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
-                @Override
-                public void onClick(View view, int position) {
-                    Intent intent=new Intent(context,SecondActivity.class);
-                    intent.putStringArrayListExtra("urls", (ArrayList<String>) images);
-                    intent.putExtra("position", position);
-                    xyMap.clear();//每一次点击前子项坐标都不一样，所以清空子项坐标
-
-                    //子项前置判断，是否在屏幕内，不在的话获取屏幕边缘坐标
-                    View view0=rv.getChildAt(0);
-                    int position0=rv.getChildPosition(view0);
-                    if(position0>0)
-                    {
-                        for(int j=0;j<position0;j++)
-                        {
-                            float[] xyf=new float[]{(1/6.0f+(j%3)*(1/3.0f))*screenWidth,0};//每行3张图，每张图的中心点横坐标自然是屏幕宽度的1/6,3/6,5/6
-                            xyMap.put(j, xyf);
-                        }
-                    }
-
-                    //其余子项判断
-                    for(int i=position0;i<rv.getAdapter().getItemCount();i++)
-                    {
-                        View view1=rv.getChildAt(i-position0);
-                        if(rv.getChildPosition(view1)==-1)//子项末尾不在屏幕部分同样赋值屏幕底部边缘
-                        {
-                            float[] xyf=new float[]{(1/6.0f+(i%3)*(1/3.0f))*screenWidth,screenHeight};
-                            xyMap.put(i, xyf);
-                        }
-                        else
-                        {
-                            int[] xy = new int[2];
-                            view1.getLocationOnScreen(xy);
-                            float[] xyf=new float[]{xy[0]*1.0f+view1.getWidth()/2,xy[1]*1.0f+view1.getHeight()/2};
-                            xyMap.put(i, xyf);
-                        }
-                    }
-                    intent.putExtra("xyMap",xyMap);
-                    context.startActivity(intent);
-                }
-            });
-        }
-
-        private void initView()
-        {
-            GridLayoutManager glm=new GridLayoutManager(context,3);//定义3列的网格布局
-            rv.setLayoutManager(glm);
-            rv.addItemDecoration(new RecyclerViewItemDecoration(20,3));//初始化子项距离和列数
-            options=new DisplayImageOptions.Builder()
-                    .showImageForEmptyUri(R.mipmap.ic_launcher)
-                    .showImageOnLoading(R.mipmap.ic_launcher)
-                    .showImageOnFail(R.mipmap.ic_launcher)
-                    .cacheInMemory(true)
-                    .cacheOnDisk(true)
-                    .displayer(new FadeInBitmapDisplayer(5))
-                    .build();
-
-//               options = new DisplayImageOptions.Builder()
-//                .showImageOnLoading(R.mipmap.ic_launcher) //设置图片在下载期间显示的图片
-//                .showImageForEmptyUri(R.mipmap.ic_launcher)//设置图片Uri为空或是错误的时候显示的图片
-//                .showImageOnFail(R.mipmap.ic_launcher)  //设置图片加载/解码过程中错误时候显示的图片
-//                .cacheInMemory(true)//设置下载的图片是否缓存在内存中
-//                .cacheOnDisk(true)//设置下载的图片是否缓存在SD卡中
-//                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)//设置图片以如何的编码方式显示
-//                .bitmapConfig(Bitmap.Config.RGB_565)//设置图片的解码类型
-//                .displayer(new RoundedBitmapDisplayer(10))
-//                .build();//构建完成
-            adapter=new MyRecyclerViewAdapter(images,context,options,glm);
-            rv.setAdapter(adapter);
-        }
-
-        /**
-         * 初始化网络图片地址，来自百度图片
-         */
-        private void initData()
-        {
-           adapter.notifyDataSetChanged();
-        }
-        public class RecyclerViewItemDecoration extends RecyclerView.ItemDecoration
-        {
-            private int itemSpace;//定义子项间距
-            private int itemColumnNum;//定义子项的列数
-
-            public RecyclerViewItemDecoration(int itemSpace, int itemColumnNum) {
-                this.itemSpace = itemSpace;
-                this.itemColumnNum = itemColumnNum;
+       /** 初始化9图model数据 */
+        private void initListData(List<String> list) {
+            NineGridTestModel model = new NineGridTestModel();
+            int len=list.size();
+            for (int i = 0; i < len; i++) {
+                model.urlList.add(list.get(i));
             }
-
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-                outRect.bottom=itemSpace;//底部留出间距
-                if(parent.getChildPosition(view)%itemColumnNum==0)//每行第一项左边不留间距，其他留出间距
-                {
-                    outRect.left=0;
-                }
-                else
-                {
-                    outRect.left=itemSpace;
-                }
-
-            }
+            mList.add(model);
         }
-
-        /**
-         * 判断点赞用户是否包含某个用户id
-         * @param strs
-         * @param userId
-         * @return
-         */
-        private boolean isInclude(String[] strs,int userId){
-            String userid=String.valueOf(userId);
-            for(String s:strs){
-                if(s.equals(userid)){
-                    return true;
-                }
-            }
-            return false;
-        }
-
 
         @Override
         void setData(int pos) {
@@ -292,17 +155,22 @@ public class TopicAdapter extends BaseAdapter {
 
             TopicBean object = topicList.get(pos);
             imgUrls= JSONArray.parseArray(object.getContentPictureJson(),String.class);
-            if(imgUrls!=null){
-                images.clear();
-                images.addAll(imgUrls);
+            if(imgUrls!=null && imgUrls.size()>0){
+                initListData(imgUrls);
+                imgUrls.clear();
+                nineGridTestLayout.setIsShowAll(mList.get(0).isShowAll);
+                nineGridTestLayout.setUrlList(mList.get(0).urlList);
             }
-            //images=JSONArray.parseArray(object.getContentPictureJson(),String.class);
-
             String praiseUsers=object.getPraiseAccountJson();
             //点赞的用户id数字
             String[] userids=praiseUsers.split(Constants.COMMA);
+            if(userids.length>0){
+                //点赞用户集合
+                praiseUseridList= new ArrayList<>(Arrays.asList(userids));
+                praiseUseridList.remove("");
+            }
             //点赞数量
-            int praiseNumber=userids.length;
+            int praiseNumber=praiseUseridList.size();
             if(object.getTitle().isEmpty()){
                 articleTitle.setVisibility(View.GONE);
             }else {
@@ -319,7 +187,7 @@ public class TopicAdapter extends BaseAdapter {
             //点赞数量
             praiseCount.setText(""+praiseNumber);
             //已经点赞
-            if(isInclude(userids,App.getUid())){
+            if(praiseUseridList.contains(String.valueOf(App.getUid()))){
                 // 使用代码设置drawableleft
                 Drawable drawable = context.getDrawable(R.drawable.praised);
                 // / 这一步必须要做,否则不会显示.
@@ -336,9 +204,6 @@ public class TopicAdapter extends BaseAdapter {
                     .load(object.getUserByUserId().getIcon())
                     .placeholder(R.drawable.image_placeholder)
                     .into(authorImg);
-            initView();
-            initData();
-            setEvent();
             //点击头像
             authorImg.setOnClickListener(view -> {
                 Intent intent = new Intent(context, UserDetailActivity.class);
@@ -347,11 +212,12 @@ public class TopicAdapter extends BaseAdapter {
             });
             //点赞
             praiseCount.setOnClickListener(view->{
-                if(isInclude(userids,App.getUid())){
-                    ToastShort("你已点赞");
+                if(praiseUseridList.contains(String.valueOf(App.getUid()))){
+                   // ToastShort("你已点赞");
                     return ;
                 }else{
                     praiseCount.setText(""+(praiseNumber+1));
+                    praiseUseridList.add(String.valueOf(App.getUid()));
                     // 使用代码设置drawableleft
                     Drawable drawable = context.getDrawable(R.drawable.praised);
                     // / 这一步必须要做,否则不会显示.
@@ -363,7 +229,7 @@ public class TopicAdapter extends BaseAdapter {
                                 if(!response.contains("code")){
                                     ToastNetWorkError();
                                 }else {
-                                    ToastShort("点赞成功");
+                                    //ToastShort("点赞成功");
                                 }
                             }, throwable -> {
                                 printLog("TopicAdapter:" + throwable.getMessage());

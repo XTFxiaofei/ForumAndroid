@@ -114,22 +114,27 @@
         </LinearLayout>
 
 
-        <android.support.v7.widget.RecyclerView
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="@dimen/dimen_16"-->
+        <!--android:layout_marginRight="@dimen/dimen_16"-->
+        <!--android:paddingRight="5dp"-->
+        <!--android:paddingTop="6dp"-->
+        <!--android:id="@+id/rv"-->
+        <!--/>-->
+
+        <cn.tengfeistudio.forum.widget.NineGridTestLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/layout_nine_grid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_16"
             android:layout_marginRight="@dimen/dimen_16"
+            android:layout_marginTop="8dp"
             android:paddingRight="5dp"
             android:paddingTop="6dp"
-            android:id="@+id/rv"
-            />
-
-        <!--<com.lzy.ninegrid.NineGridView-->
-        <!--android:id="@+id/nineGrid"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:paddingRight="5dp"-->
-        <!--android:paddingTop="6dp"/>-->
+            app:sapcing="4dp" />
 
 
         <LinearLayout
@@ -143,18 +148,17 @@
                 android:id="@+id/reply_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginTop="4dp"
+                android:layout_weight="1"
                 android:background="@drawable/buttonstyle"
                 android:drawableLeft="@drawable/comment"
-                android:paddingBottom="5dp"
-                android:text="回复"
-                android:textColor="#000000"
-                android:textSize="16sp"
                 android:drawablePadding="10dip"
                 android:gravity="center_vertical"
+                android:paddingBottom="5dp"
                 android:paddingLeft="20dip"
-                ></Button>
+                android:text="回复"
+                android:textColor="#000000"
+                android:textSize="16sp"></Button>
 
             <Button
                 android:id="@+id/view_count"
@@ -164,14 +168,13 @@
                 android:layout_weight="1"
                 android:background="@drawable/buttonstyle"
                 android:drawableLeft="@drawable/view"
-                android:paddingBottom="5dp"
-                android:text="浏览"
-                android:textColor="#000000"
-                android:textSize="16sp"
                 android:drawablePadding="10dip"
                 android:gravity="center_vertical"
+                android:paddingBottom="5dp"
                 android:paddingLeft="20dip"
-                ></Button>
+                android:text="浏览"
+                android:textColor="#000000"
+                android:textSize="16sp"></Button>
 
             <Button
                 android:id="@+id/praise_count"
@@ -181,14 +184,13 @@
                 android:layout_weight="1"
                 android:background="@drawable/buttonstyle"
                 android:drawableLeft="@drawable/praise"
+                android:drawablePadding="10dip"
+                android:gravity="center_vertical"
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:text="点赞"
                 android:textColor="#000000"
-                android:textSize="16sp"
-                android:drawablePadding="10dip"
-                android:gravity="center_vertical"
-               ></Button>
+                android:textSize="16sp"></Button>
 
             <!--<TextView-->
             <!--android:id="@+id/reply_count"-->

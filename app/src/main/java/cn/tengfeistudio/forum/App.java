@@ -55,10 +55,16 @@ public class App extends Application {
         regReciever();
         /** 已经在MyRecyclerView类中添加 */
        // initImageLoader();//初始化ImageLoader
-
+        initImageLoader();
         disableAPIDialog();
     }
 
+
+    private void initImageLoader() {
+        ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
+        ImageLoader.getInstance().init(configuration);
+
+    }
     /**
      * 反射 禁止弹窗
      */

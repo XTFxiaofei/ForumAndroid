@@ -34,10 +34,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.tengfeistudio.forum.adapter.CommentReplyAdapter;
-import cn.tengfeistudio.forum.adapter.MyRecyclerViewAdapter;
 import cn.tengfeistudio.forum.api.beans.Comment;
 import cn.tengfeistudio.forum.api.beans.CommentBean;
 import cn.tengfeistudio.forum.api.beans.TopicBean;
+import cn.tengfeistudio.forum.model.NineGridTestModel;
 import cn.tengfeistudio.forum.module.post.postlist.PostsActivity;
 import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
 import cn.tengfeistudio.forum.adapter.CommentAdapter;
@@ -54,22 +54,18 @@ import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.widget.CircleImageView;
 import cn.tengfeistudio.forum.utils.IntentUtils;
 import cn.tengfeistudio.forum.utils.StringUtils;
-
-import com.luck.picture.lib.tools.Constant;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.tengfeistudio.forum.widget.NineGridTestLayout;
 
 import static cn.tengfeistudio.forum.utils.LogUtils.printLog;
 import static cn.tengfeistudio.forum.utils.StampToDate.getStringDate;
@@ -107,13 +103,11 @@ public class PostFragment extends BaseFragment {
     @BindView(R.id.rb_grade)
     RatingBar userLevel;
     @BindView(R.id.rv)
-    RecyclerView rv;
+    NineGridTestLayout rv;
 
     private List<CommentBean> beanList;
     private List<Comment> comments;
-    //private Post postObj;
     private TopicBean topicObj;
-    // private long postID;
     //帖子id
     private int topicId;
     //用户等级
@@ -130,13 +124,8 @@ public class PostFragment extends BaseFragment {
     /**
      * -----------  九图 ---------------
      */
-    private List<String> images = new ArrayList<String>();//图片地址
-    private Context mContext;
-    private DisplayImageOptions options;
-    private MyRecyclerViewAdapter adapter2;
-    private HashMap<Integer, float[]> xyMap = new HashMap<Integer, float[]>();//所有子项的坐标
-    private int screenWidth;//屏幕宽度
-    private int screenHeight;//屏幕高度
+    private List<NineGridTestModel> mList = new ArrayList<>();
+
 
     @Override
     public int getLayoutid() {
@@ -148,18 +137,7 @@ public class PostFragment extends BaseFragment {
         getPostObj();
         getCommentListData();
 
-        mContext = getContext();
-        onResume();
         initView();
-        initData();
-        setEvent();
-    }
-
-    public void onResume() {
-        super.onResume();
-        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        screenWidth = wm.getDefaultDisplay().getWidth();
-        screenHeight = wm.getDefaultDisplay().getHeight();
     }
 
 
@@ -307,16 +285,26 @@ public class PostFragment extends BaseFragment {
         }
     }
 
-
+    /** 初始化9图model数据 */
+    private void initListData(List<String> list) {
+        NineGridTestModel model = new NineGridTestModel();
+        int len=list.size();
+        for (int i = 0; i < len; i++) {
+            model.urlList.add(list.get(i));
+        }
+        mList.add(model);
+    }
     /**
      * 初始化标题等等信息
      */
     private void initHead() {
         List<String> imgUrls = new ArrayList<>();
         imgUrls = JSONArray.parseArray(topicObj.getContentPictureJson(), String.class);
-        if (imgUrls != null) {
-            images.clear();
-            images.addAll(imgUrls);
+        if(imgUrls!=null && imgUrls.size()>0){
+            initListData(imgUrls);
+            imgUrls.clear();
+            rv.setIsShowAll(mList.get(0).isShowAll);
+            rv.setUrlList(mList.get(0).urlList);
         }
 
         if (from.equals("PostActivity")) {
@@ -613,71 +601,11 @@ public class PostFragment extends BaseFragment {
 
 
     /** -------------- 九图 -------------------- */
-    /**
-     * recyclerView item点击事件
-     */
-    private void setEvent() {
-        adapter2.setmOnItemClickListener(new MyRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                Intent intent = new Intent(mContext, SecondActivity.class);
-                intent.putStringArrayListExtra("urls", (ArrayList<String>) images);
-                intent.putExtra("position", position);
-                xyMap.clear();//每一次点击前子项坐标都不一样，所以清空子项坐标
 
-                //子项前置判断，是否在屏幕内，不在的话获取屏幕边缘坐标
-                View view0 = rv.getChildAt(0);
-                int position0 = rv.getChildPosition(view0);
-                if (position0 > 0) {
-                    for (int j = 0; j < position0; j++) {
-                        float[] xyf = new float[]{(1 / 6.0f + (j % 3) * (1 / 3.0f)) * screenWidth, 0};//每行3张图，每张图的中心点横坐标自然是屏幕宽度的1/6,3/6,5/6
-                        xyMap.put(j, xyf);
-                    }
-                }
 
-                //其余子项判断
-                for (int i = position0; i < rv.getAdapter().getItemCount(); i++) {
-                    View view1 = rv.getChildAt(i - position0);
-                    if (rv.getChildPosition(view1) == -1)//子项末尾不在屏幕部分同样赋值屏幕底部边缘
-                    {
-                        float[] xyf = new float[]{(1 / 6.0f + (i % 3) * (1 / 3.0f)) * screenWidth, screenHeight};
-                        xyMap.put(i, xyf);
-                    } else {
-                        int[] xy = new int[2];
-                        view1.getLocationOnScreen(xy);
-                        float[] xyf = new float[]{xy[0] * 1.0f + view1.getWidth() / 2, xy[1] * 1.0f + view1.getHeight() / 2};
-                        xyMap.put(i, xyf);
-                    }
-                }
-                intent.putExtra("xyMap", xyMap);
-                mContext.startActivity(intent);
-            }
-        });
-    }
-
+    @Override
     protected void initView() {
-        GridLayoutManager glm = new GridLayoutManager(mContext, 3);//定义3列的网格布局
-        rv.setLayoutManager(glm);
-        rv.addItemDecoration(new RecyclerViewItemDecoration(20, 3));//初始化子项距离和列数
-        options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.mipmap.ic_launcher)
-                .showImageOnLoading(R.mipmap.ic_launcher)
-                .showImageOnFail(R.mipmap.ic_launcher)
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .displayer(new FadeInBitmapDisplayer(5))
-                .build();
-        adapter2 = new MyRecyclerViewAdapter(images, mContext, options, glm);
-        rv.setAdapter(adapter2);
-
         initHead();
-    }
-
-    /**
-     * 初始化网络图片地址，来自百度图片
-     */
-    private void initData() {
-        adapter2.notifyDataSetChanged();
     }
 
     public class RecyclerViewItemDecoration extends RecyclerView.ItemDecoration {

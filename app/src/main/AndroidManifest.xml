@@ -130,10 +130,9 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".module.post.postcontent.main.SecondActivity"
+            android:name=".module.post.postcontent.main.ImageActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".module.activity.DetailActivity"
             android:theme="@style/AppTheme"
