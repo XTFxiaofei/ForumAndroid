@@ -224,7 +224,6 @@ public class RetrofitService {
      * @return
      */
     public static Observable<ResponseBody> doLogin(String email, String pwd){
-        //return //plusClubApi.doLogin(email, pwd)
          return   userApi.doLogin(email,pwd)
            .subscribeOn(Schedulers.io())
            .unsubscribeOn(Schedulers.io())
@@ -235,12 +234,6 @@ public class RetrofitService {
     /**
      * 获取用户个人信息
      */
-/*    public static Observable<ResponseBody> getUserDetails() {
-        return plusClubApi.getUserDetails("Bearer " + Store.getInstance().getToken())
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }*/
    public static Observable<ResponseBody> getUserDetails(){
        return userApi.getUserDetails(Store.getInstance().getToken())
                .subscribeOn(Schedulers.io())
@@ -324,12 +317,6 @@ public class RetrofitService {
     /**
      * 发送帖子
      */
-//    public static Observable<ResponseBody> doPost(String title, String content, String categories) {
-//        return plusClubApi.doPost("Bearer " + Store.getInstance().getToken(), title, content, categories)
-//                .subscribeOn(Schedulers.io())
-//                .unsubscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread());
-//    }
       public static Observable<ResponseBody> sendTopic(String title,String content,String theme){
           return topicApi.sendTopic(Store.getInstance().getToken(),title,content,theme)
                   .subscribeOn(Schedulers.io())
@@ -367,12 +354,6 @@ public class RetrofitService {
     /**
      * 获取帖子
      */
-//    public static Observable<ResponseBody> getPost(long id) {
-//        return plusClubApi.getPost(id)
-//                .subscribeOn(Schedulers.io())
-//                .unsubscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread());
-//    }
     public static Observable<ResponseBody> getPost(int id){
         return topicApi.getTopicByTopicId(id)
                 .subscribeOn(Schedulers.io())
@@ -390,28 +371,12 @@ public class RetrofitService {
     /**
      * 获取帖子详情列表，根据activity获取的POSTID从服务器获取[回复对象含User对象]详情
      */
-//    public static Observable<ResponseBody> getCommentListData(long id) {
-//        return plusClubApi.getCommentListData(id)
-//                .subscribeOn(Schedulers.io())
-//                .unsubscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread());
-//    }
     public static Observable<ResponseBody> getCommentListData(int id){
         return commentApi.getCommentsByTopicId(id)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-
-    /**
-     * 发表评论/回复
-     */
-//    public static Observable<ResponseBody> doPostComment(String comment, long discussion_id) {
-//        return plusClubApi.postComment("Bearer " + Store.getInstance().getToken(), comment, discussion_id)
-//                .subscribeOn(Schedulers.io())
-//                .unsubscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread());
-//    }
 
     /**
      * 发表评论/回复

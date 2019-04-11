@@ -42,32 +42,7 @@ public class NetConfig {
     public static final String GET_WEATHER_URL = "http://www.weather.com.cn/data/cityinfo/";
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /** ----------- 我的url地址 ------------------ */
-
-
 
 
     /** github版本更新地址 */
