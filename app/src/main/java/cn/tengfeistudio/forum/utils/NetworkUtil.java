@@ -14,8 +14,8 @@ import okhttp3.Call;
 public class NetworkUtil {
     public static void regetToken(Context context){
         OkHttpUtils.post()
-                .url(NetConfig.BASE_GETNEWTOKEN_PLUS)
-                .addHeader("Authorization","Bearer " + Store.getInstance().getToken())
+                .url(NetConfig.BASE_REFRESH_TOKEN)
+                .addHeader("Authorization",Store.getInstance().getToken())
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -26,7 +26,7 @@ public class NetworkUtil {
                     @Override
                     public void onResponse(String response, int id) {
                         JSONObject obj = JSON.parseObject(response);
-                        if (obj.getInteger("code") != 20000){
+                        if (obj.getInteger("code") != Constants.RETURN_CONTINUE){
                             Log.e("print","HomeFragment getNewToken() onResponse获取Token失败,重新登陆");
                         }else{
                             Store.getInstance().setToken(obj.getString("result"));

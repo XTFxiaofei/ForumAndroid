@@ -15,7 +15,6 @@ import cn.tengfeistudio.forum.api.api.ActivityApi;
 import cn.tengfeistudio.forum.api.api.CollectionApi;
 import cn.tengfeistudio.forum.api.api.CommentApi;
 import cn.tengfeistudio.forum.api.api.GithubApi;
-import cn.tengfeistudio.forum.api.api.PlusClubApi;
 import cn.tengfeistudio.forum.api.api.TopicApi;
 import cn.tengfeistudio.forum.api.api.UserApi;
 import cn.tengfeistudio.forum.api.api.WeatherApi;
@@ -45,8 +44,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class RetrofitService {
 
-    private static PlusClubApi plusClubApi;
+
+    //天气api
     private static WeatherApi weatherApi;
+    //github api
     private static GithubApi githubApi;
     //用户api
     private static UserApi userApi;
@@ -75,17 +76,10 @@ public class RetrofitService {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .build();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(client)
-                .baseUrl(NetConfig.BASE_PLUSCLUB)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build();
-        plusClubApi = retrofit.create(PlusClubApi.class);
 
 
         /** 用户base_url */
-        retrofit=new Retrofit.Builder()
+        Retrofit retrofit=new Retrofit.Builder()
                 .client(client)
                 .baseUrl(NetConfig.BASE_USER)
                 .addConverterFactory(GsonConverterFactory.create())
