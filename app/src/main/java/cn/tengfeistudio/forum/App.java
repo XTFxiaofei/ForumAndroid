@@ -54,9 +54,10 @@ public class App extends Application {
         initConfig();
         regReciever();
         /** 已经在MyRecyclerView类中添加 */
-       // initImageLoader();//初始化ImageLoader
         initImageLoader();
         disableAPIDialog();
+        //全局异常处理，避免闪退
+        Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
     }
 
 
@@ -83,22 +84,6 @@ public class App extends Application {
         }
     }
 
-
-
-
-//    private void initImageLoader()
-//    {
-//        DisplayImageOptions options = new DisplayImageOptions.Builder()
-//                .cacheInMemory(true).cacheOnDisk(true)
-//                .showImageOnFail(R.mipmap.ic_launcher)
-//                .build();
-//
-//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-//                .diskCache(new UnlimitedDiscCache(new File(Environment.getExternalStorageDirectory()+File.separator+"ImageObserverDemo"+File.separator+"Image_cache")))
-//                .defaultDisplayImageOptions(options). // 上面的options对象，一些属性配置
-//                build();
-//        ImageLoader.getInstance().init(config); // 初始化
-//    }
 
     public static ApplicationComponent getAppComponent() {
         return mAppComponent;
