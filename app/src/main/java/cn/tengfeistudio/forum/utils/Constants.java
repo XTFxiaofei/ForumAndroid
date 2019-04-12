@@ -9,7 +9,7 @@ public class Constants {
     /**
      * 当前app版本号
      */
-    public static final String version_name="1.0.3";
+    public static final String version_name="1.0.5";
 
     public static final int version_code=1;
     /**
