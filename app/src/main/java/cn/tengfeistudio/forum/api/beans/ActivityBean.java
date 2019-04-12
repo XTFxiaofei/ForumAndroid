@@ -45,6 +45,29 @@ public class ActivityBean implements Serializable{
                 '}';
     }
 
+    public ActivityBean() {
+    }
+
+    public ActivityBean(int activityId, Integer userId, String title, String logoImage, Long createTime, String content, String place, String type, String level, String sponsor, String target, String typeNickname, String activityTime, String contentPicture, Integer flag, Long updateTime, String activityName) {
+        this.activityId = activityId;
+        this.userId = userId;
+        this.title = title;
+        this.logoImage = logoImage;
+        this.createTime = createTime;
+        this.content = content;
+        this.place = place;
+        this.type = type;
+        this.level = level;
+        this.sponsor = sponsor;
+        this.target = target;
+        this.typeNickname = typeNickname;
+        this.activityTime = activityTime;
+        this.contentPicture = contentPicture;
+        this.flag = flag;
+        this.updateTime = updateTime;
+        this.activityName = activityName;
+    }
+
     public int getActivityId() {
         return activityId;
     }

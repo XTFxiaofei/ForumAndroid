@@ -1,4 +1,5 @@
 package cn.tengfeistudio.forum.module.activity;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
@@ -12,15 +13,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.alibaba.fastjson.JSON;
 
 import com.zxl.library.DropDownMenu;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.R;
@@ -47,10 +52,9 @@ public class ActivityFragment extends BaseFragment
     SwipeRefreshLayout refreshLayout;
 
     //活动地点
-    private String acPlace="";
+    private String acPlace = "";
     //活动类型
-    private String acType="";
-
+    private String acType = "";
 
 
     //private String headers[] = {"城市", "年龄", "性别", "星座"};
@@ -103,7 +107,7 @@ public class ActivityFragment extends BaseFragment
             return;
         }
         tvHotnewsShowlogin.setText("刷新中...");
-        mPresenter.getData(false, mContent,acPlace,acType);
+        mPresenter.getData(false, mContent, acPlace, acType);
         //不用放到initView()否则每次跳回都刷新添加到标题
         initNewLayout();
         initView();
@@ -114,9 +118,13 @@ public class ActivityFragment extends BaseFragment
         initRefreshLayout();
         initRecyclerView();
     }
+
     private void initNewLayout() {
 
-       ((ViewGroup)rv.getParent()).removeAllViews();
+
+
+        ((ViewGroup) rv.getParent()).removeAllViews();
+        //mDropDownMenu.setDropDownMenu(Arrays.asList(headers), initViewData(), refreshLayout);
         mDropDownMenu.setDropDownMenu(Arrays.asList(headers), initViewData(), rv);
 
         //该监听回调只监听默认类型，如果是自定义view请自行设置，参照demo
@@ -124,17 +132,17 @@ public class ActivityFragment extends BaseFragment
             @Override
             public void onSelectDefaultMenu(int index, int pos, String clickstr) {
                 //index:点击的tab索引，pos：单项菜单中点击的位置索引，clickstr：点击位置的字符串
-                printLog("index:"+index+"  pos:"+pos+" clickstr:"+clickstr);
+                printLog("index:" + index + "  pos:" + pos + " clickstr:" + clickstr);
                 Toast.makeText(getContext(), clickstr, Toast.LENGTH_SHORT).show();
-                if(0==index && pos!=0){
-                    acPlace=clickstr;
-                }else if(0==index && 0==pos){
-                    acPlace="";
+                if (0 == index && pos != 0) {
+                    acPlace = clickstr;
+                } else if (0 == index && 0 == pos) {
+                    acPlace = "";
                 }
-                if(1==index && pos!=0){
-                    acType=clickstr;
-                }else if(1==index && 0==pos){
-                    acType="";
+                if (1 == index && pos != 0) {
+                    acType = clickstr;
+                } else if (1 == index && 0 == pos) {
+                    acType = "";
                 }
                 doRefresh();
             }
@@ -156,7 +164,7 @@ public class ActivityFragment extends BaseFragment
             switch (types[i]) {
                 case DropDownMenu.TYPE_LIST_CITY:
                     map.put(DropDownMenu.VALUE, citys);
-                   // map.put(DropDownMenu.SELECT_POSITION,0);
+                    // map.put(DropDownMenu.SELECT_POSITION,0);
                     break;
                 case DropDownMenu.TYPE_LIST_SIMPLE:
                     map.put(DropDownMenu.VALUE, actypes);
@@ -176,6 +184,7 @@ public class ActivityFragment extends BaseFragment
 
     /**
      * 自定义标题栏，先不用
+     *
      * @return
      */
     private View getCustomView() {
@@ -184,13 +193,12 @@ public class ActivityFragment extends BaseFragment
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDropDownMenu.setTabText(2,"自定义");//设置tab标签文字
+                mDropDownMenu.setTabText(2, "自定义");//设置tab标签文字
                 mDropDownMenu.closeMenu();//关闭menu
             }
         });
         return v;
     }
-
 
 
     /**
@@ -202,10 +210,10 @@ public class ActivityFragment extends BaseFragment
     private void initRecyclerView() {
         // 设置监听事件
         //if (loadMoreListener == null) {
-            mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-            rv.setLayoutManager(mLayoutManager);
-            loadMoreListener = new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 5);
-       // }
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        rv.setLayoutManager(mLayoutManager);
+        loadMoreListener = new LoadMoreListener((LinearLayoutManager) mLayoutManager, this, 5);
+        // }
         rv.addOnScrollListener(loadMoreListener);
 
         rv.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
@@ -231,12 +239,12 @@ public class ActivityFragment extends BaseFragment
             @Override
             public void run() {
                 getActivity().runOnUiThread(() -> {
-                    tvHotnewsShowlogin.setText("刷新中2...");
+                    tvHotnewsShowlogin.setText("刷新中...");
                     tvHotnewsShowlogin.setVisibility(View.VISIBLE);
                 });
             }
         }.start();
-        mPresenter.getData(true, mContent,acPlace,acType);
+        mPresenter.getData(true, mContent, acPlace, acType);
     }
 
     /**
@@ -256,7 +264,9 @@ public class ActivityFragment extends BaseFragment
             }
         }.start());
     }
+
     protected boolean new_loadnothing = false;
+
     protected void afterGetDataSuccess(String data) {
         mPresenter.afterGetDataSuccess(data, mContent);
         isPullDownRefresh = false;
@@ -302,13 +312,12 @@ public class ActivityFragment extends BaseFragment
     private boolean isPullUpRefresh = false;
 
 
-
     @Override
     public void onLoadMore() {
         if (isPullDownRefresh || isPullUpRefresh)
             return;
         isPullUpRefresh = true;
-        mPresenter.getListData(mPresenter.max_page_post + 1,acPlace,acType);
+        mPresenter.getListData(mPresenter.max_page_post + 1, acPlace, acType);
     }
 
 

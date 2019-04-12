@@ -15,6 +15,7 @@ import java.util.List;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.adapter.ActivityAdapter;
 import cn.tengfeistudio.forum.api.beans.ActivityBean;
+import cn.tengfeistudio.forum.local.DataBase.MyDB;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.NetConfig;
 import io.reactivex.Observable;
@@ -47,11 +48,17 @@ public class ActivityFragPresenter {
 
     private Observer<String> observer;
 
+    //是否从本地获取数据，如果连接网络则重网络端获取
+    private static boolean getDataFromMydb=true;
+
+    private Context context;
+
     public ActivityFragPresenter(ActivityFragment mView) {
         this.mView = mView;
     }
 
     public void getData(boolean isRefresh, Context context,String acPlace,String acType) {
+        this.context=context;
         if (!isRefresh) {
             initList();
             initObserver();
@@ -62,6 +69,7 @@ public class ActivityFragPresenter {
             getListData(Constants.DEFAULT_PAGE_NUMBER,acPlace,acType);
             max_page_post = Constants.DEFAULT_PAGE_NUMBER;
         }
+
     }
 
     // 第一次加载的行为
@@ -101,29 +109,46 @@ public class ActivityFragPresenter {
             if (activityAdapter != null)
                 activityAdapter.changeLoadMoreState(STATE_LOADING);
         }
-        JSONObject jsonObject = JSON.parseObject(JsonDataArray);
-        // 尾页处理
-        printLog("currentPage:" + jsonObject.getInteger("number") + " last: " + jsonObject.getBoolean("last") + " numberOfElements:" + jsonObject.getInteger("numberOfElements") + " size:" + jsonObject.getInteger("size"));
-        if (jsonObject.getInteger("number") >= jsonObject.getInteger("totalPages") || jsonObject.getInteger("totalPages") == 1) {
+        //判断是否从本地获取数据
+        if(!getDataFromMydb){
+            JSONObject jsonObject = JSON.parseObject(JsonDataArray);
+            // 尾页处理
+            printLog("currentPage:" + jsonObject.getInteger("number") + " last: " + jsonObject.getBoolean("last") + " numberOfElements:" + jsonObject.getInteger("numberOfElements") + " size:" + jsonObject.getInteger("size"));
+            if (jsonObject.getInteger("number") >= jsonObject.getInteger("totalPages") || jsonObject.getInteger("totalPages") == 1) {
 
-            if (activityAdapter != null) {
-                activityAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
-                return;
-            } else {
-                mView.new_loadnothing = true;
+                if (activityAdapter != null) {
+                    activityAdapter.changeLoadMoreState(STATE_LOAD_NOTHING);
+                    return;
+                } else {
+                    mView.new_loadnothing = true;
+                }
             }
+            MyDB db = new MyDB(context);
+            //不是最后一页的处理
+            JSONArray array = JSON.parseArray(jsonObject.getString("content"));
+            for (int i = 0; i < array.size(); i++){
+                ActivityBean bean=JSON.parseObject(array.getString(i), ActivityBean.class);
+                activityList.add(bean);
+                //活动存到数据库
+                db.handSingleReadActivity(bean);
+            }
+        }else{
+            //从本地获取数据
+            MyDB db=new MyDB(context);
+            activityList=db.getActivityBean();
+            for(ActivityBean activityBean:activityList){
+                printLog(activityBean.getActivityName());
+            }
+
         }
-        //不是最后一页的处理
-        JSONArray array = JSON.parseArray(jsonObject.getString("content"));
-        for (int i = 0; i < array.size(); i++)
-            activityList.add(JSON.parseObject(array.getString(i), ActivityBean.class));
+
+
     }
 
     public void getListData(int page,String acPlace,String acType) {
         if (page == Constants.DEFAULT_PAGE_NUMBER)
             activityAdapter = null;
         getActivityListData(page,acPlace,acType);
-
     }
 
     private void initObserver() {
@@ -138,6 +163,7 @@ public class ActivityFragPresenter {
             }
             @Override
             public void onError(Throwable e) {
+
             }
             @Override
             public void onComplete() {
@@ -180,6 +206,8 @@ public class ActivityFragPresenter {
                         if (dataObj.getInteger("code") != Constants.RETURN_CONTINUE) {
                             ToastShort("服务器出状况惹，稍等喔( • ̀ω•́ )✧");
                         } else {
+                            //能够正常从服务端获取数据
+                            getDataFromMydb=false;
                             max_page_post = max_page_post >= page ? max_page_post : page;
                             JSONObject obj = new JSONObject();
                             obj.put("data", dataObj.getString("data"));

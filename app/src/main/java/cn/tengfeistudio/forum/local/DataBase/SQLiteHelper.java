@@ -49,6 +49,30 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 + ")";
         db.execSQL(sql2);
         Log.e("DATABASE", "TABLE_USER_INFO数据表创建成功");
+
+        //aid,auserid,atitle,alogoimage,acreatetime,acontent,aplace,atype,alevel,asponsor,
+        // atarget,atypenickname,activityTime,acontentpicture,flag,aupdatetime,activityname
+        String sql3="CREATE TABLE "+MyDB.TABLE_EXTENTSION_ACTIVITY+"("
+                +"aid INT primary key,"
+                +"auserid INT,"
+                +"atitle VARCHAR(100) NOT NULL,"
+                +"alogoimage VARCHAR(255),"
+                +"acreatetime LONG,"
+                +"acontent VARCHAR,"
+                +"aplace VARCHAR(100) NOT NULL,"
+                +"atype VARCAHR(100) NOT NULL,"
+                +"alevel VARCHAR(100),"
+                +"asponsor VARCHAR(100),"
+                +"atarget VARCHAR(100),"
+                +"atypenickname VARCHAR(100),"
+                +"activitytime VARCHAR(100),"
+                +"acontentpicture VARCHAR(255),"
+                +"aflag INT,"
+                +"aupdatetime LONG,"
+                +"activityname VARCHAR(100) NOT NULL"
+                + ")";
+        db.execSQL(sql3);
+        Log.e("DATABASE", "TABLE_EXTENTSION_ACTIVITY数据表创建成功");
     }
 
     /**
@@ -61,6 +85,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         String sql2 = "DROP TABLE IF EXISTS " + MyDB.TABLE_USER_INFO;
         db.execSQL(sql2);
+
+        String sql3="DROP TABLE IF EXISTS "+MyDB.TABLE_EXTENTSION_ACTIVITY;
+        db.execSQL(sql3);
 
         this.onCreate(db);
         Log.e("DATABASE", "数据库已更新");

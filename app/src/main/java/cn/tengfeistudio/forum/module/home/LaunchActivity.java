@@ -28,6 +28,7 @@ import cn.tengfeistudio.forum.App;
 import cn.tengfeistudio.forum.R;
 import cn.tengfeistudio.forum.api.RetrofitService;
 import cn.tengfeistudio.forum.api.bean.Store;
+import cn.tengfeistudio.forum.local.DataBase.MyDB;
 import cn.tengfeistudio.forum.module.post.postlist.PostsActivity;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.NetConfig;
@@ -43,10 +44,10 @@ import ua.naiksoftware.stomp.client.StompMessage;
 import static android.content.ContentValues.TAG;
 import static cn.tengfeistudio.forum.utils.LogUtils.printLog;
 
-public class LaunchActivity extends Activity{
+public class LaunchActivity extends Activity {
     private static final int WAIT_TIME = 2;
     //玩家收藏活动的Id集合
-    public static List<Integer> collectActivityIds=new ArrayList<Integer>();
+    public static List<Integer> collectActivityIds = new ArrayList<Integer>();
 
 
     @SuppressLint("CheckResult")
@@ -76,24 +77,27 @@ public class LaunchActivity extends Activity{
         App.setCookie("");
 
 
-        if(Store.getInstance().getToken().length()>0){
+        if (Store.getInstance().getToken().length() > 0) {
             /** 获取玩家已经收藏的活动 */
             RetrofitService.getCollectionActivity()
                     .subscribe(responseBody -> {
                         JSONObject jsonObject = JSON.parseObject(responseBody.string());
-                        if (jsonObject.getInteger("code") != Constants.RETURN_CONTINUE){
-                        }else{
+                        if (jsonObject.getInteger("code") != Constants.RETURN_CONTINUE) {
+                        } else {
                             //收藏的活动id集合
-                            collectActivityIds=JSON.parseArray(jsonObject.getString("data"), Integer.class);
+                            collectActivityIds = JSON.parseArray(jsonObject.getString("data"), Integer.class);
+                            //连接网络则清楚之前的素拓活动
+                            MyDB db = new MyDB(getBaseContext());
+                            //清理旧素拓活动
+                            db.clearActivityList();
                         }
                     });
         }
-        }
-
+    }
 
 
     private void enterHome() {
-        startActivity(new Intent(LaunchActivity.this,HomeActivity.class));
+        startActivity(new Intent(LaunchActivity.this, HomeActivity.class));
         finish();
     }
 
@@ -130,10 +134,6 @@ public class LaunchActivity extends Activity{
         // 去掉自带的转场动画
         overridePendingTransition(R.anim.zoomin, R.anim.zoomout);
     }
-
-
-
-
 
 
 }
