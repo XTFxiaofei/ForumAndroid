@@ -154,12 +154,9 @@ public class TopicAdapter extends BaseAdapter {
             List<String> imgUrls = new ArrayList<>();
 
             TopicBean object = topicList.get(pos);
+            //9图处理
             imgUrls= JSONArray.parseArray(object.getContentPictureJson(),String.class);
-            //先让就图不显示
-            nineGridTestLayout.setVisibility(View.GONE);
            if(imgUrls!=null && imgUrls.size()>0){
-               //存在图片是让九图显示
-               nineGridTestLayout.setVisibility(View.VISIBLE);
                 initListData(imgUrls);
                 imgUrls.clear();
                 nineGridTestLayout.setIsShowAll(mList.get(0).isShowAll);

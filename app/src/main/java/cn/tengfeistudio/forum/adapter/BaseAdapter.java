@@ -49,9 +49,15 @@ public abstract class BaseAdapter extends RecyclerView.Adapter<BaseAdapter.BaseV
         }
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
+        //bindViewHolder不复用
+        holder.setIsRecyclable(false);
         holder.setData(position);
+
+
     }
 
     @Override
