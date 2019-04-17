@@ -155,12 +155,18 @@ public class TopicAdapter extends BaseAdapter {
 
             TopicBean object = topicList.get(pos);
             imgUrls= JSONArray.parseArray(object.getContentPictureJson(),String.class);
-            if(imgUrls!=null && imgUrls.size()>0){
+            //先让就图不显示
+            nineGridTestLayout.setVisibility(View.GONE);
+           if(imgUrls!=null && imgUrls.size()>0){
+               //存在图片是让九图显示
+               nineGridTestLayout.setVisibility(View.VISIBLE);
                 initListData(imgUrls);
                 imgUrls.clear();
                 nineGridTestLayout.setIsShowAll(mList.get(0).isShowAll);
                 nineGridTestLayout.setUrlList(mList.get(0).urlList);
             }
+
+
             String praiseUsers=object.getPraiseAccountJson();
             //点赞的用户id数字
             String[] userids=praiseUsers.split(Constants.COMMA);

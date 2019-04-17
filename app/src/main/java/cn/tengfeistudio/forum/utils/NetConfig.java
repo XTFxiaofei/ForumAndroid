@@ -48,7 +48,10 @@ public class NetConfig {
     /** github版本更新地址 */
     public static final String GITHUB_GET_RELEASE="https://api.github.com/repos/XTFxiaofei/ForumAndroid/releases/latest";
 
-    public static final String BASE_DOMAIN="http://192.168.191.1:8080/";
+    public static final String BASE_DOMAIN="http://111.230.241.50:8888/";
+
+    /** 连接websocket */
+    public static final String CONNECT_WEBSOCKET_URL="ws://111.230.241.50:8888/cheat/websocket";
 
     /** 分享web网页的帖子 */
     public static final String SHARE_TOPIC=BASE_DOMAIN+"forum/";
@@ -99,8 +102,7 @@ public class NetConfig {
     public static final String APK_DOWNLOAD_URL="https://github.com/XTFxiaofei/ForumAndroid/releases/download/"+Constants.version_name+"/ForumAndroid.apk";
 
 
-    /** 连接websocket */
-    public static final String CONNECT_WEBSOCKET_URL="ws://192.168.191.1:8080/cheat/websocket";
+
 
     /** 拉取未读回复 */
     public static final String RECEIVE_REPLY=BASE_COMMENT+"pull_unread_reply";
