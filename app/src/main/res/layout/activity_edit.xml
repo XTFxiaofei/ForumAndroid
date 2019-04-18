@@ -30,8 +30,9 @@
             android:background="@color/bg_secondary"
             android:focusable="true"
             android:gravity="start|center_vertical"
-            android:hint="请输入帖子标题"
+            android:hint="请输入帖子标题,不超过10个字"
             android:imeOptions="actionNext"
+            android:maxLength="10"
             android:padding="10dp"
             android:singleLine="true" />
     </LinearLayout>
@@ -46,8 +47,9 @@
         android:background="@color/bg_secondary"
         android:focusable="true"
         android:gravity="start"
-        android:hint="请输入发布内容 #支持MarkDown"
+        android:hint="请输入发布内容#支持MarkDown \n发送内容不能超过150个字"
         android:imeOptions="actionNext"
+        android:maxLength="150"
         android:inputType="text" />
     <!--android:padding="10dp"-->
     <!--android:singleLine="false"-->

@@ -19,9 +19,12 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSONArray;
 import com.squareup.picasso.Picasso;
 import com.zzhoujay.richtext.RichText;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +38,7 @@ import cn.tengfeistudio.forum.module.user.userdetail.UserDetailActivity;
 import cn.tengfeistudio.forum.utils.Constants;
 import cn.tengfeistudio.forum.utils.IntentUtils;
 import cn.tengfeistudio.forum.utils.NetConfig;
+import cn.tengfeistudio.forum.utils.SensitiveWordUtil;
 import cn.tengfeistudio.forum.utils.StampToDate;
 import cn.tengfeistudio.forum.utils.toast.GlobalDialog;
 import cn.tengfeistudio.forum.widget.CircleImageView;
@@ -131,6 +135,7 @@ public class TopicAdapter extends BaseAdapter {
         /** 9宫图model */
         private List<NineGridTestModel> mList = new ArrayList<>();
         private List<String> praiseUseridList=new ArrayList<>();
+        private String topicTitle,topicContent;
 
 
         NormalViewHolder(View view) {
@@ -174,11 +179,31 @@ public class TopicAdapter extends BaseAdapter {
             }
             //点赞数量
             int praiseNumber=praiseUseridList.size();
+
+            /** 敏感词汇过滤 */
+            topicTitle=object.getTitle();
+            topicContent=object.getContent();
+            SensitiveWordUtil filterEngine = SensitiveWordUtil.getInstance();
+            Vector<Integer> levelSet = new Vector<Integer>();
+            try {
+                topicTitle=filterEngine.parse(new String(topicTitle.getBytes(), "UTF-8"), levelSet);
+                topicContent=filterEngine.parse(new String(topicContent.getBytes(), "UTF-8"), levelSet);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            //标题
             if(object.getTitle().isEmpty()){
                 articleTitle.setVisibility(View.GONE);
             }else {
-                articleTitle.setText("# "+object.getTitle()+" #");
+                articleTitle.setText("# "+topicTitle+" #");
             }
+            //内容
+            if(object.getContent().isEmpty()){
+                content.setVisibility(View.GONE);
+            }else{
+                RichText.fromMarkdown(topicContent).into(content);
+            }
+
             authorName.setText(" " + object.getUserByUserId().getNickname());
             postTime.setText(" " + StampToDate.getStringDate(object.getCreateTime()));
             //评论数量
@@ -198,11 +223,7 @@ public class TopicAdapter extends BaseAdapter {
                 praiseCount.setCompoundDrawables(drawable,null, null, null);
             }
             level.setRating(object.getUserByUserId().getLevel());
-            if(object.getContent().isEmpty()){
-                content.setVisibility(View.GONE);
-            }else{
-                RichText.fromMarkdown(object.getContent()).into(content);
-            }
+
             Picasso.get()
                     .load(object.getUserByUserId().getIcon())
                     .placeholder(R.drawable.image_placeholder)
