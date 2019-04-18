@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -248,15 +249,34 @@ public class DetailActivity extends BaseActivity {
 //                handler.sendMessage(msg);
 //            }
 //        }.start();
-        acName.setText("活动名称:"+activityObj.getActivityName());
-        acType.setText("活动类型: "+activityObj.getType());
-        acTime.setText("活动时间: "+activityObj.getActivityTime());
-        acPlace.setText("活动地点: "+activityObj.getPlace());
-        acTarget.setText("面向人群: "+activityObj.getTarget());
-        acLevel.setText("活动等级: "+activityObj.getLevel());
-        acSponsor.setText("举办单位: "+activityObj.getSponsor());
+        //acName.setText("活动名称:"+activityObj.getActivityName());
+        acName.setText(Html.fromHtml("<font color=\'#217aff\' ><middle>活动名称:</middle></font><font color=\'#656565\' ><small>"+activityObj.getActivityName()+"</small></font>"));
+       // acType.setText("活动类型: "+activityObj.getType());
+        acType.setText(Html.fromHtml("<font color=\'#217aff\' ><middle>活动类型:</middle></font><font color=\'#656565\' ><small>"+activityObj.getType()+"</small></font>"));
+       // acTime.setText("活动时间: "+activityObj.getActivityTime());
+        StringBuilder sb = new StringBuilder(activityObj.getActivityTime());//构造一个StringBuilder对象
+        sb.insert(4, "/");//在指定的位置1，插入指定的字符串
+        sb.insert(7,"/");
+        if(sb.length()>10){
+            sb.insert(15,"/");
+            sb.insert(18,"/");
+        }
+        acTime.setText(Html.fromHtml("<font color=\'#217aff\' ><middle>活动时间:</middle></font><font color=\'#656565\' ><small>"+sb.toString()+"</small></font>"));
+       // acPlace.setText("活动地点: "+activityObj.getPlace());
+        acPlace.setText(Html.fromHtml("<font color=\'#217aff\' ><middle>活动地点:</middle></font><font color=\'#656565\' ><small>"+activityObj.getPlace()+"</small></font>"));
+       // acTarget.setText("面向人群: "+activityObj.getTarget());
+        acTarget.setText(Html.fromHtml("<font color=\'#217aff\' ><middle>面向人群:</middle></font><font color=\'#656565\' ><small>"+activityObj.getTarget()+"</small></font>"));
+        //acLevel.setText("活动等级: "+activityObj.getLevel());
+        acLevel.setText(Html.fromHtml("<font color=\'#217aff\' ><middle>活动等级:</middle></font><font color=\'#656565\' ><small>"+activityObj.getLevel()+"</small></font>"));
+       // acSponsor.setText("举办单位: "+activityObj.getSponsor());
+        acSponsor.setText(Html.fromHtml("<font color=\'#217aff\' ><middle>举办单位:</middle></font><font color=\'#656565\' ><small>"+activityObj.getSponsor()+"</small></font>"));
         //<br>转成换行符
-        acContent.setText(activityObj.getContent().replaceAll("<br>", "\r\n"));
+        String content=activityObj.getContent().replaceAll("<br>", "\r\n");
+        acContent.setText(""+content.trim());
+
+
+
+
         //活动图片
         new Thread() {
             @Override

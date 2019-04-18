@@ -113,7 +113,14 @@ public class ActivityAdapter extends BaseAdapter {
 
             articleTitle2.setText("【" +object.getType()+"】" +object.getActivityName());
             authorName2.setText(" " + object.getPlace());
-            postTime2.setText(" " + object.getActivityTime());
+            StringBuilder sb = new StringBuilder(object.getActivityTime());//构造一个StringBuilder对象
+            sb.insert(4, "/");//在指定的位置1，插入指定的字符串
+            sb.insert(7,"/");
+            if(sb.length()>10){
+                sb.insert(15,"/");
+                sb.insert(18,"/");
+            }
+            postTime2.setText(" " + sb.toString());
             if(LaunchActivity.collectActivityIds.contains(collectionId)){
                 ivCollect.setImageResource(R.drawable.collect_yes);
                 ivCollect.setSelected(true);
