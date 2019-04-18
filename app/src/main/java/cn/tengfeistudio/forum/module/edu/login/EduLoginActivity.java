@@ -289,36 +289,58 @@ public class EduLoginActivity extends BaseActivity {
      */
     @SuppressLint("CheckResult")
     private void doLogin(String eduid, String pwd, String checkid) {
-        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.post()
-                .url("http://jwxt.gdufe.edu.cn/jsxsd/xk/LoginToXkLdap")
-                .addParams("USERNAME",eduid)
-                .addParams("PASSWORD",pwd)
-                .addHeader("Cookie", cookie)
-                .build()
-                .execute(new Callback() {
-                    @Override
-                    public Object parseNetworkResponse(Response response, int id) throws Exception {
-                        String responseHTML = new String(response.body().bytes(), "UTF-8");
-                        user_eduid = eduid;
-                        user_edupwd = pwd;
-                        emitter.onNext(responseHTML);
-                        return null;
-                    }
+//        Observable.create((ObservableOnSubscribe<String>) emitter -> OkHttpUtils.post()
+//                .url("http://jwxt.gdufe.edu.cn/jsxsd/xk/LoginToXkLdap")
+//                .addParams("USERNAME",eduid)
+//                .addParams("PASSWORD",pwd)
+//                .addHeader("Cookie", cookie)
+//                .build()
+//                .execute(new Callback() {
+//                    @Override
+//                    public Object parseNetworkResponse(Response response, int id) throws Exception {
+//                        String responseHTML = new String(response.body().bytes(), "UTF-8");
+//                        user_eduid = eduid;
+//                        user_edupwd = pwd;
+//                        emitter.onNext(responseHTML);
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    public void onError(Call call, Exception e, int id) {
+//                        emitter.onError(new Throwable("doLogin() onError " + call.toString() + " " + e.getMessage()));
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Object response, int id) {
+//                        Log.e("print", "doLogin() onResponse");
+//                    }
+//                }))
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(s -> checkLoginSuccess(s), throwable -> printLog("EduLoginActivity_doLogin_onError:" + throwable.getMessage()));
 
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        emitter.onError(new Throwable("doLogin() onError " + call.toString() + " " + e.getMessage()));
-                    }
+        getSchedule("",eduid,pwd);
+    }
 
-                    @Override
-                    public void onResponse(Object response, int id) {
-                        Log.e("print", "doLogin() onResponse");
-                    }
-                }))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(s -> checkLoginSuccess(s), throwable -> printLog("EduLoginActivity_doLogin_onError:" + throwable.getMessage()));
-
+    /**
+     * 直接外网请求课程表
+     * @param studentName
+     * @param studentCard
+     * @param password
+     */
+    private void getSchedule(String studentName,String studentCard,String password){
+        SharedPreferences sp = getSharedPreferences(App.MY_SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(App.COOKIE, cookie);
+        editor.putString(App.USER_EDUID_KEY, studentCard);
+        editor.putString(App.USER_EDUPWD_KEY, password);
+        editor.putString(App.USER_EDUNAME_KEY,studentName);
+        editor.apply();
+        // gotoActivity(EduActivity.class);
+        Intent intent=new Intent(EduLoginActivity.this,HomeActivity.class);
+        intent.putExtra("schedule",1);
+        startActivity(intent);
+        finishActivity();
     }
 
     /**
